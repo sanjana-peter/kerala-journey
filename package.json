@@ -1,0 +1,12 @@
+{
+  "name": "kerala-journey",
+  "version": "0.1.0",
+  "private": true,
+  "description": "An interactive walk through Kerala's fourteen districts.",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "media": "node scripts/fetch-media.mjs",
+    "map": "node scripts/build-map.mjs",
+    "optimize": "python scripts/optimize-images.py"
+  }
+}
