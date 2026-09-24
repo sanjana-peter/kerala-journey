@@ -2,7 +2,8 @@
 
     python scripts/optimize-images.py        # needs Pillow: pip install pillow
 
-Safe to re-run: a file is only replaced when the new version is smaller.
+Safe to re-run: photos already saved as progressive JPEGs (i.e. optimised before) are skipped,
+so they're never recompressed twice, and a file is only replaced when the new version is smaller.
 """
 import io
 import pathlib
@@ -14,7 +15,11 @@ before = after = 0
 for f in sorted(root.rglob("*.jpg")):
     data = f.read_bytes()
     before += len(data)
-    img = Image.open(io.BytesIO(data)).convert("RGB")
+    img = Image.open(io.BytesIO(data))
+    if img.info.get("progressive") or img.info.get("progression"):
+        after += len(data)
+        continue
+    img = img.convert("RGB")
     out = io.BytesIO()
     img.save(out, "JPEG", quality=80 if not f.stem.endswith("-t") else 75, progressive=True, optimize=True)
     if out.tell() < len(data):

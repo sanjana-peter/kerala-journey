@@ -10,6 +10,9 @@
  *   exclude    – title fragments of Commons photos to skip
  * After editing, run `npm run media` to download photos and credits.
  *
+ * must: true marks a place as a must-visit (badge + Guide page).
+ * Signature dishes live in food.js and are added to each district automatically.
+ *
  * Districts are listed north → south: the order of the journey.
  */
 window.KERALA_DISTRICTS = [
@@ -23,6 +26,7 @@ window.KERALA_DISTRICTS = [
     spots: [
       {
         id: "bekal-fort",
+        must: true,
         name: "Bekal Fort",
         blurb:
           "Built around 1650 by Shivappa Nayaka of Keladi, Kerala's largest fort curls around a headland so that the sea presses in on three sides. Climb the observation tower and the coastline runs away in both directions.",
@@ -81,6 +85,7 @@ window.KERALA_DISTRICTS = [
     spots: [
       {
         id: "theyyam",
+        must: true,
         name: "Theyyam",
         blurb:
           "From December to April, village shrines light up for Theyyam, a ritual in which the performer, in towering headdress and painted face, is believed to become the deity.",
@@ -139,6 +144,7 @@ window.KERALA_DISTRICTS = [
     spots: [
       {
         id: "edakkal",
+        must: true,
         name: "Edakkal Caves",
         blurb:
           "Scramble up Ambukuthi Mala to a cleft in the rock whose walls are covered in Neolithic carvings of human figures, animals and symbols, among the oldest in South India.",
@@ -209,6 +215,7 @@ window.KERALA_DISTRICTS = [
     spots: [
       {
         id: "kappad",
+        must: true,
         name: "Kappad Beach",
         blurb:
           "The rocky shore where Vasco da Gama is said to have landed in 1498, opening the sea route from Europe to India. A small stone memorial marks the spot.",
@@ -267,6 +274,7 @@ window.KERALA_DISTRICTS = [
     spots: [
       {
         id: "nilambur",
+        must: true,
         name: "Nilambur & Conolly's Plot",
         blurb:
           "Planted in the 1840s, Conolly's Plot is the oldest teak plantation in the world. You reach it over a hanging bridge across the Chaliyar, and the trees are huge.",
@@ -337,6 +345,7 @@ window.KERALA_DISTRICTS = [
       },
       {
         id: "silent-valley",
+        must: true,
         name: "Silent Valley National Park",
         blurb:
           "One of the last undisturbed tropical evergreen forests in India, saved from a dam project by a people's movement in the 1980s. It is home to the lion-tailed macaque.",
@@ -395,6 +404,7 @@ window.KERALA_DISTRICTS = [
     spots: [
       {
         id: "thrissur-pooram",
+        must: true,
         name: "Thrissur Pooram",
         blurb:
           "Every April or May, dozens of caparisoned elephants face each other at the Vadakkunnathan temple grounds for kudamattam, a fast exchange of bright parasols, accompanied by hundreds of drummers.",
@@ -407,6 +417,7 @@ window.KERALA_DISTRICTS = [
       },
       {
         id: "athirappilly",
+        must: true,
         name: "Athirappilly Falls",
         blurb:
           "Kerala's largest waterfall, where the Chalakudy river drops about 25 m across a wide rock face. At full monsoon it is a wall of white.",
@@ -453,6 +464,7 @@ window.KERALA_DISTRICTS = [
     spots: [
       {
         id: "fort-kochi",
+        must: true,
         name: "Chinese Fishing Nets, Fort Kochi",
         blurb:
           "Giant cantilevered nets, said to have arrived with traders from Kublai Khan's court, are raised and lowered by teams of fishermen using stone counterweights.",
@@ -523,6 +535,7 @@ window.KERALA_DISTRICTS = [
     spots: [
       {
         id: "munnar",
+        must: true,
         name: "Munnar",
         blurb:
           "At the meeting of three mountain streams, tea bushes cover the hills like green velvet. Estate roads climb past pluckers and waterfalls to viewpoints above the clouds.",
@@ -571,6 +584,7 @@ window.KERALA_DISTRICTS = [
       },
       {
         id: "thekkady",
+        must: true,
         name: "Thekkady & Periyar",
         blurb:
           "A boat on Periyar lake glides past dead tree stumps where elephants come down to drink. Spice gardens around the town smell of pepper and clove.",
@@ -593,6 +607,7 @@ window.KERALA_DISTRICTS = [
     spots: [
       {
         id: "kumarakom",
+        must: true,
         name: "Kumarakom",
         blurb:
           "A cluster of islands on Vembanad lake, laced with canals, mangroves and a bird sanctuary. The heart of backwater Kerala.",
@@ -651,6 +666,7 @@ window.KERALA_DISTRICTS = [
     spots: [
       {
         id: "houseboats",
+        must: true,
         name: "Houseboat Cruise",
         blurb:
           "Board a kettuvallam, a thatched rice barge turned floating home, and drift past villages where life happens on the water's edge.",
@@ -733,6 +749,7 @@ window.KERALA_DISTRICTS = [
       },
       {
         id: "aranmula",
+        must: true,
         name: "Aranmula",
         blurb:
           "Home of the Parthasarathy temple, the Uthrattathi snake boat regatta on the Pamba, and the Aranmula kannadi, a mirror cast from secret metal alloys.",
@@ -803,6 +820,7 @@ window.KERALA_DISTRICTS = [
       },
       {
         id: "jatayu",
+        must: true,
         name: "Jatayu Earth's Center",
         blurb:
           "On a rock 1,000 feet up, a 200-foot sculpture of the mythical bird Jatayu, who in the Ramayana is said to have fallen here fighting Ravana.",
@@ -837,6 +855,7 @@ window.KERALA_DISTRICTS = [
     spots: [
       {
         id: "padmanabhaswamy",
+        must: true,
         name: "Sree Padmanabhaswamy Temple",
         blurb:
           "The city grew around this temple, whose seven-storey gopuram is reflected in the Padma Theertham tank. Inside, Vishnu reclines on the serpent Anantha.",
@@ -861,6 +880,7 @@ window.KERALA_DISTRICTS = [
       },
       {
         id: "varkala",
+        must: true,
         name: "Varkala Cliff",
         blurb:
           "Red laterite cliffs rise straight from the Arabian Sea, the only such cliffs on Kerala's coast. Cafés line the edge and there are mineral springs at the foot.",

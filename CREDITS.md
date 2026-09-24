@@ -18,6 +18,10 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Ranipuram** — [Madatha Male](https://commons.wikimedia.org/wiki/File:Madatha_Male.jpg) by Nativeplants garden, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Valiyaparamba Backwaters** — [Kavvayi Backwaters, Payyannur 01](https://commons.wikimedia.org/wiki/File:Kavvayi_Backwaters,_Payyannur_01.jpg) by Manojk, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Valiyaparamba Backwaters** — [Coconut Tree in Kerala](https://commons.wikimedia.org/wiki/File:Coconut_Tree_in_Kerala.jpg) by Athayyil at English Wikipedia, Public domain
+- **Neer Dosa** — [Red Chilli Neer Dosa](https://commons.wikimedia.org/wiki/File:Red_Chilli_Neer_Dosa.jpg) by Yakshitha, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Neer Dosa** — [NeerDosa](https://commons.wikimedia.org/wiki/File:NeerDosa.jpg) by Ramuias13, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Neer Dosa** — [Neeru Dosa with Chutney pudi](https://commons.wikimedia.org/wiki/File:Neeru_Dosa_with_Chutney_pudi.jpg) by Kart127, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Neer Dosa** — [Neer-Dosa](https://commons.wikimedia.org/wiki/File:Neer-Dosa.jpg) by Shrads.m, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 
 ## Kannur
 
@@ -37,6 +41,10 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Payyambalam Beach** — [Tree @ Payyambalam Beach](https://commons.wikimedia.org/wiki/File:Tree_@_Payyambalam_Beach.jpg) by ജസ്റ്റിൻ, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
 - **Payyambalam Beach** — [Payyambalam beach park](https://commons.wikimedia.org/wiki/File:Payyambalam_beach_park.jpg) by gnoeee, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Payyambalam Beach** — [Payyambalam beach, Kannur](https://commons.wikimedia.org/wiki/File:Payyambalam_beach,_Kannur.jpg) by Navaneeth Krishnan S, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Thalassery Biryani** — [Thalassery biriyani in dining table](https://commons.wikimedia.org/wiki/File:Thalassery_biriyani_in_dining_table.jpg) by Maureen, [CC BY 2.0](https://creativecommons.org/licenses/by/2.0)
+- **Thalassery Biryani** — [The making of Biriyani-Biriyani Masala-Step3](https://commons.wikimedia.org/wiki/File:The_making_of_Biriyani-Biriyani_Masala-Step3.jpg) by Angus Fraser, [CC BY 2.0](https://creativecommons.org/licenses/by/2.0)
+- **Thalassery Biryani** — [Thalassery biryani -1](https://commons.wikimedia.org/wiki/File:Thalassery_biryani_-1.jpg) by Sheetal, [CC BY 2.5](https://creativecommons.org/licenses/by/2.5)
+- **Thalassery Biryani** — [Ready biriyaani](https://commons.wikimedia.org/wiki/File:Ready_biriyaani.jpg) by Rameshng at Malayalam Wikipedia, [CC BY 3.0](https://creativecommons.org/licenses/by/3.0)
 
 ## Wayanad
 
@@ -60,6 +68,8 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Wayanad Wildlife Sanctuary** — [Snap during safari in Wayanad Wildlife Sanctuary 9836](https://commons.wikimedia.org/wiki/File:Snap_during_safari_in_Wayanad_Wildlife_Sanctuary_9836.JPG) by Rameshng, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
 - **Wayanad Wildlife Sanctuary** — [Kerala Muthunga Wildlife Sanctuary (15784333127)](https://commons.wikimedia.org/wiki/File:Kerala_Muthunga_Wildlife_Sanctuary_(15784333127).jpg) by Dumphasizer, [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0)
 - **Wayanad Wildlife Sanctuary** — [Mutanga checkpost](https://commons.wikimedia.org/wiki/File:Mutanga_checkpost.JPG) by irvin calicut, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Wayanad Coffee** — [Wayanad-WUS06247](https://commons.wikimedia.org/wiki/File:Wayanad-WUS06247.jpg) by Rainer Halama, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Wayanad Coffee** — [Unripe Coffee Cherry Wayand](https://commons.wikimedia.org/wiki/File:Unripe_Coffee_Cherry_Wayand.jpg) by CocoPhotographer008, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 
 ## Kozhikode
 
@@ -79,6 +89,10 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Thusharagiri Falls** — [Thusharagiri waterfall](https://commons.wikimedia.org/wiki/File:Thusharagiri_waterfall.jpg) by Dr.Juna, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Thusharagiri Falls** — [Thusharagiri Waterfalls - തുഷാരഗിരി വെള്ളച്ചാട്ടം 01](https://commons.wikimedia.org/wiki/File:Thusharagiri_Waterfalls_-_%E0%B4%A4%E0%B5%81%E0%B4%B7%E0%B4%BE%E0%B4%B0%E0%B4%97%E0%B4%BF%E0%B4%B0%E0%B4%BF_%E0%B4%B5%E0%B5%86%E0%B4%B3%E0%B5%8D%E0%B4%B3%E0%B4%9A%E0%B5%8D%E0%B4%9A%E0%B4%BE%E0%B4%9F%E0%B5%8D%E0%B4%9F%E0%B4%82_01.jpg) by Shijan Kaakkara, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Thusharagiri Falls** — [20100919 Misc 31](https://commons.wikimedia.org/wiki/File:20100919_Misc_31.jpg) by Svg3414, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Kozhikodan Halwa** — [Halwa at Mitayi street clt](https://commons.wikimedia.org/wiki/File:Halwa_at_Mitayi_street_clt.jpg) by Fotokannan, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Kozhikodan Halwa** — [Kozhikode (1 of 1)-9](https://commons.wikimedia.org/wiki/File:Kozhikode_(1_of_1)-9.jpg) by Mr 037, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Kozhikodan Halwa** — [Kozhikode Halwa](https://commons.wikimedia.org/wiki/File:Kozhikode_Halwa.jpg) by Abilngeorge, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Kozhikodan Halwa** — [Kozhikode Halva](https://commons.wikimedia.org/wiki/File:Kozhikode_Halva.jpg) by Suresh Khole, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 
 ## Malappuram
 
@@ -98,6 +112,10 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Thirunavaya** — [Bharathapuzha](https://commons.wikimedia.org/wiki/File:Bharathapuzha.jpg) by Ganesh Mohan T, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Thirunavaya** — [A view of the Bharathapuzha river from a train-3](https://commons.wikimedia.org/wiki/File:A_view_of_the_Bharathapuzha_river_from_a_train-3.jpg) by AquariusAge1, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Thirunavaya** — [Bharathapuzha River](https://commons.wikimedia.org/wiki/File:Bharathapuzha_River.jpg) by DrAbyS, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Pathiri** — [Stuffed pathiri](https://commons.wikimedia.org/wiki/File:Stuffed_pathiri.jpg) by Vis M, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Pathiri** — [Matakkuppaththiri - മടക്കുപ്പത്തിരി](https://commons.wikimedia.org/wiki/File:Matakkuppaththiri_-_%E0%B4%AE%E0%B4%9F%E0%B4%95%E0%B5%8D%E0%B4%95%E0%B5%81%E0%B4%AA%E0%B5%8D%E0%B4%AA%E0%B4%A4%E0%B5%8D%E0%B4%A4%E0%B4%BF%E0%B4%B0%E0%B4%BF.JPG) by കാക്കര, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Pathiri** — [Chatti pathiri](https://commons.wikimedia.org/wiki/File:Chatti_pathiri.JPG) by Silsilah Ali, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Pathiri** — [Chattippathiri - snack of north malabar kerala](https://commons.wikimedia.org/wiki/File:Chattippathiri_-_snack_of_north_malabar_kerala.jpg) by Ranjithsiji, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
 
 ## Palakkad
 
@@ -121,6 +139,10 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Kalpathy** — [Kalpathipuzha](https://commons.wikimedia.org/wiki/File:Kalpathipuzha.jpg) by Ramesh Kunnappully, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Kalpathy** — [Kalpathy Village](https://commons.wikimedia.org/wiki/File:Kalpathy_Village.jpg) by Aswinthephenom, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
 - **Kalpathy** — [Kalpathi agraharam](https://commons.wikimedia.org/wiki/File:Kalpathi_agraharam.jpg) by Unknown, Public domain
+- **Ramassery Idli** — [Carrot Peas Idli](https://commons.wikimedia.org/wiki/File:Carrot_Peas_Idli.JPG) by Kurinjikathambam, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Ramassery Idli** — [Cuisine (318) 29](https://commons.wikimedia.org/wiki/File:Cuisine_(318)_29.jpg) by AmanAgrahari01, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Ramassery Idli** — [An idly show](https://commons.wikimedia.org/wiki/File:An_idly_show.jpg) by Thamizhpparithi Maari, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Ramassery Idli** — [Chilli Idli - Geetha Canteen, Coimbatore - TamilNadu - PXL2419](https://commons.wikimedia.org/wiki/File:Chilli_Idli_-_Geetha_Canteen,_Coimbatore_-_TamilNadu_-_PXL2419.jpg) by Harikrishnan N, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 
 ## Thrissur
 
@@ -138,6 +160,10 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Vadakkunnathan Temple** — [Vadakkunnathan temple at night - December 2019](https://commons.wikimedia.org/wiki/File:Vadakkunnathan_temple_at_night_-_December_2019.jpg) by Ajay090, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Kerala Kalamandalam** — [കൂത്തമ്പലം](https://commons.wikimedia.org/wiki/File:%E0%B4%95%E0%B5%82%E0%B4%A4%E0%B5%8D%E0%B4%A4%E0%B4%AE%E0%B5%8D%E0%B4%AA%E0%B4%B2%E0%B4%82.jpg) by Arayilpdas at Malayalam Wikipedia, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
 - **Kerala Kalamandalam** — [Old P.G.Campus at Kerala Kalamandalam](https://commons.wikimedia.org/wiki/File:Old_P.G.Campus_at_Kerala_Kalamandalam.jpg) by Prof tpms, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Sadya** — [Sadya-Aluva-Kerala-IMG 20210320 204532](https://commons.wikimedia.org/wiki/File:Sadya-Aluva-Kerala-IMG_20210320_204532.jpg) by Ranjithsiji, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Sadya** — [Kerala Feast or Kerala Sadya](https://commons.wikimedia.org/wiki/File:Kerala_Feast_or_Kerala_Sadya.jpg) by Reshmi.vm, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Sadya** — [South Indian Traditional Food](https://commons.wikimedia.org/wiki/File:South_Indian_Traditional_Food.jpg) by Madhubala Ravi, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Sadya** — [Simple Kerala sadya](https://commons.wikimedia.org/wiki/File:Simple_Kerala_sadya.jpg) by Dr. Chinchu C., [CC BY 4.0](https://creativecommons.org/licenses/by/4.0)
 
 ## Ernakulam
 
@@ -161,6 +187,10 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Kathakali** — ['Kathakali'-The cultural soul of Kerala](https://commons.wikimedia.org/wiki/File:%27Kathakali%27-The_cultural_soul_of_Kerala.jpg) by WonderFrames, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Kathakali** — [Kadhakali at Kerala state school kalothsavam 2019 4](https://commons.wikimedia.org/wiki/File:Kadhakali_at_Kerala_state_school_kalothsavam_2019_4.jpg) by Shagil Kannur, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Kathakali** — [Kadhakali Make up and Dressing](https://commons.wikimedia.org/wiki/File:Kadhakali_Make_up_and_Dressing.jpg) by Rahul Chandran R, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Appam & Stew** — [Appam breakfast](https://commons.wikimedia.org/wiki/File:Appam_breakfast.jpg) by Kalpita.chakrabortty, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Appam & Stew** — [Appam12345](https://commons.wikimedia.org/wiki/File:Appam12345.JPG) by Seenatn, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Appam & Stew** — [2025-12-03-20-33-12-659 Image of appam](https://commons.wikimedia.org/wiki/File:2025-12-03-20-33-12-659_Image_of_appam.jpg) by Atheenasiji, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Appam & Stew** — [Aappam with chicken curry with coconut milk](https://commons.wikimedia.org/wiki/File:Aappam_with_chicken_curry_with_coconut_milk.jpg) by Mrs.bhaskaran, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 
 ## Idukki
 
@@ -184,6 +214,10 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Thekkady & Periyar** — [Deers grazing in National Park Periyar - Kerala 03](https://commons.wikimedia.org/wiki/File:Deers_grazing_in_National_Park_Periyar_-_Kerala_03.jpg) by Harvinder Chandigarh, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Thekkady & Periyar** — [Dense forest of the Periyar tiger reserve around the Sabarimala temple](https://commons.wikimedia.org/wiki/File:Dense_forest_of_the_Periyar_tiger_reserve_around_the_Sabarimala_temple.jpg) by Shantham11, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Thekkady & Periyar** — [Birding at Periyar Tiger Reserve (49443805211)](https://commons.wikimedia.org/wiki/File:Birding_at_Periyar_Tiger_Reserve_(49443805211).jpg) by Mike Prince from Bangalore, India, [CC BY 2.0](https://creativecommons.org/licenses/by/2.0)
+- **Cardamom & Spice Tea** — [Elettaria cardamomum - Cardamom Flower](https://commons.wikimedia.org/wiki/File:Elettaria_cardamomum_-_Cardamom_Flower.jpg) by Samyakvaria, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Cardamom & Spice Tea** — [Elettaria cardamomum (Cardamon) tree in RDA, Bogra 03](https://commons.wikimedia.org/wiki/File:Elettaria_cardamomum_(Cardamon)_tree_in_RDA,_Bogra_03.jpg) by Afifa Afrin, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Cardamom & Spice Tea** — [Ela (Bengali- এলা) (14393555700)](https://commons.wikimedia.org/wiki/File:Ela_(Bengali-_%E0%A6%8F%E0%A6%B2%E0%A6%BE)_(14393555700).jpg) by Dinesh Valke from Thane, India, [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0)
+- **Cardamom & Spice Tea** — [Elettaria cardamomum (24895)](https://commons.wikimedia.org/wiki/File:Elettaria_cardamomum_(24895).jpg) by Nativeplants garden, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 
 ## Kottayam
 
@@ -203,6 +237,10 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Rubber Estates** — [Natural rubber drying 1](https://commons.wikimedia.org/wiki/File:Natural_rubber_drying_1.jpg) by Slashme, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Rubber Estates** — [Rubber forest of mechode](https://commons.wikimedia.org/wiki/File:Rubber_forest_of_mechode.jpg) by Abijith k.a, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Rubber Estates** — [Rebber-thottam 1](https://commons.wikimedia.org/wiki/File:Rebber-thottam_1.JPG) by rajeshodayanchal, [CC BY 3.0](https://creativecommons.org/licenses/by/3.0)
+- **Kappa & Meen Curry** — [Kerala Tapioca](https://commons.wikimedia.org/wiki/File:Kerala_Tapioca.jpg) by Anish KG, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Kappa & Meen Curry** — [CloseUp Shot of Kappa with fish curry](https://commons.wikimedia.org/wiki/File:CloseUp_Shot_of_Kappa_with_fish_curry.jpg) by Aiwin Soji, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Kappa & Meen Curry** — [Kappa And Crab](https://commons.wikimedia.org/wiki/File:Kappa_And_Crab.JPG) by greybeard1123, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Kappa & Meen Curry** — [Appam, Kappa & Vatta Thala Mulakitta Curry](https://commons.wikimedia.org/wiki/File:Appam,_Kappa_%26_Vatta_Thala_Mulakitta_Curry.JPG) by BinoyCN, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 
 ## Alappuzha
 
@@ -226,6 +264,8 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Marari Beach** — [Mararikulam Beach](https://commons.wikimedia.org/wiki/File:Mararikulam_Beach.jpg) by Gannu03, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Marari Beach** — [Marari Beach Sunset 01](https://commons.wikimedia.org/wiki/File:Marari_Beach_Sunset_01.JPG) by Mahendra M, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
 - **Marari Beach** — [Sunset from Mararikulam beach, Kerala, India](https://commons.wikimedia.org/wiki/File:Sunset_from_Mararikulam_beach,_Kerala,_India.jpg) by Almost90's, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Karimeen Pollichathu** — [Karimeen Ilayill Pollichathu](https://commons.wikimedia.org/wiki/File:Karimeen_Ilayill_Pollichathu.JPG) by Jiss Tom palelil, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Karimeen Pollichathu** — [Karimeen Pollichathu](https://commons.wikimedia.org/wiki/File:Karimeen_Pollichathu.jpg) by Anupama1002, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 
 ## Pathanamthitta
 
@@ -243,6 +283,8 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Konni** — [Elephant at Konni Elephant Training Centre 04](https://commons.wikimedia.org/wiki/File:Elephant_at_Konni_Elephant_Training_Centre_04.jpg) by Gannu03, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Konni** — [Adavi Eco Tourism](https://commons.wikimedia.org/wiki/File:Adavi_Eco_Tourism.jpg) by Abhijith VG, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Konni** — [Konni elephant training centre](https://commons.wikimedia.org/wiki/File:Konni_elephant_training_centre.jpg) by Adarshjchandran, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Aranmula Valla Sadya** — [Boat coming to aranmula](https://commons.wikimedia.org/wiki/File:Boat_coming_to_aranmula.JPG) by Dvellakat, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Aranmula Valla Sadya** — [Long view boat coming](https://commons.wikimedia.org/wiki/File:Long_view_boat_coming.JPG) by Dvellakat, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 
 ## Kollam
 
@@ -262,6 +304,10 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Thenmala** — [Thenmala Hills](https://commons.wikimedia.org/wiki/File:Thenmala_Hills.jpg) by Prpetrator, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Thenmala** — [Forest view stairs in Thenmala 2](https://commons.wikimedia.org/wiki/File:Forest_view_stairs_in_Thenmala_2.jpg) by Haravinth rajan, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Thenmala** — [Statue at Thenmala Leisure Zone 04](https://commons.wikimedia.org/wiki/File:Statue_at_Thenmala_Leisure_Zone_04.jpg) by Vis M, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Kollam Cashews** — [CEPCI Headquarters, Kollam](https://commons.wikimedia.org/wiki/File:CEPCI_Headquarters,_Kollam.jpg) by Arunvrparavur, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Kollam Cashews** — [Cashew apples](https://commons.wikimedia.org/wiki/File:Cashew_apples.jpg) by Abhishek Jacob, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Kollam Cashews** — [Twin Cashews (3453745219)](https://commons.wikimedia.org/wiki/File:Twin_Cashews_(3453745219).jpg) by Abhishek Jacob from Palakkad, India, [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0)
+- **Kollam Cashews** — [CashewSnack](https://commons.wikimedia.org/wiki/File:CashewSnack.jpg) by User Femto on en.wikipedia, [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/)
 
 ## Thiruvananthapuram
 
@@ -285,5 +331,9 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Ponmudi** — [Green lush kerala 02](https://commons.wikimedia.org/wiki/File:Green_lush_kerala_02.jpg) by Arunram85, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Ponmudi** — [Ponmudi-Kerala-4](https://commons.wikimedia.org/wiki/File:Ponmudi-Kerala-4.jpg) by Ajay V Nair, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Ponmudi** — [Ponmudi Climate Observatory](https://commons.wikimedia.org/wiki/File:Ponmudi_Climate_Observatory.jpg) by Akhilan, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Puttu & Kadala** — [Puttu and Kadalakkari](https://commons.wikimedia.org/wiki/File:Puttu_and_Kadalakkari.jpg) by Mullookkaaran, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Puttu & Kadala** — [Karupatti Puttu (Palm Sugar Rice Cake)](https://commons.wikimedia.org/wiki/File:Karupatti_Puttu_(Palm_Sugar_Rice_Cake).JPG) by Selvakumar Natarajan, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Puttu & Kadala** — [Puttu ](https://commons.wikimedia.org/wiki/File:Puttu_.jpg) by BHARATHESHA ALASANDEMAJALU, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Puttu & Kadala** — [Puttu and payar](https://commons.wikimedia.org/wiki/File:Puttu_and_payar.jpg) by SijiR, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 
 Map boundaries: [geohacker/kerala](https://github.com/geohacker/kerala), derived from [DataMeet](https://datameet.org/) maps (CC BY 4.0).

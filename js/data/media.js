@@ -104,6 +104,33 @@ window.KERALA_MEDIA = {
    }
   ]
  },
+ "alappuzha/karimeen-pollichathu": {
+  "coords": null,
+  "images": [
+   {
+    "src": "assets/img/alappuzha/karimeen-pollichathu-1.jpg",
+    "thumb": "assets/img/alappuzha/karimeen-pollichathu-1-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Karimeen Ilayill Pollichathu",
+    "author": "Jiss Tom palelil",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Karimeen_Ilayill_Pollichathu.JPG"
+   },
+   {
+    "src": "assets/img/alappuzha/karimeen-pollichathu-2.jpg",
+    "thumb": "assets/img/alappuzha/karimeen-pollichathu-2-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Karimeen Pollichathu",
+    "author": "Anupama1002",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Karimeen_Pollichathu.jpg"
+   }
+  ]
+ },
  "alappuzha/kuttanad": {
   "coords": [
    9.425,
@@ -257,6 +284,55 @@ window.KERALA_MEDIA = {
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
     "source": "https://commons.wikimedia.org/wiki/File:VembanadBackwaters.jpg"
+   }
+  ]
+ },
+ "ernakulam/appam-stew": {
+  "coords": null,
+  "images": [
+   {
+    "src": "assets/img/ernakulam/appam-stew-1.jpg",
+    "thumb": "assets/img/ernakulam/appam-stew-1-t.jpg",
+    "w": 1920,
+    "h": 1078,
+    "title": "Appam breakfast",
+    "author": "Kalpita.chakrabortty",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Appam_breakfast.jpg"
+   },
+   {
+    "src": "assets/img/ernakulam/appam-stew-2.jpg",
+    "thumb": "assets/img/ernakulam/appam-stew-2-t.jpg",
+    "w": 1920,
+    "h": 1272,
+    "title": "Appam12345",
+    "author": "Seenatn",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Appam12345.JPG"
+   },
+   {
+    "src": "assets/img/ernakulam/appam-stew-3.jpg",
+    "thumb": "assets/img/ernakulam/appam-stew-3-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "2025-12-03-20-33-12-659 Image of appam",
+    "author": "Atheenasiji",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2025-12-03-20-33-12-659_Image_of_appam.jpg"
+   },
+   {
+    "src": "assets/img/ernakulam/appam-stew-4.jpg",
+    "thumb": "assets/img/ernakulam/appam-stew-4-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Aappam with chicken curry with coconut milk",
+    "author": "Mrs.bhaskaran",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Aappam_with_chicken_curry_with_coconut_milk.jpg"
    }
   ]
  },
@@ -517,6 +593,58 @@ window.KERALA_MEDIA = {
     "license": "CC BY 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Kochi,_Paradesi_Synagogue,_Cochin_Jewish_Synagogue,_Jew_Town,_Kerala,_India.jpg"
+   }
+  ]
+ },
+ "idukki/cardamom": {
+  "coords": [
+   9.8667,
+   77.15
+  ],
+  "images": [
+   {
+    "src": "assets/img/idukki/cardamom-1.jpg",
+    "thumb": "assets/img/idukki/cardamom-1-t.jpg",
+    "w": 1920,
+    "h": 1280,
+    "title": "Elettaria cardamomum - Cardamom Flower",
+    "author": "Samyakvaria",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Elettaria_cardamomum_-_Cardamom_Flower.jpg"
+   },
+   {
+    "src": "assets/img/idukki/cardamom-2.jpg",
+    "thumb": "assets/img/idukki/cardamom-2-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Elettaria cardamomum (Cardamon) tree in RDA, Bogra 03",
+    "author": "Afifa Afrin",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Elettaria_cardamomum_(Cardamon)_tree_in_RDA,_Bogra_03.jpg"
+   },
+   {
+    "src": "assets/img/idukki/cardamom-3.jpg",
+    "thumb": "assets/img/idukki/cardamom-3-t.jpg",
+    "w": 1920,
+    "h": 1442,
+    "title": "Ela (Bengali- এলা) (14393555700)",
+    "author": "Dinesh Valke from Thane, India",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ela_(Bengali-_%E0%A6%8F%E0%A6%B2%E0%A6%BE)_(14393555700).jpg"
+   },
+   {
+    "src": "assets/img/idukki/cardamom-4.jpg",
+    "thumb": "assets/img/idukki/cardamom-4-t.jpg",
+    "w": 1920,
+    "h": 1080,
+    "title": "Elettaria cardamomum (24895)",
+    "author": "Nativeplants garden",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Elettaria_cardamomum_(24895).jpg"
    }
   ]
  },
@@ -936,6 +1064,55 @@ window.KERALA_MEDIA = {
    }
   ]
  },
+ "kannur/thalassery-biryani": {
+  "coords": null,
+  "images": [
+   {
+    "src": "assets/img/kannur/thalassery-biryani-1.jpg",
+    "thumb": "assets/img/kannur/thalassery-biryani-1-t.jpg",
+    "w": 1920,
+    "h": 1273,
+    "title": "Thalassery biriyani in dining table",
+    "author": "Maureen",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Thalassery_biriyani_in_dining_table.jpg"
+   },
+   {
+    "src": "assets/img/kannur/thalassery-biryani-2.jpg",
+    "thumb": "assets/img/kannur/thalassery-biryani-2-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "The making of Biriyani-Biriyani Masala-Step3",
+    "author": "Angus Fraser",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:The_making_of_Biriyani-Biriyani_Masala-Step3.jpg"
+   },
+   {
+    "src": "assets/img/kannur/thalassery-biryani-3.jpg",
+    "thumb": "assets/img/kannur/thalassery-biryani-3-t.jpg",
+    "w": 1920,
+    "h": 1280,
+    "title": "Thalassery biryani -1",
+    "author": "Sheetal",
+    "license": "CC BY 2.5",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.5",
+    "source": "https://commons.wikimedia.org/wiki/File:Thalassery_biryani_-1.jpg"
+   },
+   {
+    "src": "assets/img/kannur/thalassery-biryani-4.jpg",
+    "thumb": "assets/img/kannur/thalassery-biryani-4-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Ready biriyaani",
+    "author": "Rameshng at Malayalam Wikipedia",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Ready_biriyaani.jpg"
+   }
+  ]
+ },
  "kannur/theyyam": {
   "coords": [
    11.8745,
@@ -1092,6 +1269,55 @@ window.KERALA_MEDIA = {
    }
   ]
  },
+ "kasaragod/neer-dosa": {
+  "coords": null,
+  "images": [
+   {
+    "src": "assets/img/kasaragod/neer-dosa-1.jpg",
+    "thumb": "assets/img/kasaragod/neer-dosa-1-t.jpg",
+    "w": 1920,
+    "h": 862,
+    "title": "Red Chilli Neer Dosa",
+    "author": "Yakshitha",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Red_Chilli_Neer_Dosa.jpg"
+   },
+   {
+    "src": "assets/img/kasaragod/neer-dosa-2.jpg",
+    "thumb": "assets/img/kasaragod/neer-dosa-2-t.jpg",
+    "w": 1920,
+    "h": 1536,
+    "title": "NeerDosa",
+    "author": "Ramuias13",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:NeerDosa.jpg"
+   },
+   {
+    "src": "assets/img/kasaragod/neer-dosa-3.jpg",
+    "thumb": "assets/img/kasaragod/neer-dosa-3-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Neeru Dosa with Chutney pudi",
+    "author": "Kart127",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Neeru_Dosa_with_Chutney_pudi.jpg"
+   },
+   {
+    "src": "assets/img/kasaragod/neer-dosa-4.jpg",
+    "thumb": "assets/img/kasaragod/neer-dosa-4-t.jpg",
+    "w": 1920,
+    "h": 1079,
+    "title": "Neer-Dosa",
+    "author": "Shrads.m",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Neer-Dosa.jpg"
+   }
+  ]
+ },
  "kasaragod/ranipuram": {
   "coords": [
    12.4211,
@@ -1223,6 +1449,55 @@ window.KERALA_MEDIA = {
     "license": "CC0",
     "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
     "source": "https://commons.wikimedia.org/wiki/File:Ashtamudikayal_Kerala_India_pics_02.jpg"
+   }
+  ]
+ },
+ "kollam/cashew": {
+  "coords": null,
+  "images": [
+   {
+    "src": "assets/img/kollam/cashew-1.jpg",
+    "thumb": "assets/img/kollam/cashew-1-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "CEPCI Headquarters, Kollam",
+    "author": "Arunvrparavur",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:CEPCI_Headquarters,_Kollam.jpg"
+   },
+   {
+    "src": "assets/img/kollam/cashew-2.jpg",
+    "thumb": "assets/img/kollam/cashew-2-t.jpg",
+    "w": 1920,
+    "h": 1502,
+    "title": "Cashew apples",
+    "author": "Abhishek Jacob",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Cashew_apples.jpg"
+   },
+   {
+    "src": "assets/img/kollam/cashew-3.jpg",
+    "thumb": "assets/img/kollam/cashew-3-t.jpg",
+    "w": 1920,
+    "h": 1502,
+    "title": "Twin Cashews (3453745219)",
+    "author": "Abhishek Jacob from Palakkad, India",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Twin_Cashews_(3453745219).jpg"
+   },
+   {
+    "src": "assets/img/kollam/cashew-4.jpg",
+    "thumb": "assets/img/kollam/cashew-4-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "CashewSnack",
+    "author": "User Femto on en.wikipedia",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:CashewSnack.jpg"
    }
   ]
  },
@@ -1434,6 +1709,55 @@ window.KERALA_MEDIA = {
    }
   ]
  },
+ "kottayam/kappa-meen": {
+  "coords": null,
+  "images": [
+   {
+    "src": "assets/img/kottayam/kappa-meen-1.jpg",
+    "thumb": "assets/img/kottayam/kappa-meen-1-t.jpg",
+    "w": 1920,
+    "h": 933,
+    "title": "Kerala Tapioca",
+    "author": "Anish KG",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kerala_Tapioca.jpg"
+   },
+   {
+    "src": "assets/img/kottayam/kappa-meen-2.jpg",
+    "thumb": "assets/img/kottayam/kappa-meen-2-t.jpg",
+    "w": 1920,
+    "h": 887,
+    "title": "CloseUp Shot of Kappa with fish curry",
+    "author": "Aiwin Soji",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:CloseUp_Shot_of_Kappa_with_fish_curry.jpg"
+   },
+   {
+    "src": "assets/img/kottayam/kappa-meen-3.jpg",
+    "thumb": "assets/img/kottayam/kappa-meen-3-t.jpg",
+    "w": 1920,
+    "h": 1285,
+    "title": "Kappa And Crab",
+    "author": "greybeard1123",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kappa_And_Crab.JPG"
+   },
+   {
+    "src": "assets/img/kottayam/kappa-meen-4.jpg",
+    "thumb": "assets/img/kottayam/kappa-meen-4-t.jpg",
+    "w": 1920,
+    "h": 1280,
+    "title": "Appam, Kappa & Vatta Thala Mulakitta Curry",
+    "author": "BinoyCN",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Appam,_Kappa_%26_Vatta_Thala_Mulakitta_Curry.JPG"
+   }
+  ]
+ },
  "kottayam/kumarakom": {
   "coords": [
    9.595,
@@ -1639,6 +1963,58 @@ window.KERALA_MEDIA = {
     "license": "CC BY-SA 2.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
     "source": "https://commons.wikimedia.org/wiki/File:Kappad_beach_kerala.jpg"
+   }
+  ]
+ },
+ "kozhikode/kozhikodan-halwa": {
+  "coords": [
+   11.2489,
+   75.7839
+  ],
+  "images": [
+   {
+    "src": "assets/img/kozhikode/kozhikodan-halwa-1.jpg",
+    "thumb": "assets/img/kozhikode/kozhikodan-halwa-1-t.jpg",
+    "w": 1920,
+    "h": 1280,
+    "title": "Halwa at Mitayi street clt",
+    "author": "Fotokannan",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Halwa_at_Mitayi_street_clt.jpg"
+   },
+   {
+    "src": "assets/img/kozhikode/kozhikodan-halwa-2.jpg",
+    "thumb": "assets/img/kozhikode/kozhikodan-halwa-2-t.jpg",
+    "w": 1920,
+    "h": 1280,
+    "title": "Kozhikode (1 of 1)-9",
+    "author": "Mr 037",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kozhikode_(1_of_1)-9.jpg"
+   },
+   {
+    "src": "assets/img/kozhikode/kozhikodan-halwa-3.jpg",
+    "thumb": "assets/img/kozhikode/kozhikodan-halwa-3-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Kozhikode Halwa",
+    "author": "Abilngeorge",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kozhikode_Halwa.jpg"
+   },
+   {
+    "src": "assets/img/kozhikode/kozhikodan-halwa-4.jpg",
+    "thumb": "assets/img/kozhikode/kozhikodan-halwa-4-t.jpg",
+    "w": 1920,
+    "h": 1080,
+    "title": "Kozhikode Halva",
+    "author": "Suresh Khole",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kozhikode_Halva.jpg"
    }
   ]
  },
@@ -1954,6 +2330,55 @@ window.KERALA_MEDIA = {
    }
   ]
  },
+ "malappuram/pathiri": {
+  "coords": null,
+  "images": [
+   {
+    "src": "assets/img/malappuram/pathiri-1.jpg",
+    "thumb": "assets/img/malappuram/pathiri-1-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Stuffed pathiri",
+    "author": "Vis M",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Stuffed_pathiri.jpg"
+   },
+   {
+    "src": "assets/img/malappuram/pathiri-2.jpg",
+    "thumb": "assets/img/malappuram/pathiri-2-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Matakkuppaththiri - മടക്കുപ്പത്തിരി",
+    "author": "കാക്കര",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Matakkuppaththiri_-_%E0%B4%AE%E0%B4%9F%E0%B4%95%E0%B5%8D%E0%B4%95%E0%B5%81%E0%B4%AA%E0%B5%8D%E0%B4%AA%E0%B4%A4%E0%B5%8D%E0%B4%A4%E0%B4%BF%E0%B4%B0%E0%B4%BF.JPG"
+   },
+   {
+    "src": "assets/img/malappuram/pathiri-3.jpg",
+    "thumb": "assets/img/malappuram/pathiri-3-t.jpg",
+    "w": 1920,
+    "h": 1280,
+    "title": "Chatti pathiri",
+    "author": "Silsilah Ali",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Chatti_pathiri.JPG"
+   },
+   {
+    "src": "assets/img/malappuram/pathiri-4.jpg",
+    "thumb": "assets/img/malappuram/pathiri-4-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Chattippathiri - snack of north malabar kerala",
+    "author": "Ranjithsiji",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Chattippathiri_-_snack_of_north_malabar_kerala.jpg"
+   }
+  ]
+ },
  "malappuram/thirunavaya": {
   "coords": [
    11.001,
@@ -2214,6 +2639,55 @@ window.KERALA_MEDIA = {
    }
   ]
  },
+ "palakkad/ramassery-idli": {
+  "coords": null,
+  "images": [
+   {
+    "src": "assets/img/palakkad/ramassery-idli-1.jpg",
+    "thumb": "assets/img/palakkad/ramassery-idli-1-t.jpg",
+    "w": 1920,
+    "h": 1280,
+    "title": "Carrot Peas Idli",
+    "author": "Kurinjikathambam",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Carrot_Peas_Idli.JPG"
+   },
+   {
+    "src": "assets/img/palakkad/ramassery-idli-2.jpg",
+    "thumb": "assets/img/palakkad/ramassery-idli-2-t.jpg",
+    "w": 1920,
+    "h": 933,
+    "title": "Cuisine (318) 29",
+    "author": "AmanAgrahari01",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Cuisine_(318)_29.jpg"
+   },
+   {
+    "src": "assets/img/palakkad/ramassery-idli-3.jpg",
+    "thumb": "assets/img/palakkad/ramassery-idli-3-t.jpg",
+    "w": 1920,
+    "h": 1080,
+    "title": "An idly show",
+    "author": "Thamizhpparithi Maari",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:An_idly_show.jpg"
+   },
+   {
+    "src": "assets/img/palakkad/ramassery-idli-4.jpg",
+    "thumb": "assets/img/palakkad/ramassery-idli-4-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Chilli Idli - Geetha Canteen, Coimbatore - TamilNadu - PXL2419",
+    "author": "Harikrishnan N",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Chilli_Idli_-_Geetha_Canteen,_Coimbatore_-_TamilNadu_-_PXL2419.jpg"
+   }
+  ]
+ },
  "palakkad/silent-valley": {
   "coords": [
    11.1333,
@@ -2452,6 +2926,33 @@ window.KERALA_MEDIA = {
    }
   ]
  },
+ "pathanamthitta/valla-sadya": {
+  "coords": null,
+  "images": [
+   {
+    "src": "assets/img/pathanamthitta/valla-sadya-1.jpg",
+    "thumb": "assets/img/pathanamthitta/valla-sadya-1-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Boat coming to aranmula",
+    "author": "Dvellakat",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Boat_coming_to_aranmula.JPG"
+   },
+   {
+    "src": "assets/img/pathanamthitta/valla-sadya-2.jpg",
+    "thumb": "assets/img/pathanamthitta/valla-sadya-2-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Long view boat coming",
+    "author": "Dvellakat",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Long_view_boat_coming.JPG"
+   }
+  ]
+ },
  "thiruvananthapuram/kovalam": {
   "coords": [
    8.4004,
@@ -2660,6 +3161,55 @@ window.KERALA_MEDIA = {
    }
   ]
  },
+ "thiruvananthapuram/puttu-kadala": {
+  "coords": null,
+  "images": [
+   {
+    "src": "assets/img/thiruvananthapuram/puttu-kadala-1.jpg",
+    "thumb": "assets/img/thiruvananthapuram/puttu-kadala-1-t.jpg",
+    "w": 1920,
+    "h": 1280,
+    "title": "Puttu and Kadalakkari",
+    "author": "Mullookkaaran",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Puttu_and_Kadalakkari.jpg"
+   },
+   {
+    "src": "assets/img/thiruvananthapuram/puttu-kadala-2.jpg",
+    "thumb": "assets/img/thiruvananthapuram/puttu-kadala-2-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Karupatti Puttu (Palm Sugar Rice Cake)",
+    "author": "Selvakumar Natarajan",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Karupatti_Puttu_(Palm_Sugar_Rice_Cake).JPG"
+   },
+   {
+    "src": "assets/img/thiruvananthapuram/puttu-kadala-3.jpg",
+    "thumb": "assets/img/thiruvananthapuram/puttu-kadala-3-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Puttu ",
+    "author": "BHARATHESHA ALASANDEMAJALU",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Puttu_.jpg"
+   },
+   {
+    "src": "assets/img/thiruvananthapuram/puttu-kadala-4.jpg",
+    "thumb": "assets/img/thiruvananthapuram/puttu-kadala-4-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Puttu and payar",
+    "author": "SijiR",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Puttu_and_payar.jpg"
+   }
+  ]
+ },
  "thiruvananthapuram/varkala": {
   "coords": [
    8.734,
@@ -2791,6 +3341,55 @@ window.KERALA_MEDIA = {
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Old_P.G.Campus_at_Kerala_Kalamandalam.jpg"
+   }
+  ]
+ },
+ "thrissur/sadya": {
+  "coords": null,
+  "images": [
+   {
+    "src": "assets/img/thrissur/sadya-1.jpg",
+    "thumb": "assets/img/thrissur/sadya-1-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Sadya-Aluva-Kerala-IMG 20210320 204532",
+    "author": "Ranjithsiji",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sadya-Aluva-Kerala-IMG_20210320_204532.jpg"
+   },
+   {
+    "src": "assets/img/thrissur/sadya-2.jpg",
+    "thumb": "assets/img/thrissur/sadya-2-t.jpg",
+    "w": 1920,
+    "h": 953,
+    "title": "Kerala Feast or Kerala Sadya",
+    "author": "Reshmi.vm",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Kerala_Feast_or_Kerala_Sadya.jpg"
+   },
+   {
+    "src": "assets/img/thrissur/sadya-3.jpg",
+    "thumb": "assets/img/thrissur/sadya-3-t.jpg",
+    "w": 1920,
+    "h": 1080,
+    "title": "South Indian Traditional Food",
+    "author": "Madhubala Ravi",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:South_Indian_Traditional_Food.jpg"
+   },
+   {
+    "src": "assets/img/thrissur/sadya-4.jpg",
+    "thumb": "assets/img/thrissur/sadya-4-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Simple Kerala sadya",
+    "author": "Dr. Chinchu C.",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Simple_Kerala_sadya.jpg"
    }
   ]
  },
@@ -3103,6 +3702,36 @@ window.KERALA_MEDIA = {
     "license": "CC BY-SA 4.0",
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
     "source": "https://commons.wikimedia.org/wiki/File:Wayand-soochipara_waterfalls.jpg"
+   }
+  ]
+ },
+ "wayanad/wayanad-coffee": {
+  "coords": [
+   11.6264,
+   76.0889
+  ],
+  "images": [
+   {
+    "src": "assets/img/wayanad/wayanad-coffee-1.jpg",
+    "thumb": "assets/img/wayanad/wayanad-coffee-1-t.jpg",
+    "w": 1920,
+    "h": 1280,
+    "title": "Wayanad-WUS06247",
+    "author": "Rainer Halama",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Wayanad-WUS06247.jpg"
+   },
+   {
+    "src": "assets/img/wayanad/wayanad-coffee-2.jpg",
+    "thumb": "assets/img/wayanad/wayanad-coffee-2-t.jpg",
+    "w": 1920,
+    "h": 1440,
+    "title": "Unripe Coffee Cherry Wayand",
+    "author": "CocoPhotographer008",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Unripe_Coffee_Cherry_Wayand.jpg"
    }
   ]
  },

@@ -26,7 +26,10 @@ const force = args.includes("--force");
 const only = args.find((a) => !a.startsWith("--"));
 
 const ctx = { window: {} };
-vm.runInNewContext(fs.readFileSync(path.join(ROOT, "js/data/districts.js"), "utf8"), ctx);
+vm.runInNewContext(
+  ["districts.js", "food.js"].map((f) => fs.readFileSync(path.join(ROOT, "js/data", f), "utf8")).join(";\n"),
+  ctx
+);
 const DISTRICTS = ctx.window.KERALA_DISTRICTS;
 
 const mediaFile = path.join(ROOT, "js/data/media.js");
@@ -84,7 +87,7 @@ async function fromSearch(q) {
 
 const strip = (html = "") => html.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 
-function candidate(p, exclude = []) {
+function candidate(p, exclude = [], { minWidth = 1600, minRatio = 1.25 } = {}) {
   const ii = p.imageinfo?.[0];
   if (!ii || ii.mime !== "image/jpeg") return null;
   if (exclude.some((x) => p.title.toLowerCase().includes(x.toLowerCase()))) return null;
@@ -93,7 +96,7 @@ function candidate(p, exclude = []) {
   if (!OK_LICENSE.test(license)) return null;
   if (BAD_TITLE.test(p.title)) return null;
   const ratio = ii.width / ii.height;
-  if (ii.width < 1600 || ratio < 1.25 || ratio > 3.6) return null;
+  if (ii.width < minWidth || ratio < minRatio || ratio > 3.6) return null;
   const cats = m.Categories?.value || "";
   let score = Math.min(ii.width, 6000) / 1000;
   if (/Featured pictures/i.test(cats)) score += 6;
@@ -185,7 +188,7 @@ async function fetchSpot(d, s, key) {
   const seen = new Map();
   for (const cat of s.media.categories || []) {
     for (const p of await fromCategory(cat)) {
-      const c = candidate(p, exclude);
+      const c = candidate(p, exclude, s.media);
       if (c) seen.set(c.source, c);
     }
     await sleep(300);
@@ -193,7 +196,7 @@ async function fetchSpot(d, s, key) {
   let picks = pickVaried([...seen.values()]);
   if (picks.length < PER_SPOT && s.media.search) {
     for (const p of await fromSearch(s.media.search)) {
-      const c = candidate(p, exclude);
+      const c = candidate(p, exclude, s.media);
       if (c && !seen.has(c.source)) seen.set(c.source, { ...c, score: c.score - 3 });
     }
     picks = pickVaried([...seen.values()]);

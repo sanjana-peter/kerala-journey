@@ -7,6 +7,15 @@
   const MEDIA = mergeMedia(window.KERALA_MEDIA || {}, window.KERALA_MEDIA_OVERRIDES || {});
   const HERO = ["alappuzha/houseboats", "idukki/munnar", "ernakulam/fort-kochi"];
   const app = document.getElementById("app");
+  const STAMP_ICON =
+    '<svg class="stamp-ic" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2.2 1.6"/><circle cx="10" cy="10" r="3.2" fill="currentColor"/></svg>';
+  const canHover = () => matchMedia("(hover: hover)").matches;
+  const CONFIG = window.KERALA_CONFIG || {};
+  // Unverified food stops are visible only while developing locally, or with ?preview in the URL.
+  const PREVIEW =
+    /^(localhost|127\.0\.0\.1)$/.test(location.hostname) || new URLSearchParams(location.search).has("preview");
+  const isEat = (s) => s.type === "eat";
+  const visibleStops = (s) => (s.stops || []).filter((x) => x.verified || PREVIEW);
 
   // ---------- helpers ----------
   const esc = (s = "") =>
@@ -36,10 +45,55 @@
     return [p.pad + (lon - p.minX) * p.k * p.scale, p.pad + (p.maxY - lat) * p.scale];
   }
 
+  function fmtDate(iso) {
+    if (!iso) return "";
+    const d = new Date(iso + "T00:00:00");
+    return isNaN(d) ? iso : d.toLocaleDateString("en-GB", { month: "short", year: "numeric" });
+  }
+
+  // One food stop: name, what to order, price, veg, links out, verification status.
+  function stopCard(x, d) {
+    const q = encodeURIComponent(`${x.name}, ${x.area || d.name}, Kerala`);
+    const report = CONFIG.reportUrl
+      ? `${CONFIG.reportUrl}?title=${encodeURIComponent(`Food stop: ${x.name} (${d.name})`)}&body=${encodeURIComponent(
+          "What needs fixing? (closed, moved, wrong details…)\n\n"
+        )}`
+      : "";
+    const ig = x.instagram ? x.instagram.replace(/^@/, "") : "";
+    return `
+      <li class="stop${x.verified ? "" : " unverified"}">
+        <div class="stop-head">
+          <strong>${esc(x.name)}</strong>
+          <span class="stop-meta">${esc(x.area || "")}${x.price ? ` · ${esc(x.price)}` : ""}${
+      x.veg ? ` · <span class="veg" title="Pure vegetarian">Veg</span>` : ""
+    }</span>
+        </div>
+        ${x.order ? `<p class="stop-order">Try: ${esc(x.order)}</p>` : ""}
+        <p class="stop-links">
+          <a href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">Map</a>
+          ${ig ? `<a href="https://www.instagram.com/${encodeURIComponent(ig)}/" target="_blank" rel="noopener">Instagram</a>` : ""}
+          ${x.website ? `<a href="${esc(x.website)}" target="_blank" rel="noopener">Website</a>` : ""}
+          ${report ? `<a href="${esc(report)}" target="_blank" rel="noopener" class="report">Report a problem</a>` : ""}
+        </p>
+        <p class="stop-status">${
+          x.verified
+            ? `Last verified ${esc(fmtDate(x.lastChecked)) || "recently"}`
+            : "Not yet verified · preview only, hidden on the public site"
+        }</p>
+      </li>`;
+  }
+
+  function stopsBlock(s, d) {
+    const stops = visibleStops(s);
+    if (!stops.length) return "";
+    return `<div class="stops"><h2>Where to eat in ${esc(d.name)}</h2><ul>${stops.map((x) => stopCard(x, d)).join("")}</ul></div>`;
+  }
+
   function credit(im) {
     if (!im) return "";
     const lic = im.licenseUrl ? `<a href="${esc(im.licenseUrl)}" target="_blank" rel="noopener">${esc(im.license)}</a>` : esc(im.license);
-    return `Photo: <a href="${esc(im.source)}" target="_blank" rel="noopener">${esc(im.author)}</a> · ${lic}`;
+    // Title + author + license + "resized" satisfies CC BY / BY-SA attribution (we scale and recompress).
+    return `<a href="${esc(im.source)}" target="_blank" rel="noopener">“${esc(im.title)}”</a> by ${esc(im.author)} · ${lic} · resized`;
   }
 
   // ---------- passport (per-visitor, stored in this browser only) ----------
@@ -77,6 +131,8 @@
   function Viewer(el) {
     const st = { x: 0, y: 0, zoom: 1.12, drag: null };
     const MIN = 1.08, MAX = 2.4;
+    const pointers = new Map(); // active pointers, for pinch-to-zoom
+    let pinch = null, lastTap = 0, lastType = "mouse", tap = null;
 
     function layout(img) {
       const vw = el.clientWidth, vh = el.clientHeight;
@@ -92,22 +148,61 @@
     }
     const apply = () => el.querySelectorAll("img").forEach(layout);
 
+    const dist = () => {
+      const [a, b] = [...pointers.values()];
+      return Math.hypot(a.x - b.x, a.y - b.y);
+    };
+    const toggleZoom = () => {
+      st.zoom = st.zoom > 1.5 ? 1.12 : 1.9;
+      apply();
+    };
     el.addEventListener("pointerdown", (e) => {
       if (e.button !== 0) return;
+      lastType = e.pointerType;
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      tap = pointers.size === 1 ? { x: e.clientX, y: e.clientY, t: Date.now() } : null;
+      if (pointers.size === 2) pinch = { d: dist(), zoom: st.zoom };
       st.drag = { px: e.clientX, py: e.clientY };
-      el.setPointerCapture(e.pointerId);
+      try {
+        el.setPointerCapture(e.pointerId);
+      } catch {}
       el.classList.add("grabbing");
     });
     el.addEventListener("pointermove", (e) => {
+      if (!pointers.has(e.pointerId)) return;
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pinch && pointers.size === 2) {
+        st.zoom = Math.max(MIN, Math.min(MAX, (pinch.zoom * dist()) / pinch.d));
+        apply();
+        return;
+      }
       if (!st.drag) return;
       st.x += e.clientX - st.drag.px;
       st.y += e.clientY - st.drag.py;
       st.drag = { px: e.clientX, py: e.clientY };
       apply();
     });
-    const end = () => {
+    const end = (e) => {
+      pointers.delete(e.pointerId);
+      if (pointers.size < 2) pinch = null;
+      if (pointers.size) tap = null;
+      if (pointers.size === 1) {
+        const [p] = pointers.values();
+        st.drag = { px: p.x, py: p.y };
+        return;
+      }
       st.drag = null;
       el.classList.remove("grabbing");
+      // Double-tap to zoom on touch screens.
+      const still = tap && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) < 10 && Date.now() - tap.t < 250;
+      if (e.type === "pointerup" && e.pointerType === "touch" && still) {
+        const now = Date.now();
+        if (now - lastTap < 300) {
+          toggleZoom();
+          lastTap = 0;
+        } else lastTap = now;
+      }
+      tap = null;
     };
     el.addEventListener("pointerup", end);
     el.addEventListener("pointercancel", end);
@@ -120,10 +215,7 @@
       },
       { passive: false }
     );
-    el.addEventListener("dblclick", () => {
-      st.zoom = st.zoom > 1.5 ? 1.12 : 1.9;
-      apply();
-    });
+    el.addEventListener("dblclick", () => lastType !== "touch" && toggleZoom());
     const ro = new ResizeObserver(apply);
     ro.observe(el);
 
@@ -149,6 +241,19 @@
         };
         img.src = im.src;
         el.appendChild(img);
+        // Not cached yet: show the small thumbnail, blurred, until the full photo arrives.
+        if (!img.complete && im.thumb) {
+          const ph = new Image();
+          ph.alt = "";
+          ph.className = "ph";
+          ph.onload = () => {
+            if (img.classList.contains("in")) return ph.remove();
+            layout(ph);
+            ph.classList.add("in");
+          };
+          ph.src = im.thumb;
+          el.insertBefore(ph, img);
+        }
       },
       destroy() {
         ro.disconnect();
@@ -167,6 +272,7 @@
   function parse() {
     const p = location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
     if (p[0] === "map") return { view: "map", focus: p[1] };
+    if (p[0] === "guide") return { view: "guide", tab: p[1] === "food" ? "food" : "must" };
     if (p[0] === "d" && byId(p[1])) {
       const d = byId(p[1]);
       const si = Math.max(0, d.spots.findIndex((s) => s.id === p[2]));
@@ -189,6 +295,7 @@
     current = null;
     window.scrollTo(0, 0);
     if (r.view === "map") renderMap(r.focus);
+    else if (r.view === "guide") renderGuide(r.tab);
     else if (r.view === "district") renderDistrict(r, from);
     else renderHome();
   }
@@ -210,6 +317,7 @@
             <a class="btn primary" href="#/d/kasaragod">${visited ? "Continue the journey" : "Begin in the north"} <span aria-hidden="true">→</span></a>
             <a class="btn ghost" href="#/map">Choose on the map</a>
           </div>
+          <p class="home-links"><a href="#/guide">Must-visit places</a> · <a href="#/guide/food">Food trail</a></p>
           <p class="hint"><span class="hint-icon" aria-hidden="true">✥</span> Drag any photo to look around · scroll to look closer</p>
         </div>
         <p class="credit">${credit(im)}</p>
@@ -248,7 +356,10 @@
       <section class="map-view">
         <header class="map-head">
           <a class="brand" href="#/">Kerala <span class="ml" lang="ml">കേരളം</span></a>
-          <button class="chip light" data-passport>Passport · <span data-count>${Passport.count()}</span>/14</button>
+          <nav class="head-nav">
+            <a href="#/guide">Guide</a>
+            <button class="chip light" data-passport aria-label="Passport">${STAMP_ICON}<span class="lbl">Passport · </span><span data-count>${Passport.count()}</span>/14</button>
+          </nav>
         </header>
         <div class="map-layout">
           <div class="map-wrap">
@@ -258,6 +369,7 @@
           <div class="map-side">
             <p class="eyebrow">Choose your next stop</p>
             <h1 class="map-title">Fourteen districts,<br />north to south</h1>
+            <p class="map-hint">${canHover() ? "Hover over a district to preview it, click to travel there." : "Tap a district to preview it, tap it again to travel there."}</p>
             <article class="preview" id="preview"></article>
             <ol class="route" aria-label="Districts from north to south">
               ${DISTRICTS.map(
@@ -298,9 +410,22 @@
 
     app.querySelectorAll(".kmap .district").forEach((p) => {
       const d = byId(p.dataset.id);
-      p.addEventListener("mouseenter", () => setFocus(d));
+      let wasFocused = false, touchy = false;
+      p.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && setFocus(d));
+      // Record state before the browser's own focus/hover events run for this tap.
+      p.addEventListener("pointerdown", (e) => {
+        touchy = e.pointerType !== "mouse" || !canHover();
+        wasFocused = p.classList.contains("focus");
+      });
       p.addEventListener("focus", () => setFocus(d));
-      p.addEventListener("click", () => go(`#/d/${d.id}`));
+      p.addEventListener("click", () => {
+        if (touchy && !wasFocused) {
+          setFocus(d);
+          preview.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          return;
+        }
+        go(`#/d/${d.id}`);
+      });
       p.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
@@ -309,10 +434,68 @@
       });
     });
     app.querySelectorAll(".route a").forEach((a) => {
-      a.addEventListener("mouseenter", () => setFocus(byId(a.dataset.id)));
+      a.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && setFocus(byId(a.dataset.id)));
       a.addEventListener("focus", () => setFocus(byId(a.dataset.id)));
     });
     current = { view: "map" };
+  }
+
+  // ---------- guide: must-visits and the food trail, by district ----------
+  function renderGuide(tab) {
+    const card = (d, s) => {
+      const im = imagesFor(d, s)[0];
+      return `<a class="g-card" href="#/d/${d.id}/${s.id}">
+        ${im ? `<img src="${esc(im.thumb)}" alt="" loading="lazy" />` : '<span class="noimg"></span>'}
+        <span class="g-name">${esc(s.name)}</span>
+        <span class="g-blurb">${esc(s.blurb.split(". ")[0])}.</span>
+      </a>`;
+    };
+    const body = DISTRICTS.map((d) => {
+      const items = d.spots.filter((s) => (tab === "food" ? isEat(s) : s.must));
+      if (!items.length) return "";
+      const suggest = CONFIG.reportUrl
+        ? `<p class="suggest">Know a great place to eat in ${esc(d.name)}? <a href="${esc(
+            `${CONFIG.reportUrl}?title=${encodeURIComponent(`Food suggestion: ${d.name}`)}`
+          )}" target="_blank" rel="noopener">Suggest one</a></p>`
+        : "";
+      const food =
+        tab === "food" ? items.map((s) => stopsBlock(s, d) || `<div class="stops">${suggest}</div>`).join("") : "";
+      return `<section class="g-district ${tab}">
+        <header><span class="ml" lang="ml">${esc(d.ml)}</span><h2>${esc(d.name)}</h2><a href="#/d/${d.id}">Visit →</a></header>
+        <div class="g-grid">${items.map((s) => card(d, s)).join("")}</div>
+        ${food}
+      </section>`;
+    }).join("");
+    app.innerHTML = `
+      <section class="guide-view">
+        <header class="map-head">
+          <a class="brand" href="#/">Kerala <span class="ml" lang="ml">കേരളം</span></a>
+          <nav class="head-nav">
+            <a href="#/map">Map</a>
+            <button class="chip light" data-passport aria-label="Passport">${STAMP_ICON}<span class="lbl">Passport · </span><span data-count>${Passport.count()}</span>/14</button>
+          </nav>
+        </header>
+        <div class="guide-inner">
+          <p class="eyebrow">The guide</p>
+          <h1 class="map-title">${tab === "food" ? "The food trail" : "Must-visit places"}</h1>
+          <nav class="tabs" aria-label="Guide sections">
+            <a href="#/guide" aria-current="${tab === "must"}">Must-visit places</a>
+            <a href="#/guide/food" aria-current="${tab === "food"}">Food trail</a>
+          </nav>
+          <p class="map-hint">${
+            tab === "food"
+              ? "One signature dish from every district, and well-known places to try it. Opening hours change, so check before you go."
+              : "The places you shouldn't miss, from north to south. Tap one to step into it."
+          }</p>
+          ${body}
+          ${
+            PREVIEW
+              ? '<p class="footnote">Preview mode: unverified food stops are shown. They are hidden on the public site until marked verified in js/data/food.js.</p>'
+              : ""
+          }
+        </div>
+      </section>`;
+    current = { view: "guide" };
   }
 
   // ---------- district ----------
@@ -324,7 +507,7 @@
     const pins = d.spots
       .map((s, si) => {
         const c = MEDIA[`${d.id}/${s.id}`]?.coords;
-        if (!c) return "";
+        if (!c || isEat(s)) return "";
         const [x, y] = project(c);
         return `<g class="pin" data-si="${si}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})" tabindex="0" role="button" aria-label="${esc(s.name)}">
           <circle r="7" class="pin-halo"></circle><circle r="3.2" class="pin-dot"></circle><title>${esc(s.name)}</title></g>`;
@@ -337,23 +520,24 @@
         <div class="scene-shade"></div>
 
         <header class="topbar">
-          <a class="chip" href="#/map/${d.id}" aria-label="Back to map"><span aria-hidden="true">←</span> Map</a>
+          <a class="chip" href="#/map/${d.id}" aria-label="Back to map"><span aria-hidden="true">←</span><span class="lbl"> Map</span></a>
           <div class="where">
             <span class="ml" lang="ml">${esc(d.ml)}</span>
             <strong>${esc(d.name)}</strong>
             <span class="count">Stop ${i + 1} of ${DISTRICTS.length}</span>
           </div>
           <div class="top-actions">
-            <button class="chip" data-passport>Passport · <span data-count>${Passport.count()}</span>/14</button>
+            <button class="chip" data-passport aria-label="Passport">${STAMP_ICON}<span class="lbl">Passport · </span><span data-count>${Passport.count()}</span>/14</button>
             <button class="chip" data-hide aria-pressed="false" title="Hide the panels (H)">Just look</button>
           </div>
         </header>
 
-        <aside class="place" id="place" aria-live="polite"></aside>
-
         <nav class="minimap" aria-label="Places in ${esc(d.name)}">
           ${mapSvg({ focus: d.id, cls: "mini", pins: [pins], labels: false })}
         </nav>
+
+        <div class="dock">
+        <aside class="place" id="place" aria-live="polite"></aside>
 
         <nav class="strip" aria-label="Places">
           ${prev ? `<a class="hop prev" href="#/d/${prev.id}"><small>Back north</small>${esc(prev.name)}</a>` : `<a class="hop prev" href="#/"><small>Back to</small>Start</a>`}
@@ -363,12 +547,14 @@
                 const im = imagesFor(d, s)[0];
                 return `<a href="#/d/${d.id}/${s.id}" data-si="${si}" class="spot">
                   ${im ? `<img src="${esc(im.thumb)}" alt="" loading="lazy" />` : '<span class="noimg"></span>'}
-                  <span>${esc(s.name)}</span></a>`;
+                  ${isEat(s) ? '<span class="tag eat">Eat</span>' : s.must ? '<span class="tag">Must-visit</span>' : ""}
+                  <span class="nm">${esc(s.name)}</span></a>`;
               })
               .join("")}
           </div>
           ${next ? `<a class="hop next" href="#/d/${next.id}"><small>Continue south</small>${esc(next.name)} →</a>` : `<a class="hop next" href="#/map"><small>Journey's end</small>See the map</a>`}
         </nav>
+        </div>
 
         <p class="credit" id="credit"></p>
 
@@ -379,7 +565,9 @@
             <h2 id="board-title">${esc(d.name)}</h2>
             <p class="board-tag">${esc(d.tagline)}</p>
             <p class="board-intro">${esc(d.intro)}</p>
-            <ul class="board-spots">${d.spots.map((s) => `<li>${esc(s.name)}</li>`).join("")}</ul>
+            <ul class="board-spots">${d.spots
+              .map((s) => `<li class="${isEat(s) ? "eat" : s.must ? "must" : ""}">${isEat(s) ? "Taste: " : ""}${esc(s.name)}</li>`)
+              .join("")}</ul>
             <button class="btn primary" data-enter>Step in <span aria-hidden="true">→</span></button>
             <p class="board-hint">or press Enter</p>
           </div>
@@ -457,7 +645,9 @@
     const place = app.querySelector("#place");
     if (spotChanged || !place.innerHTML) {
       place.innerHTML = `
-        <p class="eyebrow">${esc(d.tagline)}</p>
+        <p class="eyebrow">${
+          isEat(s) ? `<span class="tag eat">Eat</span> The taste of ${esc(d.name)}` : s.must ? `<span class="tag">Must-visit</span> ${esc(d.tagline)}` : esc(d.tagline)
+        }</p>
         <h1>${esc(s.name)}</h1>
         <button class="more" aria-expanded="false">About this place</button>
         <p class="blurb">${esc(s.blurb)}</p>
@@ -466,6 +656,7 @@
           <div><dt><span aria-hidden="true">◌</span> Taste</dt><dd>${esc(s.senses.taste)}</dd></div>
           <div><dt><span aria-hidden="true">◌</span> Feel</dt><dd>${esc(s.senses.feel)}</dd></div>
         </dl>
+        ${isEat(s) ? stopsBlock(s, d) : ""}
         <div class="scene-nav">
           <button class="round prev" aria-label="Previous view">‹</button>
           <span class="dots" role="tablist"></span>

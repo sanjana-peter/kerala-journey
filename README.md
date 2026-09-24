@@ -11,6 +11,10 @@ There are no autoplay animations: visitors move through the state at their own p
 - **Journey:** keep pressing → to go photo → place → next district, from Kasaragod in the north
   down to Thiruvananthapuram.
 - **Passport:** each district you visit stamps your passport. The stamps are saved in the visitor's browser.
+- **Food trail:** a signature dish is the last stop in every district, with famous places to eat nearby.
+- **Guide** (`#/guide`): must-visit places and the food trail, listed by district.
+- **Works on every screen:** phones in either orientation, tablets, laptops and large monitors.
+  Touch screens get pinch-to-zoom and double-tap on photos. On the map, tap once to preview a district and tap again to travel.
 
 ## Run it
 
@@ -36,7 +40,9 @@ No build step and no dependencies. Opening `index.html` directly from disk also 
 index.html
 css/styles.css
 js/app.js                     views, routing, look-around viewer, passport
-js/data/districts.js          ← CONTENT: districts, places, stories, sensory notes
+js/data/districts.js          ← CONTENT: districts, places, stories, sensory notes, must-visit flags
+js/data/food.js               ← CONTENT: signature dish per district + food stops
+js/data/config.js             site settings (where "Report a problem" links go)
 js/data/media.js              generated: photo list + credits + coordinates
 js/data/media-overrides.js    hand-picked photos (e.g. ones you have permission for)
 js/data/map.js                generated: SVG district paths
@@ -63,10 +69,25 @@ If a photo is a poor fit, add part of its Commons title to that spot's `media.ex
 (`CREDITS.md` lists every title) and refetch the place. The picker prefers featured and quality-rated
 images, avoids numbered near-duplicates, and mixes photographers.
 
+## Food stops
+
+Food stops live in `js/data/food.js`. Each one has an area, what to order, price, veg/non-veg,
+an Instagram handle and a `lastChecked` date. The site links to the shop's Instagram and a Google Maps search;
+we never copy its photos.
+
+- New stops start as `verified: false`. They're **hidden on the public site** and only show when you run it locally
+  or add `?preview` to the URL (e.g. `https://kerala-tourism-vert.vercel.app/?preview#/guide/food`).
+- To publish a stop, check that it's open, confirm the official Instagram handle (never guess one),
+  then set `verified: true` and `lastChecked: "YYYY-MM-DD"`.
+- Every stop has a **Report a problem** link, and districts without stops show **Suggest one**.
+  Both open a GitHub issue by default; change `reportUrl` in `js/data/config.js` to use a Google Form instead.
+- Re-check every few months. The site shows visitors the "last verified" date.
+
 ## Photos and licensing
 
 Every photo is from [Wikimedia Commons](https://commons.wikimedia.org) under CC BY, CC BY-SA, CC0 or public domain.
-The site shows the author and license on each photo, and `CREDITS.md` lists all of them.
+The site shows the title, author and license on each photo, and notes that it was resized.
+`CREDITS.md` lists all of them.
 **Keep those credits if you deploy the site.** CC BY-SA and CC BY require them.
 
 Photos from **Kerala Tourism** (keralatourism.org) are copyrighted by the Department of Tourism, Government of Kerala.
@@ -80,5 +101,6 @@ District boundaries: [geohacker/kerala](https://github.com/geohacker/kerala), de
 - Ambient sound per place (waves, chenda, rain on a tiled roof), with a mute toggle
 - True 360° panoramas where Commons has them
 - Season guide: monsoon vs. winter, festival calendar (Onam, Pooram, boat races)
-- Food trail and a "plan my trip" list built from the places a visitor liked
+- A "plan my trip" list built from the places a visitor liked
+- An automatic weekly "is this shop still open?" check (Google Places API), put on hold for now
 - Malayalam language toggle
