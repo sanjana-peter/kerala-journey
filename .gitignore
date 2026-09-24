@@ -1,3 +1,4 @@
 node_modules/
 _sheet-*.html
 .DS_Store
+dist/

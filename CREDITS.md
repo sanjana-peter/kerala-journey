@@ -1,6 +1,6 @@
-# Photo credits
+# Photo and sound credits
 
-All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and used under their free licenses.
+All photographs and recordings are from [Wikimedia Commons](https://commons.wikimedia.org) and used under their free licenses.
 
 ## Kasaragod
 
@@ -335,5 +335,54 @@ All photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and 
 - **Puttu & Kadala** — [Karupatti Puttu (Palm Sugar Rice Cake)](https://commons.wikimedia.org/wiki/File:Karupatti_Puttu_(Palm_Sugar_Rice_Cake).JPG) by Selvakumar Natarajan, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 - **Puttu & Kadala** — [Puttu ](https://commons.wikimedia.org/wiki/File:Puttu_.jpg) by BHARATHESHA ALASANDEMAJALU, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
 - **Puttu & Kadala** — [Puttu and payar](https://commons.wikimedia.org/wiki/File:Puttu_and_payar.jpg) by SijiR, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+
+## Culture
+
+- **Mohiniyattam** — [Mohiniyattam at Kerala state school kalothsavam 2019](https://commons.wikimedia.org/wiki/File:Mohiniyattam_at_Kerala_state_school_kalothsavam_2019.jpg) by Shagil Kannur, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Mohiniyattam** — [Mohiniyattam at Kerala School Kalolsavam 2019 02](https://commons.wikimedia.org/wiki/File:Mohiniyattam_at_Kerala_School_Kalolsavam_2019_02.jpg) by Shagil Kannur, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Koodiyattam** — [Koodiyattam Performer Kapila Venu](https://commons.wikimedia.org/wiki/File:Koodiyattam_Performer_Kapila_Venu.jpg) by Bobinson, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Koodiyattam** — [Kalamandalam Girija 1](https://commons.wikimedia.org/wiki/File:Kalamandalam_Girija_1.jpg) by Orbismedia, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Koodiyattam** — [Balivadhom Koodiyattam 01](https://commons.wikimedia.org/wiki/File:Balivadhom_Koodiyattam_01.jpg) by Nrr1729, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Koodiyattam** — [Koodiyattam performance by Margi Madhu 06](https://commons.wikimedia.org/wiki/File:Koodiyattam_performance_by_Margi_Madhu_06.jpg) by రహ్మానుద్దీన్, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Kalaripayattu** — [Kalaripayattu by young girls](https://commons.wikimedia.org/wiki/File:Kalaripayattu_by_young_girls.jpg) by Naveenkrishnan23, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Kalaripayattu** — [Kerala kalaripayattu](https://commons.wikimedia.org/wiki/File:Kerala_kalaripayattu.jpg) by RAJAN KUTTUR, [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en)
+- **Kalaripayattu** — [Kalari Pattu](https://commons.wikimedia.org/wiki/File:Kalari_Pattu.jpg) by The pixelwriter2309, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Ottamthullal** — [Ottanthullal at WikiConference India 2026 -Kochin 6th September 2026 11](https://commons.wikimedia.org/wiki/File:Ottanthullal_at_WikiConference_India_2026_-Kochin_6th_September_2026_11.jpg) by Vijayanrajapuram, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Ottamthullal** — [Ottamthullal - Fell in love with this art at the first sight](https://commons.wikimedia.org/wiki/File:Ottamthullal_-_Fell_in_love_with_this_art_at_the_first_sight.jpg) by Mmanishamary, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Ottamthullal** — [Thrippunithura-Ottamthullal-Performer-1 crop](https://commons.wikimedia.org/wiki/File:Thrippunithura-Ottamthullal-Performer-1_crop.jpg) by Rajesh Kakkanatt, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Oppana** — [Oppana @VAST](https://commons.wikimedia.org/wiki/File:Oppana_@VAST.jpg) by Rider_sanu, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Oppana** — [Oppana dance](https://commons.wikimedia.org/wiki/File:Oppana_dance.jpg) by Naveen2002, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Margamkali** — [Advika VAST 2020 Margamkali 03](https://commons.wikimedia.org/wiki/File:Advika_VAST_2020_Margamkali_03.jpg) by Abhijith Sheheer, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Margamkali** — [Margamkali](https://commons.wikimedia.org/wiki/File:Margamkali.jpg) by Fotokannan at Malayalam Wikipedia, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Margamkali** — [Knanaya Margam Kali](https://commons.wikimedia.org/wiki/File:Knanaya_Margam_Kali.jpg) by Alexander J. Mapleton, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Margamkali** — [Margam kali kerala](https://commons.wikimedia.org/wiki/File:Margam_kali_kerala.jpg) by Manseernp, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Pulikali** — [Photowalk during pulikali at Thrissur round 2024 (0)](https://commons.wikimedia.org/wiki/File:Photowalk_during_pulikali_at_Thrissur_round_2024_(0).jpg) by Jinoy Tom Jacob, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Pulikali** — [Photowalk during pulikali at Kerala Varma College Thrissur DSC 5067](https://commons.wikimedia.org/wiki/File:Photowalk_during_pulikali_at_Kerala_Varma_College_Thrissur_DSC_5067.JPG) by Ranjithsiji, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Pulikali** — [Photowalk during pulikali at Thrissur 2024 (75)](https://commons.wikimedia.org/wiki/File:Photowalk_during_pulikali_at_Thrissur_2024_(75).jpg) by User:Joseph Lazer, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Pulikali** — [Photowalk during pulikali 2024 at Thrissur Swaraj Round DSC 5305](https://commons.wikimedia.org/wiki/File:Photowalk_during_pulikali_2024_at_Thrissur_Swaraj_Round_DSC_5305.JPG) by Ranjithsiji, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Chenda melam** — [Chenda melam 02](https://commons.wikimedia.org/wiki/File:Chenda_melam_02.jpg) by Vis M, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Chenda melam** — [CHENDA MELA](https://commons.wikimedia.org/wiki/File:CHENDA_MELA.jpg) by Mamichaelraj, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Chenda melam** — [Chenda melam performance](https://commons.wikimedia.org/wiki/File:Chenda_melam_performance.jpg) by Thamizhpparithi Maari, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Chenda melam** — [Temple festival, Alleppey, Kerala (16661733755)](https://commons.wikimedia.org/wiki/File:Temple_festival,_Alleppey,_Kerala_(16661733755).jpg) by Dumphasizer, [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0)
+
+## Sounds
+
+- **Kannur** — [Theyyam Meelam](https://commons.wikimedia.org/wiki/File:Theyyam_Meelam.ogg) by Manojk, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Wayanad** — [Pycnonotus gularis, Wayanad, Kerala, India](https://commons.wikimedia.org/wiki/File:Pycnonotus_gularis,_Wayanad,_Kerala,_India.oga) by L. Shyamal, [CC BY 2.5](https://creativecommons.org/licenses/by/2.5)
+- **Thrissur** — [Pandi Melam](https://commons.wikimedia.org/wiki/File:Pandi_Melam.ogg) by Manojk, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Ernakulam** — [Chenda Melam](https://commons.wikimedia.org/wiki/File:Chenda_Melam.ogg) by Alexabraham22da, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- **Idukki** — [Common hawk-cuckoo 01a](https://commons.wikimedia.org/wiki/File:Common_hawk-cuckoo_01a.wav) by Vis M, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Kottayam** — [Stork Billed Kingfisher Sound 01](https://commons.wikimedia.org/wiki/File:Stork_Billed_Kingfisher_Sound_01.wav) by Ganesh Mohan T, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- **Alappuzha** — [White-throated kingfisher 01](https://commons.wikimedia.org/wiki/File:White-throated_kingfisher_01.wav) by Vis M, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+
+## Panoramas
+
+- [Bakel fort inside panorama](https://commons.wikimedia.org/wiki/File:Bakel_fort_inside_panorama.jpg) by Vaikoovery, [CC BY 3.0](https://creativecommons.org/licenses/by/3.0)
+- [Banasura sagar reservoir](https://commons.wikimedia.org/wiki/File:Banasura_sagar_reservoir.jpg) by Challiyan, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0)
+- [Paddyfield thakazhi](https://commons.wikimedia.org/wiki/File:Paddyfield_thakazhi.jpg) by Challiyan at Malayalam Wikipedia, [CC BY 3.0](https://creativecommons.org/licenses/by/3.0)
+- [Panoramic View of Mattupetty Dam, Munnar, Kerala, India](https://commons.wikimedia.org/wiki/File:Panoramic_View_of_Mattupetty_Dam,_Munnar,_Kerala,_India.jpg) by DeepeshAgarwal, [CC0](https://creativecommons.org/publicdomain/zero/1.0)
+- [Idukki Dam Reservoir Hillview Pano Kerala Mar22 R16 05581-Pano](https://commons.wikimedia.org/wiki/File:Idukki_Dam_Reservoir_Hillview_Pano_Kerala_Mar22_R16_05581-Pano.jpg) by Timothy A. Gonsalves, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- [Palakkad Fort Panorama (1)](https://commons.wikimedia.org/wiki/File:Palakkad_Fort_Panorama_(1).jpg) by Ssriram mt, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
+- [Malampuzha Reservoir PWD Panorama Kerala Jul21 D72 20289-91](https://commons.wikimedia.org/wiki/File:Malampuzha_Reservoir_PWD_Panorama_Kerala_Jul21_D72_20289-91.jpg) by Timothy A. Gonsalves, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0)
 
 Map boundaries: [geohacker/kerala](https://github.com/geohacker/kerala), derived from [DataMeet](https://datameet.org/) maps (CC BY 4.0).

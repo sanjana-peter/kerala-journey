@@ -11,8 +11,30 @@ There are no autoplay animations: visitors move through the state at their own p
 - **Journey:** keep pressing → to go photo → place → next district, from Kasaragod in the north
   down to Thiruvananthapuram.
 - **Passport:** each district you visit stamps your passport. The stamps are saved in the visitor's browser.
+- **Plan your visit** (the ☼ Plan button, or V, on every district): a month picker with the weather, best time to go and
+  festivals for that month (remembered across districts), how to get there, suggested days that link to the places, and tips.
+  The arrival board shows the road in from the previous district and a one-line summary for the chosen month.
+- **Try it:** a hands-on experience in all fourteen districts: Bekal Fort's plan,
+  a Kannur loom, Edakkal's carvings by torchlight, Calicut's spice routes, Nilambur teak rings, the Palakkad Gap,
+  the Pooram kudamattam, a Kathakali face, the ghat road to Munnar, rubber tapping, a houseboat day, the Aranmula mirror,
+  Kollam's cashews and an Attukal Pongala.
+- **Sound:** seven districts have a sound button (drums, temple melam, backwater birds). It never autoplays.
+- **Panorama:** seven places have a wide panorama to drag across (Bekal Fort, Banasura, Kuttanad, Munnar, Idukki, Palakkad Fort, Malampuzha).
+- **Save:** ♡ any place or art form and "Want to try" any dish; they gather on **My trip** (`/trip`), sorted north to south,
+  with the season, the road in and a share link (`/trip?s=…`) and print view.
 - **Food trail:** a signature dish is the last stop in every district, with famous places to eat nearby.
-- **Guide** (`#/guide`): must-visit places and the food trail, listed by district.
+- **Guide** (`/guide`): must-visit places, listed by district.
+- **The Kerala table** (`/eat`): a time-of-day dial for what Kerala eats when, a taste map of the five regional kitchens,
+  a banana leaf you serve a sadya onto course by course, and a story page per dish (`/eat/<dish>`): how it's made
+  (tap through the steps), how to eat it like a local, where to try it, and a "want to try" list saved in the browser.
+- **Culture** (`/culture`): twelve art forms, rituals and festivals with their own pages, a month-by-month festival calendar
+  for the whole state, a history timeline to drag through, and Malayalam phrases for travellers.
+- **Essentials** (`/essentials`): getting around, money, SIMs, customs, health and safety, monsoon travel and Ayurveda,
+  plus a packing list built from your month and plans.
+- **Search:** the magnifier button or `/` searches places, dishes, festivals, art forms and essentials.
+- **Malayalam:** the മല button switches menus and buttons to Malayalam (descriptions stay in English for now).
+- **Shareable pages:** every district, place, dish and art form has its own address (`/d/kannur/theyyam`) with its own
+  title and preview image. Old `#/` links still work.
 - **Works on every screen:** phones in either orientation, tablets, laptops and large monitors.
   Touch screens get pinch-to-zoom and double-tap on photos. On the map, tap once to preview a district and tap again to travel.
 
@@ -22,7 +44,15 @@ There are no autoplay animations: visitors move through the state at their own p
 npm start          # http://localhost:5173
 ```
 
-No build step and no dependencies. Opening `index.html` directly from disk also works.
+No build step is needed to develop: `npm start` serves the site as it is.
+
+```sh
+npm install        # once: installs sharp, used only by the build
+npm run build      # → dist/: one HTML page per place for link previews, a sitemap, and WebP copies of every photo
+```
+
+Vercel runs `npm run build` on deploy and serves `dist/` (see `vercel.json`). Set the public address in
+`js/data/config.js` (`siteUrl`) so previews and the sitemap point to the right place.
 
 ### Keyboard
 
@@ -31,6 +61,8 @@ No build step and no dependencies. Opening `index.html` directly from disk also 
 | ← / → | previous / next view (continues into the next place and district) |
 | N / P | next / previous district |
 | H | hide the panels ("Just look") |
+| V | plan your visit (seasons, routes, Try it) |
+| / | search |
 | M or Esc | back to the map |
 | Drag · scroll · double-click | look around · zoom |
 
@@ -41,8 +73,17 @@ index.html
 css/styles.css
 js/app.js                     views, routing, look-around viewer, passport
 js/data/districts.js          ← CONTENT: districts, places, stories, sensory notes, must-visit flags
-js/data/food.js               ← CONTENT: signature dish per district + food stops
-js/data/config.js             site settings (where "Report a problem" links go)
+js/data/food.js               ← CONTENT: signature dish per district, its story + food stops
+js/data/table.js              ← CONTENT: meal times, regional kitchens, sadya serving order
+js/data/visit.js              ← CONTENT: per district: seasons, festivals, getting there, suggested days, tips, the road in
+js/data/sounds.js             ← CONTENT: district soundscapes (files in assets/audio/, credits required)
+js/data/culture.js            ← CONTENT: art forms, statewide festivals, history timeline, Malayalam phrases
+js/data/essentials.js         ← CONTENT: travel essentials and the packing list rules
+js/data/panoramas.js          wide panoramas (files in assets/pano/, credits required)
+js/experiences.js             the hands-on "Try it" experiences, one function per district
+js/i18n.js                    interface text in English and Malayalam
+js/meta.js                    page titles, descriptions and preview images (site + build)
+js/data/config.js             site settings (public address, where "Report a problem" links go)
 js/data/media.js              generated: photo list + credits + coordinates
 js/data/media-overrides.js    hand-picked photos (e.g. ones you have permission for)
 js/data/map.js                generated: SVG district paths
@@ -51,6 +92,8 @@ scripts/fetch-media.mjs       downloads photos from Wikimedia Commons
 scripts/optimize-images.py    recompresses photos (progressive JPEG)
 scripts/build-map.mjs         builds map.js from data-src/kerala-districts.geojson
 scripts/serve.mjs             tiny local server
+scripts/build-pages.mjs       builds dist/ for deployment
+vercel.json                   deploy settings (build, rewrites, caching)
 CREDITS.md                    generated: every photo's author and license
 ```
 
@@ -76,7 +119,7 @@ an Instagram handle and a `lastChecked` date. The site links to the shop's Insta
 we never copy its photos.
 
 - New stops start as `verified: false`. They're **hidden on the public site** and only show when you run it locally
-  or add `?preview` to the URL (e.g. `https://kerala-tourism-vert.vercel.app/?preview#/guide/food`).
+  or add `?preview` to the URL (e.g. `https://kerala-tourism-vert.vercel.app/?preview#/eat`).
 - To publish a stop, check that it's open, confirm the official Instagram handle (never guess one),
   then set `verified: true` and `lastChecked: "YYYY-MM-DD"`.
 - Every stop has a **Report a problem** link, and districts without stops show **Suggest one**.
@@ -98,9 +141,8 @@ District boundaries: [geohacker/kerala](https://github.com/geohacker/kerala), de
 
 ## Ideas for next steps
 
-- Ambient sound per place (waves, chenda, rain on a tiled roof), with a mute toggle
-- True 360° panoramas where Commons has them
-- Season guide: monsoon vs. winter, festival calendar (Onam, Pooram, boat races)
-- A "plan my trip" list built from the places a visitor liked
+- Sounds for the other seven districts: Commons has few Kerala recordings, so record your own (waves, rain on a tiled roof, a ferry) and add them to sounds.js
+- True 360° panoramas: Commons has none of Kerala yet, so these would need to be shot
+- Translate the descriptions into Malayalam (the interface is done; see js/i18n.js)
+- Use the site offline on the road
 - An automatic weekly "is this shop still open?" check (Google Places API), put on hold for now
-- Malayalam language toggle

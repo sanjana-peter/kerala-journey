@@ -5,6 +5,7 @@
 //   node scripts/fetch-media.mjs --force    refetch everything
 //   node scripts/fetch-media.mjs idukki     only one district
 //   node scripts/fetch-media.mjs pathanamthitta/gavi   refetch one place
+//   node scripts/fetch-media.mjs culture   photos for the art forms in js/data/culture.js
 //
 // Manual overrides (e.g. photos you have permission to use from another source)
 // go in js/data/media-overrides.js and are merged in by the site at runtime.
@@ -27,10 +28,15 @@ const only = args.find((a) => !a.startsWith("--"));
 
 const ctx = { window: {} };
 vm.runInNewContext(
-  ["districts.js", "food.js"].map((f) => fs.readFileSync(path.join(ROOT, "js/data", f), "utf8")).join(";\n"),
+  ["districts.js", "food.js", "sounds.js", "panoramas.js", "culture.js"].map((f) => fs.readFileSync(path.join(ROOT, "js/data", f), "utf8")).join(";\n"),
   ctx
 );
-const DISTRICTS = ctx.window.KERALA_DISTRICTS;
+// Culture's art forms are fetched like one more "district" (photos land in assets/img/culture/).
+// Art forms with a mediaKey reuse a place's photos, so they are skipped here.
+const CULTURE = { id: "culture", name: "Culture", spots: (ctx.window.KERALA_CULTURE?.arts || []).filter((a) => a.media) };
+const DISTRICTS = [...ctx.window.KERALA_DISTRICTS, CULTURE];
+const PANORAMAS = ctx.window.KERALA_PANORAMAS || {};
+const SOUNDS = ctx.window.KERALA_SOUNDS || {};
 
 const mediaFile = path.join(ROOT, "js/data/media.js");
 let media = {};
@@ -241,7 +247,7 @@ run().then(() => {
 });
 
 function writeCredits() {
-  let md = "# Photo credits\n\nAll photographs are from [Wikimedia Commons](https://commons.wikimedia.org) and used under their free licenses.\n\n";
+  let md = "# Photo and sound credits\n\nAll photographs and recordings are from [Wikimedia Commons](https://commons.wikimedia.org) and used under their free licenses.\n\n";
   for (const d of DISTRICTS) {
     md += `## ${d.name}\n\n`;
     for (const s of d.spots) {
@@ -249,6 +255,21 @@ function writeCredits() {
         md += `- **${s.name}** — [${im.title}](${im.source}) by ${im.author}, ${im.licenseUrl ? `[${im.license}](${im.licenseUrl})` : im.license}\n`;
       }
     }
+    md += "\n";
+  }
+  const sounds = DISTRICTS.filter((d) => SOUNDS[d.id]);
+  if (sounds.length) {
+    md += "## Sounds\n\n";
+    for (const d of sounds) {
+      const a = SOUNDS[d.id];
+      md += `- **${d.name}** — [${a.title}](${a.source}) by ${a.author}, ${a.licenseUrl ? `[${a.license}](${a.licenseUrl})` : a.license}\n`;
+    }
+    md += "\n";
+  }
+  const panos = Object.values(PANORAMAS);
+  if (panos.length) {
+    md += "## Panoramas\n\n";
+    for (const p of panos) md += `- [${p.title}](${p.source}) by ${p.author}, ${p.licenseUrl ? `[${p.license}](${p.licenseUrl})` : p.license}\n`;
     md += "\n";
   }
   md += "Map boundaries: [geohacker/kerala](https://github.com/geohacker/kerala), derived from [DataMeet](https://datameet.org/) maps (CC BY 4.0).\n";

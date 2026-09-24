@@ -7,6 +7,11 @@
     "start": "node scripts/serve.mjs",
     "media": "node scripts/fetch-media.mjs",
     "map": "node scripts/build-map.mjs",
-    "optimize": "python scripts/optimize-images.py"
+    "optimize": "python scripts/optimize-images.py",
+    "build": "node scripts/build-pages.mjs",
+    "preview": "node scripts/serve.mjs dist"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.4"
   }
 }
