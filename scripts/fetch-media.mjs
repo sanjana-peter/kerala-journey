@@ -6,6 +6,7 @@
 //   node scripts/fetch-media.mjs idukki     only one district
 //   node scripts/fetch-media.mjs pathanamthitta/gavi   refetch one place
 //   node scripts/fetch-media.mjs culture   photos for the art forms in js/data/culture.js
+//   node scripts/fetch-media.mjs --credits  only rewrite CREDITS.md (e.g. after editing media-overrides.js)
 //
 // Manual overrides (e.g. photos you have permission to use from another source)
 // go in js/data/media-overrides.js and are merged in by the site at runtime.
@@ -241,17 +242,32 @@ function write() {
   );
 }
 
-run().then(() => {
-  write();
-  writeCredits();
-});
+if (args.includes("--credits")) writeCredits();
+else
+  run().then(() => {
+    write();
+    writeCredits();
+  });
 
 function writeCredits() {
-  let md = "# Photo and sound credits\n\nAll photographs and recordings are from [Wikimedia Commons](https://commons.wikimedia.org) and used under their free licenses.\n\n";
+  // Hand-picked photos from js/data/media-overrides.js are credited too, merged the way the site shows them.
+  const oc = { window: {} };
+  const overFile = path.join(ROOT, "js/data/media-overrides.js");
+  if (fs.existsSync(overFile)) vm.runInNewContext(fs.readFileSync(overFile, "utf8"), oc);
+  const OVER = oc.window.KERALA_MEDIA_OVERRIDES || {};
+  const shown = (k) => {
+    const base = media[k]?.images || [];
+    const o = OVER[k];
+    return !o ? base : o.replace ? o.images : [...o.images, ...base];
+  };
+  let md = "# Photo and sound credits\n\n" +
+    (Object.keys(OVER).length
+      ? "Photographs marked Kerala Tourism are from the [Kerala Tourism royalty-free gallery](https://www.keralatourism.org/highresolutionimages/). All other photographs and recordings are from [Wikimedia Commons](https://commons.wikimedia.org) and used under their free licenses.\n\n"
+      : "All photographs and recordings are from [Wikimedia Commons](https://commons.wikimedia.org) and used under their free licenses.\n\n");
   for (const d of DISTRICTS) {
     md += `## ${d.name}\n\n`;
     for (const s of d.spots) {
-      for (const im of media[`${d.id}/${s.id}`]?.images || []) {
+      for (const im of shown(`${d.id}/${s.id}`)) {
         md += `- **${s.name}** — [${im.title}](${im.source}) by ${im.author}, ${im.licenseUrl ? `[${im.license}](${im.licenseUrl})` : im.license}\n`;
       }
     }
