@@ -1471,17 +1471,6 @@ window.KERALA_MEDIA_OVERRIDES = {
     "license": "Royalty-free gallery",
     "licenseUrl": "https://www.keralatourism.org/highresolutionimages/",
     "source": "https://www.keralatourism.org/highresolutionimages/backwater/"
-   },
-   {
-    "src": "assets/img/kt/kottayam/kumarakom-4.jpg",
-    "thumb": "assets/img/kt/kottayam/kumarakom-4-t.jpg",
-    "w": 1500,
-    "h": 1000,
-    "title": "Bird Life in Kumarakom",
-    "author": "Kerala Tourism",
-    "license": "Royalty-free gallery",
-    "licenseUrl": "https://www.keralatourism.org/highresolutionimages/",
-    "source": "https://www.keralatourism.org/highresolutionimages/places-of-interest/"
    }
   ]
  },
@@ -1911,17 +1900,6 @@ window.KERALA_MEDIA_OVERRIDES = {
     "license": "Royalty-free gallery",
     "licenseUrl": "https://www.keralatourism.org/highresolutionimages/",
     "source": "https://www.keralatourism.org/highresolutionimages/backwater/"
-   },
-   {
-    "src": "assets/img/kt/kollam/ashtamudi-3.jpg",
-    "thumb": "assets/img/kt/kollam/ashtamudi-3-t.jpg",
-    "w": 320,
-    "h": 180,
-    "title": "Ashtamudi Lake 4",
-    "author": "Kerala Tourism",
-    "license": "Royalty-free gallery",
-    "licenseUrl": "https://www.keralatourism.org/highresolutionimages/",
-    "source": "https://www.keralatourism.org/highresolutionimages/backwater/"
    }
   ]
  },
@@ -2037,17 +2015,6 @@ window.KERALA_MEDIA_OVERRIDES = {
     "w": 2560,
     "h": 1707,
     "title": "Sree Padmanabhaswamy Temple",
-    "author": "Kerala Tourism",
-    "license": "Royalty-free gallery",
-    "licenseUrl": "https://www.keralatourism.org/highresolutionimages/",
-    "source": "https://www.keralatourism.org/highresolutionimages/pilgrim-centres/"
-   },
-   {
-    "src": "assets/img/kt/thiruvananthapuram/padmanabhaswamy-4.jpg",
-    "thumb": "assets/img/kt/thiruvananthapuram/padmanabhaswamy-4-t.jpg",
-    "w": 720,
-    "h": 405,
-    "title": "Padmanabhaswamy Temple 1",
     "author": "Kerala Tourism",
     "license": "Royalty-free gallery",
     "licenseUrl": "https://www.keralatourism.org/highresolutionimages/",
@@ -2181,17 +2148,6 @@ window.KERALA_MEDIA_OVERRIDES = {
    {
     "src": "assets/img/kt/thiruvananthapuram/ponmudi-3.jpg",
     "thumb": "assets/img/kt/thiruvananthapuram/ponmudi-3-t.jpg",
-    "w": 720,
-    "h": 405,
-    "title": "Ponmudi Hill Station",
-    "author": "Kerala Tourism",
-    "license": "Royalty-free gallery",
-    "licenseUrl": "https://www.keralatourism.org/highresolutionimages/",
-    "source": "https://www.keralatourism.org/highresolutionimages/hills/"
-   },
-   {
-    "src": "assets/img/kt/thiruvananthapuram/ponmudi-4.jpg",
-    "thumb": "assets/img/kt/thiruvananthapuram/ponmudi-4-t.jpg",
     "w": 2560,
     "h": 1707,
     "title": "Ponmudi",
