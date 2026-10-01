@@ -41,10 +41,40 @@ for (const item of ["css", "js", "assets", "CREDITS.md", "LICENSE"])
 
 const esc = (s = "") => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const template = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+
+let sharp = null;
+try {
+  sharp = (await import("sharp")).default;
+} catch {
+  console.log("sharp not installed: skipping WebP copies and link-preview images (run npm install to enable them)");
+}
+
+// Link-preview images: 1200 × 630 JPEGs under 300 KB, the size WhatsApp, Facebook and X expect.
+// WhatsApp often shows no picture at all for bigger files, and the site's photos are up to 2560 px.
+const OG_W = 1200, OG_H = 630;
+const OG_CACHE = path.join(ROOT, "node_modules/.cache/kerala-og");
+async function ogImage(src) {
+  if (!sharp) return src;
+  const dest = "og/" + src.replace(/^assets\/img\//, "").replace(/\.\w+$/, ".jpg");
+  const cached = path.join(OG_CACHE, dest);
+  const from = path.join(ROOT, src);
+  if (!fs.existsSync(cached) || fs.statSync(cached).mtimeMs < fs.statSync(from).mtimeMs) {
+    fs.mkdirSync(path.dirname(cached), { recursive: true });
+    for (const quality of [80, 70, 60]) {
+      await sharp(from).resize(OG_W, OG_H, { fit: "cover", position: "attention" }).jpeg({ quality, mozjpeg: true }).toFile(cached);
+      if (fs.statSync(cached).size < 300_000) break;
+    }
+  }
+  fs.mkdirSync(path.dirname(path.join(OUT, dest)), { recursive: true });
+  fs.copyFileSync(cached, path.join(OUT, dest));
+  return dest;
+}
+
 for (const route of routes) {
   const m = W.KERALA_META(route, W);
   const url = SITE + (route === "/" ? "/" : route);
-  const image = m.image ? `${SITE}/${m.image}` : "";
+  const og = m.image && fs.existsSync(path.join(ROOT, m.image)) ? await ogImage(m.image) : null;
+  const image = og ? `${SITE}/${og}` : "";
   const head = [
     `<link rel="canonical" href="${esc(url)}" />`,
     `<meta property="og:type" content="website" />`,
@@ -53,6 +83,10 @@ for (const route of routes) {
     `<meta property="og:description" content="${esc(m.description)}" />`,
     `<meta property="og:url" content="${esc(url)}" />`,
     image && `<meta property="og:image" content="${esc(image)}" />`,
+    image && og !== m.image && `<meta property="og:image:width" content="${OG_W}" />`,
+    image && og !== m.image && `<meta property="og:image:height" content="${OG_H}" />`,
+    image && `<meta property="og:image:type" content="image/jpeg" />`,
+    image && `<meta property="og:image:alt" content="${esc(m.title)}" />`,
     `<meta name="twitter:card" content="${image ? "summary_large_image" : "summary"}" />`,
   ]
     .filter(Boolean)
@@ -70,12 +104,6 @@ for (const route of routes) {
 // Lighter photos: WebP copies at full size, 1280 px wide (for smaller screens) and thumbnail size.
 // The site picks the right one; browsers without WebP keep using the JPEGs. Results are cached in
 // node_modules/.cache so rebuilds only convert new photos. Skipped if sharp isn't installed.
-let sharp = null;
-try {
-  sharp = (await import("sharp")).default;
-} catch {
-  console.log("sharp not installed: skipping WebP copies (run npm install to enable them)");
-}
 if (sharp) {
   const CACHE = path.join(ROOT, "node_modules/.cache/kerala-webp");
   const jobs = [];
@@ -112,9 +140,9 @@ if (sharp) {
   }));
   for (const entry of Object.values(W.KERALA_MEDIA))
     for (const im of entry.images || []) if (im.webp) saved += fs.statSync(path.join(OUT, im.webp)).size;
-  // With WebP copies in place the site no longer loads the JPEGs, so leave them out of the deploy,
-  // except the ones used as link-preview images (not every app shows WebP previews).
-  const keep = new Set(routes.map((r) => W.KERALA_META(r, W).image).filter(Boolean));
+  // With WebP copies in place the site no longer loads the JPEGs, so leave them out of the deploy
+  // (link previews use their own small JPEGs in og/).
+  const keep = new Set();
   let dropped = 0;
   for (const entry of Object.values(W.KERALA_MEDIA))
     for (const im of entry.images || []) {
@@ -125,7 +153,7 @@ if (sharp) {
         fs.unlinkSync(path.join(OUT, f));
       }
     }
-  console.log(`Left ${(dropped / 1e6).toFixed(0)} MB of JPEGs out of dist/ (kept ${keep.size} preview images)`);
+  console.log(`Left ${(dropped / 1e6).toFixed(0)} MB of JPEGs out of dist/`);
   console.log(`WebP: ${jobs.length} files; full-size photos ${(before / 1e6).toFixed(0)} MB → ${(saved / 1e6).toFixed(0)} MB`);
 }
 fs.writeFileSync(

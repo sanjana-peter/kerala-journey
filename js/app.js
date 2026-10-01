@@ -147,6 +147,7 @@
       <a class="brand" href="/">Kerala <span class="ml" lang="ml">കേരളം</span></a>
       <div class="head-tools">
         <button class="chip light icon" data-search aria-label="${t("search")}" title="${t("search")} (/)">${SEARCH_ICON}</button>
+        ${waButtons("light")}
         <button class="chip light lang" data-lang aria-label="${t("langSwitch")}">${t("langShort")}</button>
         <button class="chip light" data-passport aria-label="${t("passport")}">${STAMP_ICON}<span class="lbl">${t("passport")} · </span><span data-count>${Passport.count()}</span>/14</button>
       </div>
@@ -247,6 +248,26 @@
   }
   const SEARCH_ICON =
     '<svg class="stamp-ic" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  const WA_ICON =
+    '<svg class="stamp-ic wa-ic" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.6a7.4 7.4 0 0 0-6.4 11.1l-1.1 3.7 3.8-1A7.4 7.4 0 1 0 10 2.6z" fill="#25d366"/><path d="M7.3 6.4c.2-.4.4-.4.6-.4h.4c.1 0 .3 0 .4.3l.6 1.4c0 .2 0 .3-.1.4l-.4.5c-.1.1-.1.3 0 .4.3.6 1.2 1.6 2.2 2 .1.1.3.1.4 0l.5-.6c.1-.2.3-.2.4-.1l1.4.7c.2.1.3.2.3.3 0 .4-.1.9-.5 1.2-.4.4-1.1.6-1.9.4-2-.6-3.6-2.2-4.3-3.9-.4-.9-.2-1.8.4-2.2z" fill="#fff"/></svg>';
+
+  // ---------- WhatsApp: share the page you're on, or send feedback to the site owner ----------
+  // Uses wa.me links, so there is no API key: it opens the WhatsApp app on phones and WhatsApp Web on computers.
+  function waButtons(cls = "") {
+    return `<button class="chip ${cls} wa" data-wa aria-label="${t("waShare")}" title="${t("waShare")}">${WA_ICON}<span class="lbl"> ${t("waShort")}</span></button>${
+      CONFIG.whatsapp
+        ? `<button class="chip ${cls}" data-feedback aria-label="${t("feedbackLong")}" title="${t("feedbackLong")}"><span aria-hidden="true">✎</span><span class="lbl"> ${t("feedback")}</span></button>`
+        : ""
+    }`;
+  }
+  function pageLink() {
+    const shared = new URLSearchParams(location.search).get("s");
+    // An unshared trip lives only in this browser, so share it as a ?s= link like the trip page's own button.
+    if (location.pathname === "/trip") return `${location.origin}/trip?s=${encodeURIComponent(shared || encodeTrip())}`;
+    return location.origin + location.pathname;
+  }
+  const pageName = () => document.title.replace(/\s*·\s*Kerala Journey$/, "");
+  const openWa = (to, text) => window.open(`https://wa.me/${to}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
 
   // ---------- saved places and art forms for "My trip" (dishes live in Plate) ----------
   // Keys: "d/<district>/<spot>" or "culture/<art>".
@@ -601,6 +622,7 @@
         <div class="home-shade"></div>
         <div class="home-tools">
           <button class="chip" data-search aria-label="${t("search")}">${SEARCH_ICON}<span class="lbl"> ${t("search")}</span></button>
+          ${waButtons()}
           <button class="chip lang" data-lang aria-label="${t("langSwitch")}">${t("langShort")}</button>
         </div>
         <div class="home-copy">
@@ -1961,6 +1983,7 @@
             ${VISIT[d.id] ? `<button class="chip plan-chip" data-sheet="when" title="Plan your visit (V)"><span aria-hidden="true">☼</span><span class="lbl"> ${t("plan")}</span></button>` : ""}
             ${sound ? `<button class="chip" data-sound aria-pressed="false" aria-label="Play sound: ${esc(sound.label)}" title="${esc(sound.label)}"><span aria-hidden="true">♪</span><span class="lbl"> ${t("sound")}</span></button>` : ""}
             <button class="chip" data-search aria-label="${t("search")}">${SEARCH_ICON}</button>
+            ${waButtons()}
             <button class="chip" data-passport aria-label="${t("passport")}">${STAMP_ICON}<span class="lbl">${t("passport")} · </span><span data-count>${Passport.count()}</span>/14</button>
             <button class="chip" data-hide aria-pressed="false" title="Hide the panels (H)">${t("justLook")}</button>
           </div>
@@ -2393,6 +2416,9 @@
       tripChanged();
     }
     if (e.target.closest("[data-search]")) Search.open();
+    if (e.target.closest("[data-wa]")) openWa("", `${pageName()}\n${pageLink()}`);
+    if (e.target.closest("[data-feedback]"))
+      openWa(String(CONFIG.whatsapp).replace(/\D/g, ""), `${t("feedbackIntro")} ${pageName()}\n${pageLink()}\n\n`);
     if (e.target.closest("[data-lang]")) {
       Lang.set(Lang.get() === "ml" ? "en" : "ml");
       applyLang();
