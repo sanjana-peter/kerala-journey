@@ -55,6 +55,13 @@ window.KERALA_META = function (pathname, W) {
       description: "Getting around, money, SIM cards, customs, health and safety, monsoon travel and Ayurveda, plus a packing list for your month and plans.",
       image: cover("ernakulam/fort-kochi"),
     };
+  if (p[0] === "plan")
+    return {
+      title: `Plan your Kerala trip · ${site}`,
+      description:
+        "Tell it your days, budget and what you love: get a day-by-day Kerala itinerary with a route map, what to see, eat and do each day, and a rough budget. Share it on WhatsApp.",
+      image: cover("idukki/munnar"),
+    };
   if (p[0] === "trip") return { title: `My Kerala trip · ${site}`, description: "The places and dishes saved for a trip to Kerala, district by district.", image: home.image };
   if (p[0] === "map") return { title: `Map of Kerala's fourteen districts · ${site}`, description: home.description, image: home.image };
   if (p[0] === "guide")

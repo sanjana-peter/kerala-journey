@@ -5,6 +5,7 @@
   "description": "An interactive walk through Kerala's fourteen districts.",
   "scripts": {
     "start": "node scripts/serve.mjs",
+    "test": "node --test scripts/planner.test.mjs",
     "media": "node scripts/fetch-media.mjs",
     "map": "node scripts/build-map.mjs",
     "optimize": "python scripts/optimize-images.py",

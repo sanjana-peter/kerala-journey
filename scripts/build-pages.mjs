@@ -25,7 +25,7 @@ for (const [k, v] of Object.entries(W.KERALA_MEDIA_OVERRIDES || {})) {
 const SITE = (W.KERALA_CONFIG?.siteUrl || "").replace(/\/$/, "");
 
 // Every page worth sharing or indexing.
-const routes = ["/", "/map", "/guide", "/eat", "/culture", "/essentials", "/trip"];
+const routes = ["/", "/plan", "/map", "/guide", "/eat", "/culture", "/essentials", "/trip"];
 for (const d of W.KERALA_DISTRICTS) {
   routes.push(`/d/${d.id}`);
   for (const s of d.spots) routes.push(`/d/${d.id}/${s.id}`);

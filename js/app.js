@@ -135,12 +135,12 @@
 
   // The header on every non-photo page: brand, the main sections, search, language and passport.
   const NAV = [
+    ["plan", "/plan"],
     ["map", "/map"],
     ["guide", "/guide"],
     ["food", "/eat"],
     ["culture", "/culture"],
     ["essentials", "/essentials"],
-    ["trip", "/trip"],
   ];
   function siteHead(active) {
     return `<header class="site-head">
@@ -155,7 +155,7 @@
       <nav class="head-nav" aria-label="${t("sections")}">
         ${NAV.map(
           ([key, href]) =>
-            `<a href="${href}"${key === active ? ' aria-current="page"' : ""}>${t(key)}${key === "trip" ? ` <span class="nav-count" data-trip-count>${tripCount() || ""}</span>` : ""}</a>`
+            `<a href="${href}"${key === active ? ' aria-current="page"' : ""}>${t(key)}${key === "plan" ? ` <span class="nav-count" data-trip-count>${tripCount() || ""}</span>` : ""}</a>`
         ).join("")}
       </nav>
     </header>`;
@@ -261,6 +261,7 @@
     }`;
   }
   function pageLink() {
+    if (current?.shareUrl) return current.shareUrl();
     const shared = new URLSearchParams(location.search).get("s");
     // An unshared trip lives only in this browser, so share it as a ?s= link like the trip page's own button.
     if (location.pathname === "/trip") return `${location.origin}/trip?s=${encodeURIComponent(shared || encodeTrip())}`;
@@ -509,6 +510,7 @@
   // /culture[/<section>]  /culture/<art>[/<n>]
   // /essentials[/<section>]
   // /trip              the visitor's saved trip (?s=… for a shared one)
+  // /plan              the trip planner (?p=… for a shared plan)
   // /d/<district>[/<spot>[/<n>]]
   // Old #/ links are converted on arrival.
   function parse() {
@@ -521,6 +523,7 @@
     }
     if (p[0] === "essentials") return { view: "essentials", section: p[1] };
     if (p[0] === "trip") return { view: "trip" };
+    if (p[0] === "plan") return { view: "plan" };
     if (p[0] === "guide" && p[1] === "food") return { view: "eat", section: "trail" };
     if (p[0] === "guide") return { view: "guide" };
     if (p[0] === "eat") {
@@ -607,6 +610,7 @@
     else if (r.view === "art") renderArt(r.a, r.n);
     else if (r.view === "essentials") renderEssentials(r.section);
     else if (r.view === "trip") renderTrip();
+    else if (r.view === "plan") renderPlan();
     else if (r.view === "district") renderDistrict(r, from);
     else renderHome();
   }
@@ -631,6 +635,7 @@
           <p class="lede">Fourteen districts between the Western Ghats and the Arabian Sea. Start at the forts in the far north and finish on the cliffs of the south, looking around at each stop.</p>
           <div class="actions">
             <a class="btn primary" href="/d/kasaragod">${visited ? t("continueJourney") : t("beginNorth")} <span aria-hidden="true">→</span></a>
+            <a class="btn ghost" href="/plan">${t("planTrip")}</a>
             <a class="btn ghost" href="/map">${t("chooseMap")}</a>
           </div>
           <p class="home-links"><a href="/guide">Must-visit places</a> · <a href="/eat">The food trail</a> · <a href="/culture">${t("culture")}</a> · <a href="/essentials">${t("essentials")}</a> · <a href="/trip">${t("trip")}</a></p>
@@ -648,7 +653,7 @@
   }
 
   // ---------- map ----------
-  function mapSvg({ focus, cls = "", pins = [], labels = true } = {}) {
+  function mapSvg({ focus, cls = "", pins = [], labels = true, viewBox = MAP.viewBox } = {}) {
     const stamps = Passport.get();
     const paths = DISTRICTS.map((d) => {
       const g = MAP.districts[d.id];
@@ -662,7 +667,7 @@
           return `<text x="${g.cx}" y="${g.cy}" class="label" data-for="${d.id}">${esc(name)}</text>`;
         }).join("")
       : "";
-    return `<svg class="kmap ${cls}" viewBox="${MAP.viewBox}" xmlns="http://www.w3.org/2000/svg">${paths}${text}${pins.join("")}</svg>`;
+    return `<svg class="kmap ${cls}" viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">${paths}${text}${pins.join("")}</svg>`;
   }
 
   function renderMap(focusId) {
@@ -1754,6 +1759,342 @@
     current = { view: "trip", refreshTrip: () => !shared && rerender() };
   }
 
+  // ---------- plan: the trip planner (js/planner.js builds the itinerary from the site's own data) ----------
+  const PLANNER = window.KERALA_PLANNER;
+  const PLAN = window.KERALA_PLAN || { bases: [], gateways: [], interests: {}, parties: {}, paces: {}, styles: {} };
+  const DOINGS = window.KERALA_DOINGS || [];
+  const PLAN_DATA = { plan: PLAN, doings: DOINGS, districts: DISTRICTS, food: FOOD, visit: VISIT, climates: CLIMATES };
+  const baseById = (id) => PLAN.bases.find((b) => b.id === id);
+  const doingById = (id) => DOINGS.find((x) => x.id === id);
+  const PlanStore = {
+    key: "kerala-journey:plan",
+    get() {
+      try {
+        return JSON.parse(localStorage.getItem(this.key)) || this._mem || null;
+      } catch {
+        return this._mem || null;
+      }
+    },
+    set(v) {
+      this._mem = v;
+      try {
+        if (v) localStorage.setItem(this.key, JSON.stringify(v));
+        else localStorage.removeItem(this.key);
+      } catch {}
+    },
+  };
+  // 1.5 → "1½", 4 → "4"
+  const fmtH = (h) => `${Math.floor(h) || ""}${h % 1 ? "½" : ""}` || "½";
+  const rupees = (n) => `₹${Math.round(n).toLocaleString("en-IN")}`;
+  // Saved places ("d/<district>/<spot>") that a town in the planner covers.
+  const savedPlaces = () =>
+    Saved.get()
+      .filter((k) => k.startsWith("d/"))
+      .map((k) => k.slice(2))
+      .filter((k) => PLAN.bases.some((b) => b.district === k.split("/")[0] && b.spots.includes(k.split("/")[1])));
+  const spotOf = (district, id) => byId(district)?.spots.find((s) => s.id === id);
+
+  function renderPlan() {
+    const qs = new URLSearchParams(location.search);
+    const shared = qs.get("p") ? PLANNER.decode(qs.get("p")) : null;
+    let inputs = shared || PlanStore.get();
+    let showForm = !inputs;
+    let plan = null;
+    const link = () => `${location.origin}/plan?p=${encodeURIComponent(PLANNER.encode(plan.inputs))}`;
+    const routeText = () => plan.stops.map((s) => baseById(s.base).name).join(" → ");
+
+    const defaults = () => ({
+      days: 7,
+      from: "cok",
+      to: "cok",
+      party: "couple",
+      budget: "mid",
+      pace: "balanced",
+      month: TravelMonth.get(),
+      interests: [],
+      mustSee: savedPlaces(),
+    });
+
+    function formHtml(i) {
+      const radios = (name, opts, cur) =>
+        Object.entries(opts)
+          .map(([id, label]) => `<label class="pick"><input type="radio" name="${name}" value="${id}"${id === cur ? " checked" : ""} /><span>${esc(label)}</span></label>`)
+          .join("");
+      const gwOpts = (cur) => PLAN.gateways.map((g) => `<option value="${g.id}"${g.id === cur ? " selected" : ""}>${esc(g.name)}</option>`).join("");
+      const saved = [...new Set([...savedPlaces(), ...(i.mustSee || [])])];
+      return `<form class="plan-form" id="plan-form">
+        <div class="pf-row">
+          <label class="pf-field"><span class="pack-label">Days in Kerala</span>
+            <span class="stepper"><button type="button" data-step="-1" aria-label="One day fewer">−</button><input type="number" name="days" min="2" max="21" value="${i.days}" inputmode="numeric" /><button type="button" data-step="1" aria-label="One day more">+</button></span></label>
+          <label class="pf-field"><span class="pack-label">Travelling in</span>
+            <select name="month">${MONTHS.map((x, k) => `<option value="${k}"${k === i.month ? " selected" : ""}>${x}</option>`).join("")}</select></label>
+          <label class="pf-field"><span class="pack-label">Arriving at</span><select name="from">${gwOpts(i.from)}</select></label>
+          <label class="pf-field"><span class="pack-label">Leaving from</span><select name="to">${gwOpts(i.to)}</select></label>
+        </div>
+        <fieldset><legend class="pack-label">Who's going</legend><div class="picks">${radios("party", Object.fromEntries(Object.entries(PLAN.parties).map(([k, v]) => [k, v.label])), i.party)}</div></fieldset>
+        <fieldset><legend class="pack-label">Budget per person, on the ground</legend><div class="picks">${radios("budget", Object.fromEntries(Object.entries(PLANNER.BANDS).map(([k, v]) => [k, v.label])), i.budget)}</div></fieldset>
+        <fieldset><legend class="pack-label">Pace</legend><div class="picks">${radios("pace", Object.fromEntries(Object.entries(PLAN.paces).map(([k, v]) => [k, v.label])), i.pace)}</div></fieldset>
+        <fieldset><legend class="pack-label">What do you love? <span class="muted">(pick any)</span></legend><div class="picks">${Object.entries(PLAN.interests)
+          .map(([id, label]) => `<label class="pick"><input type="checkbox" name="interests" value="${id}"${i.interests.includes(id) ? " checked" : ""} /><span>${esc(label)}</span></label>`)
+          .join("")}</div></fieldset>
+        ${
+          saved.length
+            ? `<fieldset><legend class="pack-label">Want to see <span class="muted">(your saved places)</span></legend><div class="picks">${saved
+                .map((k) => {
+                  const [d, id] = k.split("/");
+                  return `<label class="pick"><input type="checkbox" name="mustSee" value="${esc(k)}"${(i.mustSee || []).includes(k) ? " checked" : ""} /><span>${esc(spotOf(d, id)?.name || id)}</span></label>`;
+                })
+                .join("")}</div></fieldset>`
+            : `<p class="muted small">Tip: tap <strong>♡ Save</strong> on any place while you explore, and the planner will fit it in.</p>`
+        }
+        <div class="trip-tools">
+          <button class="btn primary" type="submit">${plan ? "Update my plan" : "Build my plan"} <span aria-hidden="true">→</span></button>
+          ${plan ? '<button class="btn outline" type="button" id="pf-cancel">Cancel</button>' : ""}
+        </div>
+      </form>`;
+    }
+
+    function readForm(f) {
+      const fd = new FormData(f);
+      const base = inputs || {};
+      const next = {
+        days: +fd.get("days"),
+        month: +fd.get("month"),
+        from: fd.get("from"),
+        to: fd.get("to"),
+        party: fd.get("party"),
+        budget: fd.get("budget"),
+        pace: fd.get("pace"),
+        interests: fd.getAll("interests"),
+        mustSee: fd.getAll("mustSee"),
+      };
+      // Changing the basics starts the route afresh; edits from the buttons only survive if nothing else changed.
+      const same = ["days", "from", "to", "pace"].every((k) => base[k] === next[k]);
+      return same ? { ...base, ...next } : next;
+    }
+
+    function mapHtml() {
+      const gw = (id) => PLAN.gateways.find((g) => g.id === id);
+      const pts = [gw(plan.inputs.from), ...plan.stops.map((s) => baseById(s.base)), gw(plan.inputs.to)].map((b) => project(b.coords));
+      const line = `<polyline class="plan-route" points="${pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ")}" />`;
+      const air = [plan.inputs.from, plan.inputs.to]
+        .filter((id, k, a) => a.indexOf(id) === k)
+        .map((id) => {
+          const [x, y] = project(gw(id).coords);
+          return `<g class="plan-air" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><rect x="-4" y="-4" width="8" height="8" rx="2"></rect><title>${esc(gw(id).name)}</title></g>`;
+        })
+        .join("");
+      const pins = plan.stops
+        .map((s, k) => {
+          const b = baseById(s.base);
+          const [x, y] = project(b.coords);
+          return `<g class="plan-pin" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="9"></circle><text dy="3.5">${k + 1}</text><title>${esc(b.name)}</title></g>`;
+        })
+        .join("");
+      // Zoom to the route, with room around it, but never closer than about a third of Kerala.
+      const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+      const [, , W0, H0] = MAP.viewBox.split(" ").map(Number);
+      const w = Math.max(Math.max(...xs) - Math.min(...xs) + 80, W0 * 0.45);
+      const h = Math.max(Math.max(...ys) - Math.min(...ys) + 80, w * 1.1);
+      const cx = (Math.max(...xs) + Math.min(...xs)) / 2, cy = (Math.max(...ys) + Math.min(...ys)) / 2;
+      const vb = [cx - w / 2, cy - h / 2, w, h].map((v) => v.toFixed(1)).join(" ");
+      return mapSvg({ cls: "plan-map", labels: false, pins: [line, air, pins], viewBox: vb });
+    }
+
+    function dayHtml(d) {
+      const b = baseById(d.base);
+      const dist = byId(d.district);
+      const leg = (l, verb) =>
+        `<p class="pd-travel"><span aria-hidden="true">${verb === "Leave" ? "✈" : "→"}</span> ${verb === "Leave" ? `Leave for ${esc(l.to)}` : `${esc(l.from)} to ${esc(l.to)}`}: about ${fmtH(l.hours)} h, ${l.km} km</p>`;
+      const thumb = (im) => (im ? `<img src="${esc(thumbOf(im))}" alt="" loading="lazy" />` : '<span class="noimg"></span>');
+      const see = d.see
+        .map((id) => {
+          const s = spotOf(d.district, id);
+          return s ? `<li><a href="/d/${d.district}/${id}">${thumb(imagesFor(dist, s)[0])}<span><strong>${esc(s.name)}</strong></span></a></li>` : "";
+        })
+        .join("");
+      const eat = d.eat
+        .map((id) => {
+          const f = dishById(id);
+          return f ? `<li><a href="/eat/${f.id}">${thumb(dishImages(f)[0])}<span><strong>${esc(f.name)}</strong><small>The ${esc(dist?.name || "")} dish</small></span></a></li>` : "";
+        })
+        .join("");
+      const tries = d.try
+        .map((id) => {
+          const x = doingById(id);
+          if (!x) return "";
+          const im = x.spot ? MEDIA[`${d.district}/${x.spot}`]?.images?.[0] : null;
+          const price = x.cost ? `about ${rupees(x.cost)} ${x.per === "group" ? "per group" : "per person"}` : "free";
+          return `<li><span class="pd-try">${thumb(im)}<span><strong>${esc(x.name)}</strong><small>${x.hours >= 12 ? "Overnight" : `${x.when ? `${x.when[0].toUpperCase()}${x.when.slice(1)} · ` : ""}about ${fmtH(x.hours)} h`} · ${price}</small>${
+            x.note ? `<small class="pd-note">${esc(x.note)}</small>` : ""
+          }</span></span></li>`;
+        })
+        .join("");
+      const clim = d.climate ? CLIMATES.kinds[d.climate]?.label : "";
+      return `<li class="plan-day">
+        <header><span class="pd-n">Day ${d.n}</span><h3>${esc(b.name)}</h3><span class="pd-where">${esc(dist?.name || "")}${clim ? ` · ${esc(clim)}` : ""}</span></header>
+        ${d.travel && d.travel.hours ? leg(d.travel, "Go") : ""}
+        ${see ? `<h4>See</h4><ul class="trip-items">${see}</ul>` : ""}
+        ${eat ? `<h4>Eat</h4><ul class="trip-items">${eat}</ul>` : ""}
+        ${tries ? `<h4>Try</h4><ul class="trip-items">${tries}</ul>` : ""}
+        ${!see && !eat && !tries ? '<p class="muted small">A free day: slow down, wander, or add something from a nearby town.</p>' : ""}
+        ${d.depart ? leg(d.depart, "Leave") : ""}
+      </li>`;
+    }
+
+    function budgetHtml() {
+      const c = plan.cost;
+      const people = PLAN.parties[plan.inputs.party].people;
+      return `<div class="plan-budget">
+        <h3>Rough budget <small class="muted">per person, in Kerala (flights not included)</small></h3>
+        <ul>${Object.entries(c.byStyle)
+          .map(
+            ([id, v]) => `<li class="${id === c.style ? "on" : ""}"><strong>${esc(PLAN.styles[id].label)}</strong><span>about ${rupees(v.perPerson)}</span><small>${esc(PLAN.styles[id].transit)}${
+              people > 1 ? ` · ${rupees(v.total)} for ${people}` : ""
+            }</small></li>`
+          )
+          .join("")}</ul>
+        <p class="${c.fits ? "fits" : "over"}">${
+          c.fits
+            ? `Fits your ${esc(c.band)} budget travelling <strong>${esc(PLAN.styles[c.style].label.toLowerCase())}</strong>.`
+            : `About ${rupees(c.over)} per person over your ${esc(c.band)} budget, even on a budget style. Try <em>Less driving</em> or fewer days.`
+        }</p>
+        <p class="muted small">Ballpark figures for rooms, food, local travel and the things to try, not quotes.</p>
+      </div>`;
+    }
+
+    function draw() {
+      if (inputs && !showForm) plan = PLANNER.buildPlan(inputs, PLAN_DATA);
+      const i = plan?.inputs || inputs || defaults();
+      const outside = PLAN.bases.filter((b) => plan && !plan.stops.some((s) => s.base === b.id));
+      const missed = plan ? plan.inputs.mustSee.filter((k) => !plan.days.some((d) => d.district === k.split("/")[0] && d.see.includes(k.split("/")[1]))) : [];
+      app.innerHTML = `
+        <section class="eat-view plan-view">
+          ${siteHead("plan")}
+          <header class="eat-hero plan-hero">
+            <p class="eyebrow">${shared ? "A plan shared with you" : "Plan your trip"}</p>
+            <h1 class="eat-title">${
+              plan && !showForm ? `${plan.inputs.days} days in Kerala <em>${esc(routeText())}</em>` : "Your Kerala trip, <em>day by day</em>"
+            }</h1>
+            ${
+              plan && !showForm
+                ? `<p class="plan-facts">${esc(PLAN.parties[i.party].label)} · ${MONTHS[i.month] || "Any month"} · ${esc(PLAN.paces[i.pace].label.toLowerCase())} pace · about ${plan.km} km on the road</p>
+                   <div class="trip-tools">
+                     ${
+                       shared
+                         ? '<button class="btn primary" id="plan-use">Use this plan</button><a class="btn outline" href="/plan">Plan my own</a>'
+                         : `<button class="btn primary wa-btn" id="plan-wa">${WA_ICON} Share on WhatsApp</button>
+                            <button class="btn outline" id="plan-copy">Copy link</button>
+                            <button class="btn outline" id="plan-edit">Change trip details</button>
+                            <button class="link-btn" id="plan-print">Print</button>`
+                     }
+                   </div>
+                   <p class="muted small" id="plan-msg" aria-live="polite">${shared ? "" : "Saved in this browser."}</p>`
+                : `<p class="eat-lede">Tell us how long you have, where you land and what you love. You get a route, what to see, eat and try each day, and a rough budget, all from places on this site.</p>`
+            }
+          </header>
+          ${
+            showForm || !plan
+              ? formHtml(i)
+              : `<div class="plan-layout">
+                  <aside class="plan-side">
+                    <div class="plan-map-wrap">${mapHtml()}</div>
+                    <ol class="plan-stops">${plan.stops
+                      .map((s, k) => {
+                        const b = baseById(s.base);
+                        return `<li><span class="ps-n">${k + 1}</span><span class="ps-name"><strong>${esc(b.name)}</strong><small>${esc(byId(b.district)?.name || "")}</small></span>${
+                          shared
+                            ? `<span class="ps-days">${s.days} ${s.days === 1 ? "day" : "days"}</span>`
+                            : `<span class="ps-edit"><button data-nights="${b.id}" data-d="-1" aria-label="One day less in ${esc(b.name)}"${s.days < 2 ? " disabled" : ""}>−</button><span>${s.days} ${s.days === 1 ? "day" : "days"}</span><button data-nights="${b.id}" data-d="1" aria-label="One day more in ${esc(b.name)}">+</button><button class="link-btn" data-swap="${b.id}">Swap</button></span>`
+                        }</li>`;
+                      })
+                      .join("")}</ol>
+                    ${
+                      shared
+                        ? ""
+                        : `<div class="plan-edits">
+                            <button class="btn outline" data-edit="lessDriving"${plan.stops.length < 2 ? " disabled" : ""}>Less driving</button>
+                            <button class="btn outline" data-edit="cheaper"${plan.cost.style === "budget" && plan.inputs.cheap ? " disabled" : ""}>Make it cheaper</button>
+                            <label class="plan-add"><span class="sr-only">Add a town</span><select id="plan-add"><option value="">+ Add a town…</option>${outside
+                              .map((b) => `<option value="${b.id}">${esc(b.name)} (${esc(byId(b.district)?.name || "")})</option>`)
+                              .join("")}</select></label>
+                          </div>`
+                    }
+                    ${plan.warnings.map((w) => `<p class="plan-warn">${esc(w)}</p>`).join("")}
+                    ${missed.length ? `<p class="plan-warn">Not in this plan: ${missed.map((k) => esc(spotOf(...k.split("/"))?.name || k)).join(", ")}${i.month !== null ? `, which isn't on in ${MONTHS[i.month]}` : ""}.</p>` : ""}
+                    ${budgetHtml()}
+                  </aside>
+                  <ol class="plan-days">${plan.days.map(dayHtml).join("")}</ol>
+                </div>
+                <p class="muted small plan-foot">Drive times and prices are estimates; check opening days locally. Built only from places on this site. <a href="/trip">See all your saved places</a></p>`
+          }
+        </section>`;
+      wire();
+    }
+
+    function rebuild(next) {
+      if (!next) return;
+      inputs = next;
+      if (!shared) PlanStore.set(inputs);
+      draw();
+    }
+
+    function wire() {
+      const form = app.querySelector("#plan-form");
+      if (form) {
+        const days = form.querySelector('[name="days"]');
+        form.querySelectorAll("[data-step]").forEach((b) =>
+          b.addEventListener("click", () => (days.value = Math.max(2, Math.min(21, (+days.value || 7) + +b.dataset.step))))
+        );
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const next = readForm(form);
+          TravelMonth.set(next.month);
+          showForm = false;
+          if (shared) history.replaceState(null, "", "/plan");
+          rebuild(next);
+          window.scrollTo(0, 0);
+        });
+        app.querySelector("#pf-cancel")?.addEventListener("click", () => {
+          showForm = false;
+          draw();
+        });
+        return;
+      }
+      const msg = app.querySelector("#plan-msg");
+      app.querySelector("#plan-wa")?.addEventListener("click", () => openWa("", `Our Kerala plan: ${plan.inputs.days} days, ${routeText()}\n${link()}`));
+      app.querySelector("#plan-copy")?.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(link());
+          msg.textContent = "Link copied. Anyone with it can open this plan.";
+        } catch {
+          msg.innerHTML = `Copy this link: <a href="${esc(link())}">${esc(link())}</a>`;
+        }
+      });
+      app.querySelector("#plan-edit")?.addEventListener("click", () => {
+        showForm = true;
+        draw();
+      });
+      app.querySelector("#plan-print")?.addEventListener("click", () => window.print());
+      app.querySelector("#plan-use")?.addEventListener("click", () => {
+        PlanStore.set(plan.inputs);
+        location.replace("/plan");
+      });
+      app.querySelectorAll("[data-edit]").forEach((b) => b.addEventListener("click", () => rebuild(PLANNER.edits[b.dataset.edit](plan, PLAN_DATA))));
+      app.querySelectorAll("[data-nights]").forEach((b) => b.addEventListener("click", () => rebuild(PLANNER.edits.nights(plan, PLAN_DATA, b.dataset.nights, +b.dataset.d))));
+      app.querySelectorAll("[data-swap]").forEach((b) => b.addEventListener("click", () => rebuild(PLANNER.edits.swap(plan, PLAN_DATA, b.dataset.swap))));
+      app.querySelector("#plan-add")?.addEventListener("change", (e) => e.target.value && rebuild(PLANNER.edits.add(plan, PLAN_DATA, e.target.value)));
+    }
+
+    draw();
+    current = {
+      view: "plan",
+      // Saving or removing a place elsewhere updates the "Want to see" list next time the form opens.
+      refreshTrip: () => showForm && draw(),
+      shareUrl: () => (plan && !showForm ? link() : location.origin + "/plan"),
+    };
+  }
+
   // ---------- search (the magnifier button, or press /) ----------
   const Search = (() => {
     let dlg = null, index = null, results = [], sel = 0;
@@ -1774,7 +2115,8 @@
         ["The food trail", "/eat", "food dishes restaurants eat sadya"],
         ["Culture", "/culture", "art forms festivals history phrases malayalam"],
         ["Travel essentials", "/essentials", "packing money sim transport safety"],
-        ["My trip", "/trip", "saved plan itinerary share"],
+        ["Plan my trip", "/plan", "plan itinerary planner route days budget trip builder"],
+        ["My trip", "/trip", "saved places share"],
         ["Map", "/map", "districts map"],
       ])
         add("Page", title, "", text, href);

@@ -4292,3 +4292,415 @@ html {
 .am[data-m="metal"] .am-ghost {
   display: none;
 }
+
+/* ---------- plan: the trip planner ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.plan-form {
+  display: grid;
+  gap: 1.4rem;
+  max-width: 56rem;
+  padding: clamp(1rem, 3vw, 1.8rem);
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.plan-form fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.pf-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+.pf-field select {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+}
+.stepper {
+  display: flex;
+  align-items: stretch;
+  min-height: 2.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  overflow: hidden;
+}
+.stepper button {
+  width: 2.75rem;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.stepper input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+.stepper input::-webkit-inner-spin-button,
+.stepper input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+.picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.pick input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.pick span {
+  display: inline-block;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pick input:checked + span {
+  background: var(--green-700);
+  border-color: var(--green-700);
+  color: var(--cream);
+}
+.pick input:focus-visible + span {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.plan-facts {
+  margin: 0;
+  font-weight: 600;
+  color: var(--muted);
+}
+.btn.wa-btn {
+  background: #1f8f4d;
+  color: #fff;
+}
+.btn.wa-btn:hover {
+  background: #23a157;
+}
+.btn.wa-btn .wa-ic path:first-child {
+  fill: #fff;
+}
+.btn.wa-btn .wa-ic path:last-child {
+  fill: #1f8f4d;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
+}
+.plan-layout {
+  display: grid;
+  grid-template-columns: minmax(16rem, 22rem) minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: start;
+}
+.plan-side {
+  position: sticky;
+  top: 1rem;
+  display: grid;
+  gap: 1rem;
+}
+.plan-map-wrap {
+  overflow: hidden;
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.kmap.plan-map {
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  height: auto;
+  max-height: 60vh;
+}
+.kmap.plan-map .district {
+  pointer-events: none;
+}
+.plan-route {
+  fill: none;
+  stroke: var(--laterite);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-dasharray: 5 4;
+}
+.plan-pin circle {
+  fill: var(--green-700);
+  stroke: var(--cream);
+  stroke-width: 1.5;
+}
+.plan-pin text {
+  fill: var(--cream);
+  font: 700 10px var(--sans);
+  text-anchor: middle;
+}
+.plan-air rect {
+  fill: var(--gold);
+  stroke: var(--green-950);
+  stroke-width: 1;
+}
+.plan-stops {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.plan-stops li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.ps-n {
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--green-700);
+  color: var(--cream);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.ps-name {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+.ps-name small,
+.ps-days {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.ps-edit {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+.ps-edit button[data-nights] {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+.ps-edit button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.plan-edits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.plan-edits .btn {
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+}
+.plan-add select {
+  min-height: 2.6rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.plan-warn {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  border-left: 3px solid var(--laterite);
+  background: var(--surface);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.plan-budget {
+  padding: 1rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.plan-budget h3 {
+  margin: 0 0 0.7rem;
+  font-size: 1rem;
+}
+.plan-budget h3 small {
+  display: block;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+.plan-budget ul {
+  list-style: none;
+  margin: 0 0 0.7rem;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.plan-budget li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 0.5rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+.plan-budget li small {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.plan-budget li.on {
+  border-color: var(--green-700);
+  box-shadow: inset 0 0 0 1px var(--green-700);
+}
+.plan-budget .fits,
+.plan-budget .over {
+  margin: 0 0 0.4rem;
+  font-size: 0.9rem;
+}
+.plan-budget .over {
+  color: var(--laterite);
+}
+.plan-days {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+.plan-day {
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  break-inside: avoid;
+}
+.plan-day > header {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.7rem;
+}
+.pd-n {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.plan-day h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.pd-where {
+  margin-left: auto;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.plan-day h4 {
+  margin: 1rem 0 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.pd-travel {
+  margin: 0.6rem 0 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--green-700);
+}
+.pd-try {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.pd-try > span {
+  display: grid;
+}
+.pd-note {
+  margin-top: 0.15rem;
+  font-style: italic;
+}
+.plan-foot {
+  margin-top: 1.5rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .pd-travel {
+    color: var(--green-300);
+  }
+}
+:root[data-theme="dark"] .pd-travel {
+  color: var(--green-300);
+}
+@media (max-width: 900px) {
+  .plan-layout {
+    grid-template-columns: 1fr;
+  }
+  .plan-side {
+    position: static;
+  }
+  .kmap.plan-map {
+    max-height: 50vh;
+  }
+}
+@media (max-width: 640px) {
+  .pf-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media print {
+  .plan-view .site-head,
+  .plan-view .trip-tools,
+  .plan-edits,
+  .ps-edit button,
+  .ps-edit .link-btn,
+  #plan-msg {
+    display: none !important;
+  }
+  .plan-layout {
+    grid-template-columns: 1fr;
+  }
+  .plan-side {
+    position: static;
+  }
+}
