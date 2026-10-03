@@ -139,6 +139,7 @@
     ["map", "/map"],
     ["guide", "/guide"],
     ["food", "/eat"],
+    ["do", "/do"],
     ["culture", "/culture"],
     ["essentials", "/essentials"],
   ];
@@ -511,6 +512,7 @@
   // /essentials[/<section>]
   // /trip              the visitor's saved trip (?s=… for a shared one)
   // /plan              the trip planner (?p=… for a shared plan)
+  // /do[/<experience>|/<district>]   things to do
   // /d/<district>[/<spot>[/<n>]]
   // Old #/ links are converted on arrival.
   function parse() {
@@ -524,6 +526,7 @@
     if (p[0] === "essentials") return { view: "essentials", section: p[1] };
     if (p[0] === "trip") return { view: "trip" };
     if (p[0] === "plan") return { view: "plan" };
+    if (p[0] === "do") return { view: "do", sel: p[1] };
     if (p[0] === "guide" && p[1] === "food") return { view: "eat", section: "trail" };
     if (p[0] === "guide") return { view: "guide" };
     if (p[0] === "eat") {
@@ -589,6 +592,10 @@
       return;
     }
     // Long pages jump to a section instead of re-rendering (keeps the sadya leaf, dials and picks as they were).
+    if (r.view === "do" && current?.view === "do") {
+      current.goTo(r.sel);
+      return;
+    }
     if (["eat", "culture", "essentials"].includes(r.view) && current?.view === r.view) {
       current.goTo(r.section, r.arg);
       return;
@@ -611,6 +618,7 @@
     else if (r.view === "essentials") renderEssentials(r.section);
     else if (r.view === "trip") renderTrip();
     else if (r.view === "plan") renderPlan();
+    else if (r.view === "do") renderDo(r.sel);
     else if (r.view === "district") renderDistrict(r, from);
     else renderHome();
   }
@@ -635,7 +643,7 @@
           <p class="lede">Fourteen districts between the Western Ghats and the Arabian Sea. Start at the forts in the far north and finish on the cliffs of the south, looking around at each stop.</p>
           <div class="actions">
             <a class="btn primary" href="/d/kasaragod">${visited ? t("continueJourney") : t("beginNorth")} <span aria-hidden="true">→</span></a>
-            <a class="btn ghost" href="/plan">${t("planTrip")}</a>
+            <a class="btn ghost" href="/plan">${t("planMyTrip")}</a>
             <a class="btn ghost" href="/map">${t("chooseMap")}</a>
           </div>
           <p class="home-links"><a href="/guide">Must-visit places</a> · <a href="/eat">The food trail</a> · <a href="/culture">${t("culture")}</a> · <a href="/essentials">${t("essentials")}</a> · <a href="/trip">${t("trip")}</a></p>
@@ -1793,6 +1801,26 @@
       .map((k) => k.slice(2))
       .filter((k) => PLAN.bases.some((b) => b.district === k.split("/")[0] && b.spots.includes(k.split("/")[1])));
   const spotOf = (district, id) => byId(district)?.spots.find((s) => s.id === id);
+  const planDefaults = () => ({
+    days: 7,
+    from: "cok",
+    to: "cok",
+    party: "couple",
+    budget: "mid",
+    pace: "balanced",
+    month: TravelMonth.get(),
+    interests: [],
+    mustSee: savedPlaces(),
+  });
+  // An experience's photo: its own place, or else the first photo of a place seen from its town.
+  function doingImage(x) {
+    const b = baseById(x.base);
+    if (!b) return null;
+    const own = x.spot && MEDIA[`${b.district}/${x.spot}`]?.images?.[0];
+    return own || b.spots.map((id) => MEDIA[`${b.district}/${id}`]?.images?.[0]).find(Boolean) || null;
+  }
+  const doingPrice = (x) => (x.cost ? `about ${rupees(x.cost)} ${x.per === "group" ? "per group" : "per person"}` : "Free");
+  const doingTime = (x) => (x.hours >= 12 ? "Overnight" : `${x.when ? `${x.when[0].toUpperCase()}${x.when.slice(1)} · ` : ""}about ${fmtH(x.hours)} h`);
 
   function renderPlan() {
     const qs = new URLSearchParams(location.search);
@@ -1803,17 +1831,7 @@
     const link = () => `${location.origin}/plan?p=${encodeURIComponent(PLANNER.encode(plan.inputs))}`;
     const routeText = () => plan.stops.map((s) => baseById(s.base).name).join(" → ");
 
-    const defaults = () => ({
-      days: 7,
-      from: "cok",
-      to: "cok",
-      party: "couple",
-      budget: "mid",
-      pace: "balanced",
-      month: TravelMonth.get(),
-      interests: [],
-      mustSee: savedPlaces(),
-    });
+    const defaults = planDefaults;
 
     function formHtml(i) {
       const radios = (name, opts, cur) =>
@@ -1923,11 +1941,12 @@
         .map((id) => {
           const x = doingById(id);
           if (!x) return "";
-          const im = x.spot ? MEDIA[`${d.district}/${x.spot}`]?.images?.[0] : null;
-          const price = x.cost ? `about ${rupees(x.cost)} ${x.per === "group" ? "per group" : "per person"}` : "free";
-          return `<li><span class="pd-try">${thumb(im)}<span><strong>${esc(x.name)}</strong><small>${x.hours >= 12 ? "Overnight" : `${x.when ? `${x.when[0].toUpperCase()}${x.when.slice(1)} · ` : ""}about ${fmtH(x.hours)} h`} · ${price}</small>${
-            x.note ? `<small class="pd-note">${esc(x.note)}</small>` : ""
-          }</span></span></li>`;
+          const pinned = plan.inputs.pins[id] !== undefined;
+          return `<li><a href="/do/${x.id}" class="pd-try">${thumb(doingImage(x))}<span><strong>${esc(x.name)}</strong><small>${doingTime(x)} · ${doingPrice(x).toLowerCase()}${
+            pinned ? " · added by you" : ""
+          }</small>${x.note ? `<small class="pd-note">${esc(x.note)}</small>` : ""}</span></a>${
+            pinned && !shared ? `<button class="link-btn" data-unpin="${x.id}" aria-label="Remove ${esc(x.name)} from day ${d.n}">Remove</button>` : ""
+          }</li>`;
         })
         .join("");
       const clim = d.climate ? CLIMATES.kinds[d.climate]?.label : "";
@@ -1937,7 +1956,8 @@
         ${see ? `<h4>See</h4><ul class="trip-items">${see}</ul>` : ""}
         ${eat ? `<h4>Eat</h4><ul class="trip-items">${eat}</ul>` : ""}
         ${tries ? `<h4>Try</h4><ul class="trip-items">${tries}</ul>` : ""}
-        ${!see && !eat && !tries ? '<p class="muted small">A free day: slow down, wander, or add something from a nearby town.</p>' : ""}
+        ${!see && !eat && !tries ? '<p class="muted small">A free day: slow down, wander, or add something to do.</p>' : ""}
+        ${shared ? "" : `<p class="pd-more"><a href="/do/${d.district}">More things to do in ${esc(dist?.name || b.name)} →</a></p>`}
         ${d.depart ? leg(d.depart, "Leave") : ""}
       </li>`;
     }
@@ -2084,6 +2104,7 @@
       app.querySelectorAll("[data-nights]").forEach((b) => b.addEventListener("click", () => rebuild(PLANNER.edits.nights(plan, PLAN_DATA, b.dataset.nights, +b.dataset.d))));
       app.querySelectorAll("[data-swap]").forEach((b) => b.addEventListener("click", () => rebuild(PLANNER.edits.swap(plan, PLAN_DATA, b.dataset.swap))));
       app.querySelector("#plan-add")?.addEventListener("change", (e) => e.target.value && rebuild(PLANNER.edits.add(plan, PLAN_DATA, e.target.value)));
+      app.querySelectorAll("[data-unpin]").forEach((b) => b.addEventListener("click", () => rebuild(PLANNER.edits.unpin(plan, PLAN_DATA, b.dataset.unpin))));
     }
 
     draw();
@@ -2093,6 +2114,168 @@
       refreshTrip: () => showForm && draw(),
       shareUrl: () => (plan && !showForm ? link() : location.origin + "/plan"),
     };
+  }
+
+  // ---------- things to do (/do): every experience, north to south, with "Add to my plan" ----------
+  const DO_KINDS = window.KERALA_DOINGS_KINDS || {};
+  const doDistrict = (x) => baseById(x.base)?.district;
+  // /do/<experience> opens on that card; /do/<district> on that district's section.
+  function renderDo(sel) {
+    let kind = "all";
+    let month = "any";
+    let flash = {}; // { id: message } shown on a card after an action
+
+    const savedPlan = () => {
+      const i = PlanStore.get();
+      return i ? PLANNER.buildPlan(i, PLAN_DATA) : null;
+    };
+
+    function planControl(x, plan) {
+      const b = baseById(x.base);
+      const msg = flash[x.id] ? `<p class="do-msg" role="status">${flash[x.id]}</p>` : "";
+      if (!plan)
+        return `<button class="btn outline" data-do-add="${x.id}">+ Add to my plan</button>${msg}`;
+      const on = plan.days.find((d) => d.try.includes(x.id));
+      if (on)
+        return `<p class="do-on">✓ Day ${on.n} of <a href="/plan">your plan</a>${
+          plan.inputs.pins[x.id] !== undefined ? ` <button class="link-btn" data-do-unpin="${x.id}">Remove</button>` : ""
+        }</p>${msg}`;
+      const days = plan.days.filter((d) => d.base === x.base);
+      if (days.length)
+        return `<label class="do-pick"><span class="sr-only">Add ${esc(x.name)} to a day</span><select data-do-day="${x.id}"><option value="">+ Add to day…</option>${days
+          .map((d) => `<option value="${d.n}">Day ${d.n} · ${esc(b.name)}</option>`)
+          .join("")}</select></label>${msg}`;
+      return `<button class="btn outline" data-do-add="${x.id}">+ Add ${esc(b.name)} and this to my plan</button>${msg}`;
+    }
+
+    function card(x, plan) {
+      const d = doDistrict(x);
+      const im = doingImage(x);
+      const spot = x.spot && spotOf(d, x.spot);
+      const img = im ? `<img src="${esc(srcFor(im, { clientWidth: 640, clientHeight: 480 }))}" alt="" loading="lazy" />` : '<span class="noimg"></span>';
+      return `<article class="do-card" id="do-${x.id}">
+        ${spot ? `<a class="do-img" href="/d/${d}/${x.spot}" aria-label="${esc(spot.name)}">${img}</a>` : `<span class="do-img">${img}</span>`}
+        <div class="do-body">
+          <p class="do-kind">${esc(DO_KINDS[x.kind] || x.kind)} · ${esc(baseById(x.base).name)}</p>
+          <h3><a href="/do/${x.id}">${esc(x.name)}</a></h3>
+          <p class="do-blurb">${esc(x.blurb || "")}</p>
+          <p class="do-meta">${doingTime(x)} · ${doingPrice(x)}${x.months ? ` · ${esc(fmtMonths(x.months))}` : ""}</p>
+          ${x.note ? `<p class="do-note">${esc(x.note)}</p>` : ""}
+          <div class="do-actions">${planControl(x, plan)}</div>
+        </div>
+      </article>`;
+    }
+
+    function draw() {
+      const plan = savedPlan();
+      const shown = DOINGS.filter((x) => (kind === "all" || x.kind === kind) && (month === "any" || !x.months || x.months.includes(+month)));
+      const groups = DISTRICTS.map((d) => ({ d, items: shown.filter((x) => doDistrict(x) === d.id) })).filter((g) => g.items.length);
+      const count = (k) => DOINGS.filter((x) => (k === "all" || x.kind === k) && (month === "any" || !x.months || x.months.includes(+month))).length;
+      app.innerHTML = `
+        <section class="eat-view do-view">
+          ${siteHead("do")}
+          <header class="eat-hero">
+            <p class="eyebrow">Things to do</p>
+            <h1 class="eat-title">Kerala, <em>hands on</em></h1>
+            <p class="eat-lede">${DOINGS.length} things to actually do, from a night on a houseboat to a village Theyyam by firelight. Times and prices are rough; add the ones you like to a day of your plan.</p>
+            <div class="do-filters">
+              <div class="picks" role="group" aria-label="Kind">
+                ${[["all", "All"], ...Object.entries(DO_KINDS)]
+                  .map(([k, label]) => `<button class="pick-btn${k === kind ? " on" : ""}" data-kind="${k}" aria-pressed="${k === kind}">${esc(label)} <span>${count(k)}</span></button>`)
+                  .join("")}
+              </div>
+              <label class="do-month">On in <select id="do-month"><option value="any">any month</option>${MONTHS.map(
+                (m, k) => `<option value="${k}"${String(k) === month ? " selected" : ""}>${m}</option>`
+              ).join("")}</select></label>
+            </div>
+            ${plan ? `<p class="muted small">Your plan: ${plan.inputs.days} days, ${esc(plan.stops.map((s) => baseById(s.base).name).join(" → "))}. <a href="/plan">Open it</a></p>` : ""}
+          </header>
+          ${
+            groups.length
+              ? groups
+                  .map(
+                    ({ d, items }) => `<section class="do-district" id="do-in-${d.id}">
+                      <header><span class="ml" lang="ml">${esc(d.ml)}</span><h2><a href="/d/${d.id}">${esc(d.name)}</a></h2><span class="muted small">${items.length}</span></header>
+                      <div class="do-grid">${items.map((x) => card(x, plan)).join("")}</div>
+                    </section>`
+                  )
+                  .join("")
+              : '<p class="muted">Nothing of that kind that month. Try another month or kind.</p>'
+          }
+        </section>`;
+      wire(plan);
+    }
+
+    function save(next, x, message) {
+      if (!next) return;
+      PlanStore.set(next);
+      flash = { [x.id]: message };
+      const y = window.scrollY;
+      draw();
+      window.scrollTo(0, y);
+    }
+
+    function wire(plan) {
+      app.querySelectorAll("[data-kind]").forEach((b) =>
+        b.addEventListener("click", () => {
+          kind = b.dataset.kind;
+          flash = {};
+          draw();
+        })
+      );
+      app.querySelector("#do-month").addEventListener("change", (e) => {
+        month = e.target.value;
+        flash = {};
+        draw();
+      });
+      app.querySelectorAll("[data-do-add]").forEach((btn) =>
+        btn.addEventListener("click", () => {
+          const x = doingById(btn.dataset.doAdd);
+          const town = baseById(x.base).name;
+          if (!plan) {
+            // No plan yet: start one around this town, which the traveller can then adjust on /plan.
+            const start = { ...planDefaults(), include: [x.base], pins: { [x.id]: 0 } };
+            save(start, x, `Started a ${start.days}-day plan with ${esc(town)}. <a href="/plan">Adjust it</a>`);
+          } else {
+            const next = PLANNER.edits.pin(plan, PLAN_DATA, x.id, 0);
+            const after = PLANNER.buildPlan(next, PLAN_DATA).days.find((d) => d.try.includes(x.id));
+            save(next, x, after ? `Added ${esc(town)} to your plan: day ${after.n}.` : `Added ${esc(town)} to your plan.`);
+          }
+        })
+      );
+      app.querySelectorAll("[data-do-day]").forEach((sel) =>
+        sel.addEventListener("change", () => {
+          if (!sel.value) return;
+          const x = doingById(sel.dataset.doDay);
+          save(PLANNER.edits.pin(plan, PLAN_DATA, x.id, +sel.value), x, `Added to day ${sel.value}.`);
+        })
+      );
+      app.querySelectorAll("[data-do-unpin]").forEach((btn) =>
+        btn.addEventListener("click", () => {
+          const x = doingById(btn.dataset.doUnpin);
+          save(PLANNER.edits.unpin(plan, PLAN_DATA, x.id), x, "Removed from your plan.");
+        })
+      );
+    }
+
+    function goTo(target) {
+      app.querySelectorAll(".do-card.on").forEach((c) => c.classList.remove("on"));
+      const el = target && (app.querySelector(`#do-${CSS.escape(target)}`) || app.querySelector(`#do-in-${CSS.escape(target)}`));
+      if (!el && target) {
+        // Filtered out: show everything again so the link still lands.
+        kind = "all";
+        month = "any";
+        draw();
+        return goTo(app.querySelector(`#do-${CSS.escape(target)}`) || app.querySelector(`#do-in-${CSS.escape(target)}`) ? target : null);
+      }
+      if (!el) return window.scrollTo(0, 0);
+      if (el.classList.contains("do-card")) el.classList.add("on");
+      requestAnimationFrame(() => el.scrollIntoView({ block: "start" }));
+    }
+
+    draw();
+    current = { view: "do", goTo, refreshTrip: () => {} };
+    if (sel) goTo(sel);
   }
 
   // ---------- search (the magnifier button, or press /) ----------
@@ -2110,12 +2293,14 @@
       for (const f of FOOD) add("Dish", f.name, byId(f.district)?.name || "", `${f.blurb} ${(f.ingredients || []).join(" ")}`, `/eat/${f.id}`, f.ml);
       for (const a of CULTURE.arts) add("Art form", a.name, byId(a.district)?.name || "", `${a.blurb} ${a.story.join(" ")}`, `/culture/${a.id}`, a.ml);
       for (const e of CULTURE.festivals) add("Festival", e.name, "All of Kerala", e.what, "/culture/calendar");
+      for (const x of DOINGS) add("To do", x.name, baseById(x.base)?.name || "", `${x.blurb || ""} ${(x.tags || []).join(" ")}`, `/do/${x.id}`);
       for (const s of ESSENTIALS.sections) add("Essentials", s.title, "Travel essentials", s.items.map((i) => `${i.h} ${i.p}`).join(" "), `/essentials/${s.id}`);
       for (const [title, href, text] of [
         ["The food trail", "/eat", "food dishes restaurants eat sadya"],
         ["Culture", "/culture", "art forms festivals history phrases malayalam"],
         ["Travel essentials", "/essentials", "packing money sim transport safety"],
         ["Plan my trip", "/plan", "plan itinerary planner route days budget trip builder"],
+        ["Things to do", "/do", "experiences activities things to do tours treks boat safari"],
         ["My trip", "/trip", "saved places share"],
         ["Map", "/map", "districts map"],
       ])
@@ -2511,7 +2696,10 @@
           next && VISIT[next.id]?.road
             ? `<h4>Going on to ${esc(next.name)}</h4><p>${esc(VISIT[next.id].road.how)}, ${esc(lcFirst(VISIT[next.id].road.time))}.</p>`
             : ""
-        }`;
+        }
+        <p class="sheet-links">${
+          DOINGS.some((x) => doDistrict(x) === d.id) ? `<a class="btn outline" href="/do/${d.id}">Things to do in ${esc(d.name)}</a>` : ""
+        }<a class="btn outline" href="/plan">Open the trip planner</a></p>`;
     };
     const renderXp = () => {
       sheetBody.innerHTML = `<p class="xp-teaser">${esc(xp.teaser)}</p><h3 class="xp-head">${esc(xp.title)}</h3><div class="xp-host"></div>`;

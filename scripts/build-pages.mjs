@@ -14,7 +14,7 @@ const OUT = path.join(ROOT, "dist");
 
 const W = { window: {} };
 W.window = W;
-for (const f of ["data/config.js", "data/districts.js", "data/food.js", "data/culture.js", "data/media.js", "data/media-overrides.js", "meta.js"])
+for (const f of ["data/config.js", "data/districts.js", "data/food.js", "data/culture.js", "data/plan.js", "data/doings.js", "data/media.js", "data/media-overrides.js", "meta.js"])
   vm.runInNewContext(fs.readFileSync(path.join(ROOT, "js", f), "utf8"), W);
 // Fold the hand-picked photos into the Commons ones (same rule as mergeMedia in js/app.js), so they
 // get WebP copies and can be link-preview images. dist/ then ships the merged list with no overrides.
@@ -32,6 +32,8 @@ for (const d of W.KERALA_DISTRICTS) {
 }
 for (const f of W.KERALA_FOOD) routes.push(`/eat/${f.id}`);
 for (const a of W.KERALA_CULTURE.arts) routes.push(`/culture/${a.id}`);
+routes.push("/do");
+for (const x of W.KERALA_DOINGS) routes.push(`/do/${x.id}`);
 
 // Copy the site.
 fs.rmSync(OUT, { recursive: true, force: true });

@@ -55,6 +55,22 @@ window.KERALA_META = function (pathname, W) {
       description: "Getting around, money, SIM cards, customs, health and safety, monsoon travel and Ayurveda, plus a packing list for your month and plans.",
       image: cover("ernakulam/fort-kochi"),
     };
+  if (p[0] === "do") {
+    const X = W.KERALA_DOINGS || [];
+    const B = W.KERALA_PLAN?.bases || [];
+    const x = X.find((e) => e.id === p[1]);
+    const town = x && B.find((b) => b.id === x.base);
+    if (x && town) {
+      const img = (x.spot && cover(`${town.district}/${x.spot}`)) || town.spots.map((id) => cover(`${town.district}/${id}`)).find(Boolean) || null;
+      return { title: `${x.name}, ${town.name} · Things to do in Kerala · ${site}`, description: short(x.blurb || ""), image: img };
+    }
+    const d = D.find((e) => e.id === p[1]);
+    return {
+      title: `Things to do in ${d ? d.name : "Kerala"} · ${site}`,
+      description: "Houseboat nights, tea-estate sunrises, Theyyam by firelight, jungle safaris, cooking with a family: things to actually do in Kerala, with rough times and prices.",
+      image: cover("alappuzha/houseboats"),
+    };
+  }
   if (p[0] === "plan")
     return {
       title: `Plan your Kerala trip · ${site}`,

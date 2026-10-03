@@ -4704,3 +4704,196 @@ html {
     position: static;
   }
 }
+
+/* ---------- things to do (/do) ---------- */
+.do-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.2rem;
+}
+.pick-btn {
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pick-btn span {
+  margin-left: 0.2rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.pick-btn.on {
+  background: var(--green-700);
+  border-color: var(--green-700);
+  color: var(--cream);
+}
+.pick-btn.on span {
+  color: var(--green-300);
+}
+.do-month {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+.do-month select,
+.do-pick select {
+  min-height: 2.6rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+.do-district {
+  margin-top: 2rem;
+  scroll-margin-top: 1rem;
+}
+.do-district > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.do-district h2 {
+  min-width: 0;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.35rem, 6vw, 1.7rem);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.do-district h2 a {
+  text-decoration: none;
+}
+.do-district header .ml {
+  color: var(--gold);
+}
+.do-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1rem;
+}
+.do-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  scroll-margin-top: 1rem;
+}
+.do-card.on {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold);
+}
+.do-img {
+  display: block;
+  aspect-ratio: 16 / 10;
+  background: var(--line);
+}
+.do-img img,
+.do-img .noimg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.do-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1rem 1.1rem 1.1rem;
+}
+.do-kind {
+  margin: 0 0 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.do-card h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+.do-card h3 a {
+  text-decoration: none;
+}
+.do-blurb {
+  margin: 0 0 0.6rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.do-meta {
+  margin: 0 0 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.do-note {
+  margin: 0 0 0.4rem;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: var(--muted);
+}
+.do-actions {
+  margin-top: auto;
+  padding-top: 0.6rem;
+}
+.do-actions .btn {
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+}
+.do-on {
+  margin: 0;
+  font-weight: 700;
+  color: var(--green-700);
+}
+.do-msg {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.pd-more {
+  margin: 0.9rem 0 0;
+  font-size: 0.85rem;
+}
+.plan-day .trip-items li > .link-btn {
+  flex: none;
+}
+a.pd-try {
+  text-decoration: none;
+  min-width: 0;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .do-on {
+    color: var(--green-300);
+  }
+}
+:root[data-theme="dark"] .do-on {
+  color: var(--green-300);
+}
+.sheet-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+}
+.sheet-links .btn {
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+}

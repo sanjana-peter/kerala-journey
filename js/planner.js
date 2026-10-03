@@ -17,6 +17,8 @@
  *     stops                   how many towns (null = decided from the days and pace)
  *     nights{}                { townId: days } fixed by the ± buttons
  *     cheap                   prefer free things to do
+ *     pins{}                  { experienceId: k } "Add to Day N": done on the k-th day (0-based) in its town.
+ *                             A pin stays while its town is in the plan, and is ignored otherwise.
  *   }
  *   data = { plan, doings, districts, food, visit, climates }   (the window.KERALA_* objects)
  *
@@ -79,6 +81,7 @@
     i.nights = Object.fromEntries(Object.entries(i.nights || {}).filter(([k, v]) => baseIds.has(k) && v >= 1));
     i.stops = i.stops ? clamp(Math.round(+i.stops), 1, 8) : null;
     i.cheap = !!i.cheap;
+    i.pins = Object.fromEntries(Object.entries(i.pins || {}).filter(([, k]) => Number.isInteger(+k) && +k >= 0).map(([id, k]) => [id, +k]));
     return i;
   }
 
@@ -258,6 +261,9 @@
         .sort((a, b) => b.v - a.v)
         .map((o) => o.t);
 
+      // Pinned experiences in this town, by the day they're pinned to (clamped to the days the town has).
+      const pinned = doings.filter((t) => t.base === b.id && i.pins[t.id] !== undefined);
+      pinned.forEach((t) => usedTry.add(t.id));
       const prev = k === 0 ? from : order[k - 1].b;
       const arrive = leg(prev, b);
       const perDay = Math.ceil(spots.length / counts[k]);
@@ -270,6 +276,11 @@
         hours -= see.length * 1.5;
         const tries = [];
         const slots = new Set();
+        for (const t of pinned.filter((t) => Math.min(i.pins[t.id], counts[k] - 1) === day)) {
+          tries.push(t.id);
+          if (t.when) slots.add(t.when);
+          hours -= t.when === "evening" || t.when === "night" ? 0 : t.hours;
+        }
         for (const t of options) {
           if (tries.length >= TRIES_PER_DAY[pace] || usedTry.has(t.id)) continue;
           if (t.when && slots.has(t.when)) continue;
@@ -342,6 +353,11 @@
       if (k > 0 && k < legs.length - 1 && l.hours > pace.maxDrive)
         warnings.push(`The drive from ${stops[k].name} to ${stops[k + 1].name} is about ${l.hours} hours, longer than this pace likes.`);
     });
+    // A pinned experience out of its season is kept (the traveller chose it) but flagged.
+    for (const t of data.doings || []) {
+      if (i.pins[t.id] === undefined || !t.months || i.month === null || t.months.includes(i.month)) continue;
+      if (days.some((d) => d.try.includes(t.id))) warnings.push(`${t.name} doesn't usually happen in the month you chose.`);
+    }
     // Long drives on arrival or departure day: suggest the airport nearest that town.
     const nearest = (b) => [...data.plan.gateways].sort((x, y) => leg(x, b).hours - leg(y, b).hours)[0];
     const firstLeg = legs[0], lastLeg = legs[legs.length - 1];
@@ -404,6 +420,20 @@
       const fixed = Object.fromEntries(plan.stops.map((s) => [s.base, s.days]));
       return { ...i, days: i.days + delta, nights: { ...fixed, [baseId]: next }, stops: plan.stops.length, include: plan.stops.map((s) => s.base) };
     },
+    // "Add to Day N": pin an experience to day n of the plan (adding its town first if it isn't in the plan).
+    pin(plan, data, doingId, n) {
+      const i = plan.inputs;
+      const t = (data.doings || []).find((x) => x.id === doingId);
+      if (!t) return null;
+      const inTown = plan.days.filter((d) => d.base === t.base).map((d) => d.n);
+      if (!inTown.length) return { ...edits.add(plan, data, t.base), pins: { ...i.pins, [doingId]: 0 } };
+      return { ...i, pins: { ...i.pins, [doingId]: Math.max(0, inTown.indexOf(n)) } };
+    },
+    unpin(plan, data, doingId) {
+      const pins = { ...plan.inputs.pins };
+      delete pins[doingId];
+      return { ...plan.inputs, pins };
+    },
     add(plan, data, baseId) {
       const i = plan.inputs;
       return { ...i, include: [...new Set([...i.include, ...plan.stops.map((s) => s.base), baseId])], exclude: i.exclude.filter((x) => x !== baseId), stops: plan.stops.length + 1 };
@@ -413,7 +443,8 @@
   // ---------- share links: the inputs, packed into the URL ----------
   function encode(i) {
     const compact = [i.days, i.from, i.to, i.party, i.budget, i.pace, i.month ?? "", i.interests.join("."), i.mustSee.join("."), i.include.join("."), i.exclude.join("."),
-      Object.entries(i.nights).map(([k, v]) => `${k}:${v}`).join("."), i.stops || "", i.cheap ? 1 : "", i.style || ""];
+      Object.entries(i.nights).map(([k, v]) => `${k}:${v}`).join("."), i.stops || "", i.cheap ? 1 : "", i.style || "",
+      Object.entries(i.pins || {}).map(([k, v]) => `${k}:${v}`).join(".")];
     return compact.join("~");
   }
   function decode(s) {
@@ -424,6 +455,7 @@
       interests: list(p[7]), mustSee: list(p[8]), include: list(p[9]), exclude: list(p[10]),
       nights: Object.fromEntries(list(p[11]).map((x) => x.split(":")).map(([k, v]) => [k, +v])),
       stops: p[12] ? +p[12] : null, cheap: p[13] === "1", style: p[14] || undefined,
+      pins: Object.fromEntries(list(p[15]).map((x) => x.split(":")).map(([k, v]) => [k, +v])),
     };
   }
 

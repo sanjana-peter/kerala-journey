@@ -109,7 +109,10 @@ days add up, the cost is right for a fixed input, and no unknown ids come out.
   "Build my journey" leads to the itinerary: a route map (the existing `mapSvg` with numbered pins and route lines drawn
   with `project()`), a day list with See / Eat / Try / Collect, a budget bar, edit buttons, share, and print.
   `/plan?p=…` opens a shared, read-only plan with a "Use this plan" button.
-- **`/do`**: experiences grouped north → south, with kind filters and **Add to Day N** (days in that town listed first).
+- **`/do`** (built on `kerala-trip`): experiences grouped north → south, with kind and month filters and **Add to Day N**.
+  "Add" starts a plan around the town if there's none, offers that town's days if it's in the plan, or adds the town.
+  Each experience has its own page (`/do/<id>`) to share; `/do/<district>` opens on a district, linked from each
+  plan day and from the district's Plan sheet. Pins are stored as `pins` in the plan inputs and survive every edit.
 - **Collect:** a `Done` store (`place:…`, `dish:…`, `taste:…`, `xp:…`) with ✓ ticks on plan days, `/do` cards and dish pages.
 - **Passport dialog:** a stats row (districts · places · food n/≈45 · experiences · km) and a food trail checklist.
 - **Stamps** stay "visited in the tour" for now. Real-world check-ins can add a second kind later (Phase 3).

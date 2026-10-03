@@ -150,8 +150,27 @@ test("edits", () => {
   assert.ok(added.stops.some((s) => s.base === outsider));
 });
 
+test("Add to Day N pins an experience, and the pin survives edits", () => {
+  const p = buildPlan({ days: 8, from: "cok", to: "cok", party: "couple", pace: "balanced", month: 0, interests: ["backwaters", "hills"] }, DATA);
+  const alleppeyDays = p.days.filter((d) => d.base === "alappuzha").map((d) => d.n);
+  assert.ok(alleppeyDays.length >= 2, "test needs two days in Alappuzha");
+  const lastDay = alleppeyDays[alleppeyDays.length - 1];
+  const pinned = buildPlan(edits.pin(p, DATA, "toddy-shop", lastDay), DATA);
+  assert.ok(pinned.days.find((d) => d.n === lastDay).try.includes("toddy-shop"));
+  assert.equal(pinned.days.flatMap((d) => d.try).filter((x) => x === "toddy-shop").length, 1, "only once");
+  // Survives a cheaper edit.
+  assert.ok(buildPlan(edits.cheaper(pinned, DATA), DATA).days.some((d) => d.try.includes("toddy-shop")));
+  // Pinning something in a town that isn't in the plan adds the town.
+  const outside = DATA.doings.find((x) => !p.stops.some((s) => s.base === x.base));
+  const added = buildPlan(edits.pin(p, DATA, outside.id, 1), DATA);
+  assert.ok(added.stops.some((s) => s.base === outside.base));
+  assert.ok(added.days.some((d) => d.try.includes(outside.id)));
+  // Unpinning removes it.
+  assert.equal(buildPlan(edits.unpin(pinned, DATA, "toddy-shop"), DATA).inputs.pins["toddy-shop"], undefined);
+});
+
 test("share links round-trip", () => {
-  const p = buildPlan({ days: 8, from: "ccj", to: "cok", party: "family", budget: "high", pace: "relaxed", month: 11, interests: ["wildlife", "food"], mustSee: ["wayanad/chembra"], exclude: ["kannur"], nights: { wayanad: 3 } }, DATA);
+  const p = buildPlan({ days: 8, from: "ccj", to: "cok", party: "family", budget: "high", pace: "relaxed", month: 11, interests: ["wildlife", "food"], mustSee: ["wayanad/chembra"], exclude: ["kannur"], nights: { wayanad: 3 }, pins: { "chembra-trek": 1 } }, DATA);
   const again = buildPlan(decode(encode(p.inputs)), DATA);
   assert.equal(JSON.stringify(again.stops), JSON.stringify(p.stops));
   assert.equal(JSON.stringify(again.days), JSON.stringify(p.days));
