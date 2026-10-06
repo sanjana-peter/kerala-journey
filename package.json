@@ -12,6 +12,8 @@
     "test": "node --test --experimental-strip-types --disable-warning=ExperimentalWarning lib/planner.test.ts"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "lucide-react": "^1.52.0",
     "motion": "^14.0.0",
     "next": "^16.3.8",
