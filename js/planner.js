@@ -20,7 +20,7 @@
  *     pins{}                  { experienceId: k } "Add to Day N": done on the k-th day (0-based) in its town.
  *                             A pin stays while its town is in the plan, and is ignored otherwise.
  *   }
- *   data = { plan, doings, districts, food, visit, climates }   (the window.KERALA_* objects)
+ *   data = { plan, doings, districts, food, tastes, visit, climates }   (the window.KERALA_* objects)
  *
  * Drive times come from straight-line distance, so they are rough and always shown as "about".
  */
@@ -235,6 +235,7 @@
   }
 
   // ---------- 6. fill each day ----------
+  const dayInDistrict = (days, district) => days.filter((o) => o.district === district).length;
   function fillDays(order, counts, i, data, from, to) {
     const P = data.plan;
     const pace = i.pace;
@@ -252,6 +253,7 @@
       const must = new Set(i.mustSee.filter((m) => m.startsWith(b.district + "/")).map((m) => m.split("/")[1]));
       const spots = [...spotIds.filter((id) => must.has(id)), ...spotIds.filter((id) => !must.has(id))];
       const dishes = (data.food || []).filter((f) => f.district === b.district).map((f) => f.id);
+      const tastes = (data.tastes || []).filter((f) => f.district === b.district).map((f) => f.id);
       const options = doings
         .filter((t) => t.base === b.id && (i.month === null || !t.months || t.months.includes(i.month)))
         .map((t) => ({
@@ -294,13 +296,16 @@
         }
         // A thing to try at a place replaces seeing it (the Kathakali show covers "Kathakali").
         const trySpots = new Set(tries.map((id) => options.find((t) => t.id === id)?.spot).filter(Boolean));
+        const firstInDistrict = day === 0 && !out.some((o) => o.district === b.district);
         out.push({
           n: n++,
           base: b.id,
           district: b.district,
           see: see.filter((id) => !trySpots.has(id)),
           // The district's dish on the first day in each district, so it isn't repeated.
-          eat: day === 0 && !out.some((o) => o.district === b.district) ? dishes : [],
+          eat: firstInDistrict ? dishes : [],
+          // Other local tastes for the food passport, a couple a day across the days in the district.
+          tastes: tastes.slice(dayInDistrict(out, b.district) * 2, dayInDistrict(out, b.district) * 2 + 2),
           try: tries,
           travel,
           depart,

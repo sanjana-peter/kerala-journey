@@ -25,7 +25,7 @@ for (const [k, v] of Object.entries(W.KERALA_MEDIA_OVERRIDES || {})) {
 const SITE = (W.KERALA_CONFIG?.siteUrl || "").replace(/\/$/, "");
 
 // Every page worth sharing or indexing.
-const routes = ["/", "/plan", "/map", "/guide", "/eat", "/culture", "/essentials", "/trip"];
+const routes = ["/", "/plan", "/map", "/guide", "/eat", "/culture", "/essentials", "/trip", "/journeys"];
 for (const d of W.KERALA_DISTRICTS) {
   routes.push(`/d/${d.id}`);
   for (const s of d.spots) routes.push(`/d/${d.id}/${s.id}`);
@@ -165,12 +165,12 @@ fs.writeFileSync(
 );
 fs.writeFileSync(path.join(OUT, "js/data/media-overrides.js"), "/* Already merged into media.js by scripts/build-pages.mjs. */\nwindow.KERALA_MEDIA_OVERRIDES = {};\n");
 
-// Sitemap and robots.txt (the trip page is personal, so it stays out of the sitemap).
+// Sitemap and robots.txt (/trip is now a redirect and /journeys is personal, so they stay out of the sitemap).
 const today = new Date().toISOString().slice(0, 10);
 fs.writeFileSync(
   path.join(OUT, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes
-    .filter((r) => r !== "/trip")
+    .filter((r) => r !== "/trip" && r !== "/journeys")
     .map((r) => `  <url><loc>${esc(SITE + (r === "/" ? "/" : r))}</loc><lastmod>${today}</lastmod></url>`)
     .join("\n")}\n</urlset>\n`
 );

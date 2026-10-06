@@ -567,3 +567,42 @@ window.KERALA_FOOD = [
     if (d && !d.spots.some((s) => s.id === f.id)) d.spots.push({ ...f, type: "eat" });
   }
 })();
+
+/*
+ * The food passport: well-known tastes beyond each district's signature dish, to tick off on the road.
+ * Shown in the passport's food checklist, on plan days ("Eat") and in journeys.
+ *   id, district, name, ml   – ml is the Malayalam name (to be checked by a native speaker)
+ *   kitchen                  – the regional kitchen (table.js)
+ *   veg                      – true = vegetarian
+ *   blurb                    – one line on what it is
+ * These are common knowledge, not shop recommendations, but still need a local check before launch.
+ */
+window.KERALA_TASTES = [
+  { id: "kalathappam", district: "kasaragod", name: "Kalathappam", ml: "കലത്തപ്പം", kitchen: "malabar", veg: true, blurb: "A rice-and-jaggery cake cooked in a pot, crisp shallots and coconut bits on top." },
+  { id: "pathrode", district: "kasaragod", name: "Pathrode", ml: "പത്രോഡ", kitchen: "malabar", veg: true, blurb: "Colocasia leaves rolled with spiced rice paste, steamed, sliced and sometimes fried: a Tulu-coast teatime snack." },
+  { id: "muttamala", district: "kannur", name: "Muttamala", ml: "മുട്ടമാല", kitchen: "malabar", veg: false, blurb: "An 'egg garland': yolks dripped into boiling syrup in golden threads, served at Malabar weddings." },
+  { id: "kallummakkaya", district: "kannur", name: "Kallummakkaya nirachathu", ml: "കല്ലുമ്മക്കായ നിറച്ചത്", kitchen: "malabar", veg: false, blurb: "Mussels in their shells, stuffed with spiced rice paste, steamed, then fried." },
+  { id: "mula-ari-payasam", district: "wayanad", name: "Bamboo rice payasam", ml: "മുളയരി പായസം", kitchen: "hills", veg: true, blurb: "A sweet made from the rare seeds of flowering bamboo, cooked with jaggery and coconut milk." },
+  { id: "kozhikodan-biryani", district: "kozhikode", name: "Kozhikodan biryani", ml: "കോഴിക്കോടൻ ബിരിയാണി", kitchen: "malabar", veg: false, blurb: "Short-grain kaima rice layered with chicken or mutton, ghee and fried onions, in the dum style of Calicut." },
+  { id: "unnakkaya", district: "kozhikode", name: "Unnakkaya", ml: "ഉന്നക്കായ", kitchen: "malabar", veg: true, blurb: "Mashed ripe banana shaped round a filling of egg, coconut and cashew, then fried. An iftar favourite." },
+  { id: "sulaimani", district: "kozhikode", name: "Sulaimani", ml: "സുലൈമാനി", kitchen: "malabar", veg: true, blurb: "Black tea with lemon and a hint of spice, drunk after a heavy biryani." },
+  { id: "upperi", district: "kozhikode", name: "Banana chips", ml: "ഉപ്പേരി", kitchen: "malabar", veg: true, blurb: "Raw nendran banana sliced thin and fried in coconut oil, from the chip shops of SM Street." },
+  { id: "alisa", district: "malappuram", name: "Alisa", ml: "അലീസ", kitchen: "malabar", veg: false, blurb: "Wheat and chicken slow-cooked to a smooth porridge, finished with ghee and fried onions: Malabar's harees." },
+  { id: "irachi-pathiri", district: "malappuram", name: "Irachi pathiri", ml: "ഇറച്ചിപ്പത്തിരി", kitchen: "malabar", veg: false, blurb: "Layers of thin pastry and spiced meat, fried or baked: a teatime treat during Ramadan." },
+  { id: "matta-rice", district: "palakkad", name: "Palakkadan matta rice", ml: "പാലക്കാടൻ മട്ട", kitchen: "palakkad", veg: true, blurb: "Plump red rice from the Palakkad paddies, the everyday rice of a Kerala meal." },
+  { id: "parippu-vada", district: "palakkad", name: "Parippu vada", ml: "പരിപ്പുവട", kitchen: "palakkad", veg: true, blurb: "Crunchy split-pea fritters with shallots, curry leaves and green chilli, with a glass of tea." },
+  { id: "unniyappam", district: "thrissur", name: "Unniyappam", ml: "ഉണ്ണിയപ്പം", kitchen: "central", veg: true, blurb: "Little round cakes of rice, banana and jaggery, fried in a pan with hollows: a temple offering and a snack." },
+  { id: "pazham-pori", district: "thrissur", name: "Pazham pori", ml: "പഴംപൊരി", kitchen: "central", veg: true, blurb: "Ripe banana dipped in batter and fried: the tea shop snack you'll see everywhere." },
+  { id: "meen-molee", district: "ernakulam", name: "Meen molee", ml: "മീൻ മോളി", kitchen: "central", veg: false, blurb: "Fish simmered gently in coconut milk with ginger, green chilli and turmeric: mild and Kochi's own." },
+  { id: "chemmeen-roast", district: "ernakulam", name: "Chemmeen roast", ml: "ചെമ്മീൻ റോസ്റ്റ്", kitchen: "central", veg: false, blurb: "Prawns roasted dry with onions, coconut slivers and plenty of pepper." },
+  { id: "kappa-biryani", district: "idukki", name: "Kappa biryani", ml: "കപ്പ ബിരിയാണി", kitchen: "hills", veg: false, blurb: "Tapioca cooked down with beef bones and spices, a high-range dish despite the name." },
+  { id: "meen-vevichathu", district: "kottayam", name: "Meen vevichathu", ml: "മീൻ വേവിച്ചത്", kitchen: "central", veg: false, blurb: "Kottayam's fiery red fish curry, soured with kudampuli and made in a clay pot. Better the next day." },
+  { id: "beef-ularthiyathu", district: "kottayam", name: "Beef ularthiyathu", ml: "ബീഫ് ഉലർത്തിയത്", kitchen: "central", veg: false, blurb: "Beef cooked with spices, then fried slowly with coconut slivers and curry leaves until dark." },
+  { id: "porotta", district: "kottayam", name: "Porotta and beef", ml: "പൊറോട്ട", kitchen: "central", veg: false, blurb: "Flaky layered flatbread, torn and soaked in beef curry: found all over Kerala, best from a roadside thattukada." },
+  { id: "pidiyum-kozhiyum", district: "kottayam", name: "Pidiyum kozhiyum", ml: "പിടിയും കോഴിയും", kitchen: "central", veg: false, blurb: "Rice dumplings in a thick roasted-coconut chicken curry, made for Christmas and Easter in Syrian Christian homes." },
+  { id: "tharavu-roast", district: "alappuzha", name: "Duck roast", ml: "താറാവ് റോസ്റ്റ്", kitchen: "central", veg: false, blurb: "Kuttanad duck, roasted in a pepper-and-onion masala. The ducks are herded across the paddies." },
+  { id: "palpayasam", district: "alappuzha", name: "Ambalappuzha palpayasam", ml: "അമ്പലപ്പുഴ പാൽപ്പായസം", kitchen: "central", veg: true, blurb: "Rice slow-cooked in milk and sugar until it turns pink, the famous offering of the Ambalappuzha temple." },
+  { id: "shappu-meen-curry", district: "alappuzha", name: "Toddy-shop fish curry", ml: "ഷാപ്പ് മീൻ കറി", kitchen: "central", veg: false, blurb: "The fierce red fish curry of the backwater toddy shops, with kappa on the side." },
+  { id: "chakka-ada", district: "pathanamthitta", name: "Chakka ada", ml: "ചക്ക അട", kitchen: "south", veg: true, blurb: "Jackfruit, jaggery and rice flour folded into a leaf and steamed: a sweet of the jackfruit season." },
+  { id: "boli", district: "thiruvananthapuram", name: "Boli and payasam", ml: "ബോളി", kitchen: "south", veg: true, blurb: "A soft yellow sweet flatbread with a sweet lentil filling, eaten with palpayasam at the end of a Thiruvananthapuram sadya." },
+];

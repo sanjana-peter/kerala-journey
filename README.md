@@ -10,7 +10,8 @@ There are no autoplay animations: visitors move through the state at their own p
   A minimap shows where each place is.
 - **Journey:** keep pressing → to go photo → place → next district, from Kasaragod in the north
   down to Thiruvananthapuram.
-- **Passport:** each district you visit stamps your passport. The stamps are saved in the visitor's browser.
+- **Passport:** each district you visit stamps your passport. It also shows stats (districts · places seen · tastes n/41 ·
+  experiences · km on journeys) and a food passport: the 14 signature dishes plus 27 local tastes to tick off. All saved in the browser.
 - **Plan your visit** (the ☼ Plan button, or V, on every district): a month picker with the weather, best time to go and
   festivals for that month (remembered across districts), how to get there, suggested days that link to the places, and tips.
   The arrival board shows the road in from the previous district and a one-line summary for the chosen month.
@@ -20,8 +21,15 @@ There are no autoplay animations: visitors move through the state at their own p
   Kollam's cashews and an Attukal Pongala.
 - **Sound:** seven districts have a sound button (drums, temple melam, backwater birds). It never autoplays.
 - **Panorama:** seven places have a wide panorama to drag across (Bekal Fort, Banasura, Kuttanad, Munnar, Idukki, Palakkad Fort, Malampuzha).
-- **Save:** ♡ any place or art form and "Want to try" any dish; they gather on **My trip** (`/trip`), sorted north to south,
-  with the season, the road in and a share link (`/trip?s=…`) and print view.
+- **Save:** ♡ any place or art form and "Want to try" any dish; they gather in **Want to see** on `/plan`, sorted north to south,
+  with the season and a share link (`/plan?s=…`). Old `/trip` and `/trip?s=…` links redirect there.
+- **Plan** (`/plan`): a day-by-day itinerary built from the site's own data (`js/planner.js`): route map, See / Eat / Try
+  for each day, a rough budget, edits, and WhatsApp sharing. "Plan a trip with {district}" on each district's Plan sheet
+  starts one around that district (`/plan?with=<district>`).
+- **Things to do** (`/do`): experiences with rough hours and prices, and **Add to Day N**.
+- **Collect:** ✓ ticks ("Been here?", "Tasted it?", "Done it?") on plan days, `/do` cards, dish pages and journeys.
+- **Journeys** (`/journeys`): a private journal of trips taken. Start one from your plan or from scratch; each day has
+  notes, photos (resized to 1600 px and kept in IndexedDB on the device) and a 1–5 star rating and review per item.
 - **Food trail:** a signature dish is the last stop in every district, with famous places to eat nearby.
 - **Guide** (`/guide`): must-visit places, listed by district.
 - **The Kerala table** (`/eat`): a time-of-day dial for what Kerala eats when, a taste map of the five regional kitchens,
@@ -81,6 +89,10 @@ js/data/culture.js            ← CONTENT: art forms, statewide festivals, histo
 js/data/essentials.js         ← CONTENT: travel essentials and the packing list rules
 js/data/panoramas.js          wide panoramas (files in assets/pano/, credits required)
 js/experiences.js             the hands-on "Try it" experiences, one function per district
+js/planner.js                 the trip planner engine (pure functions; tests: scripts/planner.test.mjs)
+js/journeys.js                journeys and the passport stats (pure functions; tests: scripts/journeys.test.mjs)
+js/data/plan.js               ← CONTENT: towns, airports, paces and costs for the planner
+js/data/doings.js             ← CONTENT: things to do (/do), with hours, prices and months
 js/i18n.js                    interface text in English and Malayalam
 js/meta.js                    page titles, descriptions and preview images (site + build)
 js/data/config.js             site settings (public address, where "Report a problem" links go)

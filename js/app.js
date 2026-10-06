@@ -142,6 +142,7 @@
     ["do", "/do"],
     ["culture", "/culture"],
     ["essentials", "/essentials"],
+    ["journeys", "/journeys"],
   ];
   function siteHead(active) {
     return `<header class="site-head">
@@ -150,7 +151,7 @@
         <button class="chip light icon" data-search aria-label="${t("search")}" title="${t("search")} (/)">${SEARCH_ICON}</button>
         ${waButtons("light")}
         <button class="chip light lang" data-lang aria-label="${t("langSwitch")}">${t("langShort")}</button>
-        <button class="chip light" data-passport aria-label="${t("passport")}">${STAMP_ICON}<span class="lbl">${t("passport")} · </span><span data-count>${Passport.count()}</span>/14</button>
+        <button class="chip light" data-passport aria-label="${t("passport")}">${STAMP_ICON}<span class="lbl">${t("passport")} </span><span data-count>${Passport.count()}</span>/14</button>
       </div>
       ${Lang.get() === "ml" ? `<p class="ml-note">${t("mlNote")}</p>` : ""}
       <nav class="head-nav" aria-label="${t("sections")}">
@@ -225,6 +226,37 @@
     },
   };
 
+  // ---------- done: places seen, dishes and tastes eaten, experiences done, for real (this browser only) ----------
+  // Keys: "place:<district>/<spot>", "dish:<id>", "taste:<id>", "xp:<experience>" (see js/journeys.js).
+  const Done = {
+    key: "kerala-journey:done",
+    get() {
+      try {
+        return JSON.parse(localStorage.getItem(this.key)) || this._mem || [];
+      } catch {
+        return this._mem || [];
+      }
+    },
+    has(k) {
+      return this.get().includes(k);
+    },
+    set(k, on) {
+      const all = this.get().filter((x) => x !== k);
+      if (on) all.push(k);
+      this._mem = all;
+      try {
+        localStorage.setItem(this.key, JSON.stringify(all));
+      } catch {}
+    },
+  };
+  // A ✓ tick: "Been here?", "Tasted it?" or "Done it?", depending on the kind of thing. Pressed = done.
+  const DONE_LABEL = { place: ["Been here", "Been here?"], dish: ["Tasted", "Tasted it?"], taste: ["Tasted", "Tasted it?"], xp: ["Done", "Done it?"] };
+  const doneBtn = (k, name, cls = "") => {
+    const on = Done.has(k);
+    const [yes, ask] = DONE_LABEL[k.split(":")[0]] || DONE_LABEL.xp;
+    return `<button class="done-btn ${cls}" data-done="${esc(k)}" data-name="${esc(name)}" aria-pressed="${on}" aria-label="${esc(`${ask.replace("?", "")}: ${name}`)}"><span class="dn-ic" aria-hidden="true">✓</span><span class="dn-lbl">${on ? yes : ask}</span></button>`;
+  };
+
   // ---------- language: interface text in English or Malayalam (js/i18n.js) ----------
   const I18N = window.KERALA_I18N || { en: {}, ml: {} };
   const Lang = {
@@ -265,7 +297,7 @@
     if (current?.shareUrl) return current.shareUrl();
     const shared = new URLSearchParams(location.search).get("s");
     // An unshared trip lives only in this browser, so share it as a ?s= link like the trip page's own button.
-    if (location.pathname === "/trip") return `${location.origin}/trip?s=${encodeURIComponent(shared || encodeTrip())}`;
+    if (location.pathname === "/plan" && shared) return `${location.origin}/plan?s=${encodeURIComponent(shared)}`;
     return location.origin + location.pathname;
   }
   const pageName = () => document.title.replace(/\s*·\s*Kerala Journey$/, "");
@@ -510,8 +542,9 @@
   // /eat/<dish>[/<n>]
   // /culture[/<section>]  /culture/<art>[/<n>]
   // /essentials[/<section>]
-  // /trip              the visitor's saved trip (?s=… for a shared one)
-  // /plan              the trip planner (?p=… for a shared plan)
+  // /plan              the trip planner (?p=… for a shared plan, ?s=… for a shared "Want to see" list,
+  //                    ?with=<district> to plan around a district). /trip and /trip?s=… redirect here.
+  // /journeys[/<id>]   trips already taken: notes, photos, ratings
   // /do[/<experience>|/<district>]   things to do
   // /d/<district>[/<spot>[/<n>]]
   // Old #/ links are converted on arrival.
@@ -524,8 +557,8 @@
       return { view: "culture", section: p[1] };
     }
     if (p[0] === "essentials") return { view: "essentials", section: p[1] };
-    if (p[0] === "trip") return { view: "trip" };
-    if (p[0] === "plan") return { view: "plan" };
+    if (p[0] === "plan" || p[0] === "trip") return { view: "plan" };
+    if (p[0] === "journeys") return { view: "journeys", id: p[1] };
     if (p[0] === "do") return { view: "do", sel: p[1] };
     if (p[0] === "guide" && p[1] === "food") return { view: "eat", section: "trail" };
     if (p[0] === "guide") return { view: "guide" };
@@ -563,7 +596,7 @@
     const url = new URL(a.href, location.href);
     if (url.origin !== location.origin || /\.[a-z0-9]+$/i.test(url.pathname)) return;
     e.preventDefault();
-    if (url.search && url.pathname === "/trip") {
+    if (url.search && ["/trip", "/plan"].includes(url.pathname)) {
       history.pushState(null, "", url.pathname + url.search);
       return render();
     }
@@ -581,6 +614,11 @@
   let current = null; // { view, district, viewer, ... }
 
   function render() {
+    // "My trip" folded into the planner: keep old /trip and /trip?s=… links working.
+    if (location.pathname === "/trip") {
+      const s = new URLSearchParams(location.search).get("s");
+      history.replaceState(null, "", `/plan${s ? `?s=${encodeURIComponent(s)}` : ""}`);
+    }
     setMeta();
     const r = parse();
     if (r.view === "district" && current?.view === "district" && current.d === r.d) {
@@ -606,6 +644,8 @@
     }
     current?.viewer?.destroy();
     current?.cleanup?.();
+    // Design pilot: the Apple-inspired look (css/apple.css) on the home page, districts and the planner.
+    document.documentElement.dataset.skin = ["home", "district", "plan"].includes(r.view) ? "apple" : "";
     const from = current;
     current = null;
     window.scrollTo(0, 0);
@@ -616,7 +656,7 @@
     else if (r.view === "culture") renderCulture(r.section);
     else if (r.view === "art") renderArt(r.a, r.n);
     else if (r.view === "essentials") renderEssentials(r.section);
-    else if (r.view === "trip") renderTrip();
+    else if (r.view === "journeys") renderJourneys(r.id);
     else if (r.view === "plan") renderPlan();
     else if (r.view === "do") renderDo(r.sel);
     else if (r.view === "district") renderDistrict(r, from);
@@ -638,15 +678,17 @@
           <button class="chip lang" data-lang aria-label="${t("langSwitch")}">${t("langShort")}</button>
         </div>
         <div class="home-copy">
-          <p class="eyebrow">${t("journeyThrough")}</p>
-          <h1>Kerala <span class="ml" lang="ml">കേരളം</span></h1>
+          <h1>Kerala</h1>
+          <p class="home-ml ml" lang="ml">കേരളം</p>
           <p class="lede">Fourteen districts between the Western Ghats and the Arabian Sea. Start at the forts in the far north and finish on the cliffs of the south, looking around at each stop.</p>
           <div class="actions">
-            <a class="btn primary" href="/d/kasaragod">${visited ? t("continueJourney") : t("beginNorth")} <span aria-hidden="true">→</span></a>
+            <a class="btn primary" href="/d/kasaragod">${visited ? t("continueJourney") : t("beginNorth")}</a>
             <a class="btn ghost" href="/plan">${t("planMyTrip")}</a>
             <a class="btn ghost" href="/map">${t("chooseMap")}</a>
           </div>
-          <p class="home-links"><a href="/guide">Must-visit places</a> · <a href="/eat">The food trail</a> · <a href="/culture">${t("culture")}</a> · <a href="/essentials">${t("essentials")}</a> · <a href="/trip">${t("trip")}</a></p>
+          <ul class="home-links">
+            <li><a href="/guide">Must-visit places</a></li><li><a href="/eat">The food trail</a></li><li><a href="/culture">${t("culture")}</a></li><li><a href="/essentials">${t("essentials")}</a></li><li><a href="/journeys">${t("journeys")}</a></li>
+          </ul>
           <p class="hint"><span class="hint-icon" aria-hidden="true">✥</span> ${t("dragHint")}</p>
         </div>
         <p class="credit">${credit(im)}</p>
@@ -1199,6 +1241,7 @@
           <p class="dish-blurb">${esc(f.blurb)}</p>
           <div class="dish-actions">
             ${plateBtn(f)}
+            ${doneBtn(`dish:${f.id}`, f.name)}
             <a class="btn outline" href="/d/${d.id}/${f.id}">See it on the journey <span aria-hidden="true">→</span></a>
           </div>
           ${f.ingredients ? `<ul class="ingredients" aria-label="What goes into it">${f.ingredients.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
@@ -1643,7 +1686,7 @@
     if (section) requestAnimationFrame(() => goTo(section));
   }
 
-  // ---------- my trip: saved places, dishes and art forms, by district ----------
+  // ---------- want to see: saved places, art forms and dishes, by district (on /plan; this used to be /trip) ----------
   const encodeTrip = () =>
     [...Saved.get().map((k) => k.replace(/^d\//, "d:").replace(/^culture\//, "c:")), ...Plate.get().map((id) => `f:${id}`)].join(",");
   function decodeTrip(s) {
@@ -1656,11 +1699,8 @@
     }
     return out;
   }
-  function renderTrip() {
-    const shared = new URLSearchParams(location.search).get("s");
-    const src = shared ? decodeTrip(shared) : { saved: Saved.get(), dishes: Plate.get() };
-    const m = TravelMonth.get();
-    const byDistrict = DISTRICTS.map((d) => {
+  function wantGroups(src) {
+    return DISTRICTS.map((d) => {
       const places = src.saved
         .filter((k) => k.startsWith(`d/${d.id}/`))
         .map((k) => d.spots.find((s) => s.id === k.split("/")[2]))
@@ -1672,106 +1712,45 @@
         .filter((a) => a && a.district === d.id);
       return { d, places, dishes, arts };
     }).filter((g) => g.places.length || g.dishes.length || g.arts.length);
-    const minDays = byDistrict.reduce((n, g) => n + (parseInt(VISIT[g.d.id]?.days, 10) || 1), 0);
-    const itemRow = (href, im, name, sub, btn) => `<li>
+  }
+  // shared: a list someone sent (read-only). dayOf(district, spotId) → plan day number, to show what the plan covers.
+  function wantHtml(src, { shared = false, dayOf = () => null, month = TravelMonth.get() } = {}) {
+    const groups = wantGroups(src);
+    const row = (href, im, name, sub, btn) => `<li>
         <a href="${href}">${im ? `<img src="${esc(thumbOf(im))}" alt="" loading="lazy" />` : '<span class="noimg"></span>'}
           <span><strong>${esc(name)}</strong><small>${esc(sub)}</small></span></a>${shared ? "" : btn}</li>`;
-
-    app.innerHTML = `
-      <section class="eat-view trip-view">
-        ${siteHead("trip")}
-        <header class="eat-hero trip-hero">
-          <p class="eyebrow">${shared ? "A trip shared with you" : "My trip"}</p>
-          <h1 class="eat-title">${
-            byDistrict.length
-              ? `${byDistrict.length} ${byDistrict.length === 1 ? "district" : "districts"}, <em>about ${minDays}+ days</em>`
-              : "Your Kerala trip <em>starts here</em>"
-          }</h1>
-          ${
-            byDistrict.length
-              ? `<div class="trip-tools">
-                  <label>Travelling in <select id="trip-month">${MONTHS.map((x, k) => `<option value="${k}"${k === m ? " selected" : ""}>${x}</option>`).join("")}</select></label>
-                  ${
-                    shared
-                      ? `<button class="btn primary" id="trip-import">Add these to my trip</button><a class="btn outline" href="/trip">See my own trip</a>`
-                      : `<button class="btn primary" id="trip-share">Share this trip</button>
-                         <button class="btn outline" id="trip-print">Print</button>
-                         <button class="link-btn" id="trip-clear">Clear the trip</button>`
-                  }
-                </div>
-                <p class="muted small" id="trip-msg" aria-live="polite">${shared ? "" : "Saved in this browser. Share the link to open it on another device."}</p>`
-              : `<p class="eat-lede">Tap <strong>♡ ${t("save")}</strong> on any place or art form, and <strong>Want to try</strong> on any dish. They gather here, sorted north to south with the season, routes and tips for each district.</p>
-                 <div class="trip-tools"><a class="btn primary" href="/d/kasaragod">Start in the north</a><a class="btn outline" href="/guide">Must-visit places</a><a class="btn outline" href="/eat">The food trail</a></div>`
-          }
-        </header>
-        <ol class="trip-list">
-          ${byDistrict
-            .map(({ d, places, dishes, arts }) => {
-              const v = VISIT[d.id];
-              const mi = monthInfo(d, m);
-              return `<li class="trip-district">
-                <header>
-                  <span class="ml" lang="ml">${esc(d.ml)}</span>
-                  <h2><a href="/d/${d.id}">${esc(d.name)}</a></h2>
-                  ${v?.days ? `<span class="trip-days">${esc(v.days)}</span>` : ""}
-                </header>
-                ${mi ? `<p class="trip-month"><span class="mk mk-${mi.kind}"></span> ${MONTHS[m]}: ${esc(mi.label.toLowerCase())}${mi.best ? ", a great time to go" : ""}${mi.events[0] ? ` · ${esc(mi.events[0].name)}` : ""}</p>` : ""}
-                <ul class="trip-items">
-                  ${places.map((s) => itemRow(`/d/${d.id}/${s.id}`, imagesFor(d, s)[0], s.name, s.must ? "Must-visit" : "Place", saveBtn(`d/${d.id}/${s.id}`, s.name))).join("")}
-                  ${arts.map((a) => itemRow(`/culture/${a.id}`, artImages(a)[0], a.name, "Art form", saveBtn(`culture/${a.id}`, a.name))).join("")}
-                  ${dishes.map((f) => itemRow(`/eat/${f.id}`, dishImages(f)[0], f.name, "To eat", plateBtn(f))).join("")}
-                </ul>
-                ${v?.getThere?.fromKochi ? `<p class="trip-note"><strong>Getting there:</strong> ${esc(v.getThere.fromKochi)}${v.road ? `. From the previous district: ${esc(lcFirst(v.road.how))}, ${esc(lcFirst(v.road.time))}` : ""}.</p>` : ""}
-              </li>`;
-            })
-            .join("")}
-        </ol>
-      </section>`;
-
-    app.querySelector("#trip-month")?.addEventListener("change", (e) => {
-      TravelMonth.set(+e.target.value);
-      rerender();
-    });
-    const msg = app.querySelector("#trip-msg");
-    app.querySelector("#trip-share")?.addEventListener("click", async () => {
-      const url = `${location.origin}/trip?s=${encodeURIComponent(encodeTrip())}`;
-      try {
-        if (navigator.share) await navigator.share({ title: "My Kerala trip", url });
-        else {
-          await navigator.clipboard.writeText(url);
-          msg.textContent = "Link copied. Paste it anywhere to share your trip.";
-        }
-      } catch {
-        msg.innerHTML = `Copy this link: <a href="${esc(url)}">${esc(url)}</a>`;
-      }
-    });
-    app.querySelector("#trip-print")?.addEventListener("click", () => window.print());
-    const clear = app.querySelector("#trip-clear");
-    clear?.addEventListener("click", () => {
-      if (clear.dataset.armed) {
-        Saved.set([]);
-        Plate.get().forEach((id) => Plate.toggle(id));
-        tripChanged();
-        rerender();
-      } else {
-        clear.dataset.armed = "1";
-        clear.textContent = "Tap again to clear everything";
-      }
-    });
-    app.querySelector("#trip-import")?.addEventListener("click", () => {
-      Saved.set([...new Set([...Saved.get(), ...src.saved])]);
-      src.dishes.forEach((id) => Plate.has(id) || Plate.toggle(id));
-      tripChanged();
-      go("/trip");
-    });
-    current = { view: "trip", refreshTrip: () => !shared && rerender() };
+    if (!groups.length)
+      return `<p class="muted small">Tap <strong>♡ ${t("save")}</strong> on any place or art form, and <strong>Want to try</strong> on any dish, while you explore. They gather here, and the planner fits the places in.</p>`;
+    return `<ol class="want-list">${groups
+      .map(({ d, places, dishes, arts }) => {
+        const mi = monthInfo(d, month);
+        return `<li class="want-district">
+          <header><span class="ml" lang="ml">${esc(d.ml)}</span><h3><a href="/d/${d.id}">${esc(d.name)}</a></h3>${
+            mi ? `<span class="want-month"><span class="mk mk-${mi.kind}"></span> ${esc(mi.label.toLowerCase())}${mi.best ? ", a great time" : ""}</span>` : ""
+          }</header>
+          <ul class="trip-items">
+            ${places
+              .map((x) => {
+                const n = dayOf(d.id, x.id);
+                return row(`/d/${d.id}/${x.id}`, imagesFor(d, x)[0], x.name, n ? `Day ${n} of your plan` : x.must ? "Must-visit" : "Place", saveBtn(`d/${d.id}/${x.id}`, x.name));
+              })
+              .join("")}
+            ${arts.map((a) => row(`/culture/${a.id}`, artImages(a)[0], a.name, "Art form", saveBtn(`culture/${a.id}`, a.name))).join("")}
+            ${dishes.map((f) => row(`/eat/${f.id}`, dishImages(f)[0], f.name, "To eat", plateBtn(f))).join("")}
+          </ul>
+        </li>`;
+      })
+      .join("")}</ol>`;
   }
 
   // ---------- plan: the trip planner (js/planner.js builds the itinerary from the site's own data) ----------
   const PLANNER = window.KERALA_PLANNER;
   const PLAN = window.KERALA_PLAN || { bases: [], gateways: [], interests: {}, parties: {}, paces: {}, styles: {} };
   const DOINGS = window.KERALA_DOINGS || [];
-  const PLAN_DATA = { plan: PLAN, doings: DOINGS, districts: DISTRICTS, food: FOOD, visit: VISIT, climates: CLIMATES };
+  const TASTES = window.KERALA_TASTES || [];
+  const tasteById = (id) => TASTES.find((x) => x.id === id);
+  const PLAN_DATA = { plan: PLAN, doings: DOINGS, districts: DISTRICTS, food: FOOD, tastes: TASTES, visit: VISIT, climates: CLIMATES };
+  const JOURNEYS = window.KERALA_JOURNEYS;
   const baseById = (id) => PLAN.bases.find((b) => b.id === id);
   const doingById = (id) => DOINGS.find((x) => x.id === id);
   const PlanStore = {
@@ -1820,14 +1799,63 @@
     return own || b.spots.map((id) => MEDIA[`${b.district}/${id}`]?.images?.[0]).find(Boolean) || null;
   }
   const doingPrice = (x) => (x.cost ? `about ${rupees(x.cost)} ${x.per === "group" ? "per group" : "per person"}` : "Free");
-  const doingTime = (x) => (x.hours >= 12 ? "Overnight" : `${x.when ? `${x.when[0].toUpperCase()}${x.when.slice(1)} · ` : ""}about ${fmtH(x.hours)} h`);
+  const doingTime = (x) => (x.hours >= 12 ? "Overnight" : `${x.when ? `${x.when[0].toUpperCase()}${x.when.slice(1)}, ` : ""}about ${fmtH(x.hours)} h`);
+
+  // A route on the district map: airport squares, numbered town pins, a line between them, zoomed to fit.
+  // from / to are gateway ids (or null for a journey started from scratch); bases are town ids in order.
+  function routeMap(from, to, bases, cls = "plan-map") {
+    const gw = (id) => PLAN.gateways.find((g) => g.id === id);
+    const towns = bases.map(baseById).filter(Boolean);
+    const all = [gw(from), ...towns, gw(to)].filter(Boolean);
+    if (!all.length) return mapSvg({ cls, labels: false });
+    const pts = all.map((b) => project(b.coords));
+    const line = pts.length > 1 ? `<polyline class="plan-route" points="${pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ")}" />` : "";
+    const air = [from, to]
+      .filter((id, k, a) => gw(id) && a.indexOf(id) === k)
+      .map((id) => {
+        const [x, y] = project(gw(id).coords);
+        return `<g class="plan-air" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><rect x="-4" y="-4" width="8" height="8" rx="2"></rect><title>${esc(gw(id).name)}</title></g>`;
+      })
+      .join("");
+    const pins = towns
+      .map((b, k) => {
+        const [x, y] = project(b.coords);
+        return `<g class="plan-pin" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="9"></circle><text dy="3.5">${k + 1}</text><title>${esc(b.name)}</title></g>`;
+      })
+      .join("");
+    // Zoom to the route, with room around it, but never closer than about a third of Kerala.
+    const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+    const [, , W0] = MAP.viewBox.split(" ").map(Number);
+    const w = Math.max(Math.max(...xs) - Math.min(...xs) + 80, W0 * 0.45);
+    const h = Math.max(Math.max(...ys) - Math.min(...ys) + 80, w * 1.1);
+    const cx = (Math.max(...xs) + Math.min(...xs)) / 2, cy = (Math.max(...ys) + Math.min(...ys)) / 2;
+    const vb = [cx - w / 2, cy - h / 2, w, h].map((v) => v.toFixed(1)).join(" ");
+    return mapSvg({ cls, labels: false, pins: [line, air, pins], viewBox: vb });
+  }
 
   function renderPlan() {
     const qs = new URLSearchParams(location.search);
     const shared = qs.get("p") ? PLANNER.decode(qs.get("p")) : null;
+    // A "Want to see" list someone shared (/plan?s=…, or an old /trip?s=… link).
+    const sharedList = !shared && qs.get("s") ? decodeTrip(qs.get("s")) : null;
     let inputs = shared || PlanStore.get();
     let showForm = !inputs;
     let plan = null;
+    let note = "";
+    // "Plan a trip with Idukki" from a district: start a plan around its best-known town, or add the town to the plan.
+    const withDistrict = !shared && byId(qs.get("with"));
+    if (withDistrict) {
+      const town = PLAN.bases.filter((b) => b.district === withDistrict.id).sort((a, b) => b.weight - a.weight)[0];
+      if (town) {
+        const before = inputs && PLANNER.buildPlan(inputs, PLAN_DATA);
+        if (!before) inputs = { ...planDefaults(), include: [town.id] };
+        else if (!before.stops.some((x) => baseById(x.base)?.district === withDistrict.id)) inputs = PLANNER.edits.add(before, PLAN_DATA, town.id);
+        note = before ? `${withDistrict.name} is in your plan.` : `A first plan around ${town.name}. Change the details to make it yours.`;
+        PlanStore.set(inputs);
+        showForm = false;
+      }
+      history.replaceState(null, "", "/plan");
+    }
     const link = () => `${location.origin}/plan?p=${encodeURIComponent(PLANNER.encode(plan.inputs))}`;
     const routeText = () => plan.stops.map((s) => baseById(s.base).name).join(" → ");
 
@@ -1891,33 +1919,7 @@
       return same ? { ...base, ...next } : next;
     }
 
-    function mapHtml() {
-      const gw = (id) => PLAN.gateways.find((g) => g.id === id);
-      const pts = [gw(plan.inputs.from), ...plan.stops.map((s) => baseById(s.base)), gw(plan.inputs.to)].map((b) => project(b.coords));
-      const line = `<polyline class="plan-route" points="${pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ")}" />`;
-      const air = [plan.inputs.from, plan.inputs.to]
-        .filter((id, k, a) => a.indexOf(id) === k)
-        .map((id) => {
-          const [x, y] = project(gw(id).coords);
-          return `<g class="plan-air" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><rect x="-4" y="-4" width="8" height="8" rx="2"></rect><title>${esc(gw(id).name)}</title></g>`;
-        })
-        .join("");
-      const pins = plan.stops
-        .map((s, k) => {
-          const b = baseById(s.base);
-          const [x, y] = project(b.coords);
-          return `<g class="plan-pin" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="9"></circle><text dy="3.5">${k + 1}</text><title>${esc(b.name)}</title></g>`;
-        })
-        .join("");
-      // Zoom to the route, with room around it, but never closer than about a third of Kerala.
-      const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
-      const [, , W0, H0] = MAP.viewBox.split(" ").map(Number);
-      const w = Math.max(Math.max(...xs) - Math.min(...xs) + 80, W0 * 0.45);
-      const h = Math.max(Math.max(...ys) - Math.min(...ys) + 80, w * 1.1);
-      const cx = (Math.max(...xs) + Math.min(...xs)) / 2, cy = (Math.max(...ys) + Math.min(...ys)) / 2;
-      const vb = [cx - w / 2, cy - h / 2, w, h].map((v) => v.toFixed(1)).join(" ");
-      return mapSvg({ cls: "plan-map", labels: false, pins: [line, air, pins], viewBox: vb });
-    }
+    const mapHtml = () => routeMap(plan.inputs.from, plan.inputs.to, plan.stops.map((x) => x.base));
 
     function dayHtml(d) {
       const b = baseById(d.base);
@@ -1928,35 +1930,46 @@
       const see = d.see
         .map((id) => {
           const s = spotOf(d.district, id);
-          return s ? `<li><a href="/d/${d.district}/${id}">${thumb(imagesFor(dist, s)[0])}<span><strong>${esc(s.name)}</strong></span></a></li>` : "";
+          return s
+            ? `<li><a href="/d/${d.district}/${id}">${thumb(imagesFor(dist, s)[0])}<span><strong>${esc(s.name)}</strong></span></a>${shared ? "" : doneBtn(`place:${d.district}/${id}`, s.name)}</li>`
+            : "";
         })
         .join("");
       const eat = d.eat
         .map((id) => {
           const f = dishById(id);
-          return f ? `<li><a href="/eat/${f.id}">${thumb(dishImages(f)[0])}<span><strong>${esc(f.name)}</strong><small>The ${esc(dist?.name || "")} dish</small></span></a></li>` : "";
+          return f
+            ? `<li><a href="/eat/${f.id}">${thumb(dishImages(f)[0])}<span><strong>${esc(f.name)}</strong><small>The ${esc(dist?.name || "")} dish</small></span></a>${shared ? "" : doneBtn(`dish:${f.id}`, f.name)}</li>`
+            : "";
         })
+        .join("");
+      const tastes = (d.tastes || [])
+        .map(tasteById)
+        .filter(Boolean)
+        .map((x) => `<li class="taste-row"><span><strong>${esc(x.name)}</strong><small>${esc(x.blurb)}</small></span>${shared ? "" : doneBtn(`taste:${x.id}`, x.name)}</li>`)
         .join("");
       const tries = d.try
         .map((id) => {
           const x = doingById(id);
           if (!x) return "";
           const pinned = plan.inputs.pins[id] !== undefined;
-          return `<li><a href="/do/${x.id}" class="pd-try">${thumb(doingImage(x))}<span><strong>${esc(x.name)}</strong><small>${doingTime(x)} · ${doingPrice(x).toLowerCase()}${
-            pinned ? " · added by you" : ""
-          }</small>${x.note ? `<small class="pd-note">${esc(x.note)}</small>` : ""}</span></a>${
-            pinned && !shared ? `<button class="link-btn" data-unpin="${x.id}" aria-label="Remove ${esc(x.name)} from day ${d.n}">Remove</button>` : ""
+          return `<li><a href="/do/${x.id}" class="pd-try">${thumb(doingImage(x))}<span><strong>${esc(x.name)}</strong><small>${doingTime(x)}, ${doingPrice(x).toLowerCase()}${pinned ? ". Added by you" : ""}</small>${x.note ? `<small class="pd-note">${esc(x.note)}</small>` : ""}</span></a>${
+            shared
+              ? ""
+              : `<span class="pd-acts">${doneBtn(`xp:${x.id}`, x.name)}${
+                  pinned ? `<button class="link-btn" data-unpin="${x.id}" aria-label="Remove ${esc(x.name)} from day ${d.n}">Remove</button>` : ""
+                }</span>`
           }</li>`;
         })
         .join("");
       const clim = d.climate ? CLIMATES.kinds[d.climate]?.label : "";
       return `<li class="plan-day">
-        <header><span class="pd-n">Day ${d.n}</span><h3>${esc(b.name)}</h3><span class="pd-where">${esc(dist?.name || "")}${clim ? ` · ${esc(clim)}` : ""}</span></header>
+        <header><span class="pd-n">Day ${d.n}</span><h3>${esc(b.name)}</h3><span class="pd-where">${esc(dist?.name || "")}${clim ? `, ${esc(clim.toLowerCase())}` : ""}</span></header>
         ${d.travel && d.travel.hours ? leg(d.travel, "Go") : ""}
         ${see ? `<h4>See</h4><ul class="trip-items">${see}</ul>` : ""}
-        ${eat ? `<h4>Eat</h4><ul class="trip-items">${eat}</ul>` : ""}
+        ${eat || tastes ? `<h4>Eat</h4><ul class="trip-items">${eat}${tastes && eat ? '<li class="taste-also">Also try here</li>' : ""}${tastes}</ul>` : ""}
         ${tries ? `<h4>Try</h4><ul class="trip-items">${tries}</ul>` : ""}
-        ${!see && !eat && !tries ? '<p class="muted small">A free day: slow down, wander, or add something to do.</p>' : ""}
+        ${!see && !eat && !tastes && !tries ? '<p class="muted small">A free day: slow down, wander, or add something to do.</p>' : ""}
         ${shared ? "" : `<p class="pd-more"><a href="/do/${d.district}">More things to do in ${esc(dist?.name || b.name)} →</a></p>`}
         ${d.depart ? leg(d.depart, "Leave") : ""}
       </li>`;
@@ -1992,13 +2005,12 @@
         <section class="eat-view plan-view">
           ${siteHead("plan")}
           <header class="eat-hero plan-hero">
-            <p class="eyebrow">${shared ? "A plan shared with you" : "Plan your trip"}</p>
-            <h1 class="eat-title">${
-              plan && !showForm ? `${plan.inputs.days} days in Kerala <em>${esc(routeText())}</em>` : "Your Kerala trip, <em>day by day</em>"
-            }</h1>
+            ${shared ? '<p class="eyebrow">A plan shared with you</p>' : ""}
+            <h1 class="eat-title">${plan && !showForm ? `${plan.inputs.days} days in Kerala.` : "Plan your Kerala trip, day by day."}</h1>
             ${
               plan && !showForm
-                ? `<p class="plan-facts">${esc(PLAN.parties[i.party].label)} · ${MONTHS[i.month] || "Any month"} · ${esc(PLAN.paces[i.pace].label.toLowerCase())} pace · about ${plan.km} km on the road</p>
+                ? `<p class="plan-route">${esc(plan.stops.map((x) => baseById(x.base).name).join(", "))}</p>
+                   <ul class="plan-facts"><li>${esc(PLAN.parties[i.party].label)}</li><li>${MONTHS[i.month] || "Any month"}</li><li>${esc(PLAN.paces[i.pace].label)} pace</li><li>About ${plan.km} km on the road</li></ul>
                    <div class="trip-tools">
                      ${
                        shared
@@ -2006,13 +2018,25 @@
                          : `<button class="btn primary wa-btn" id="plan-wa">${WA_ICON} Share on WhatsApp</button>
                             <button class="btn outline" id="plan-copy">Copy link</button>
                             <button class="btn outline" id="plan-edit">Change trip details</button>
+                            <button class="btn outline" id="plan-journey">Start a journey from this plan</button>
                             <button class="link-btn" id="plan-print">Print</button>`
                      }
                    </div>
-                   <p class="muted small" id="plan-msg" aria-live="polite">${shared ? "" : "Saved in this browser."}</p>`
+                   <p class="muted small" id="plan-msg" aria-live="polite">${
+                     shared ? "" : esc(note) || "Saved in this browser. When you go, start a journey from it to keep notes, photos and ratings."
+                   }</p>`
                 : `<p class="eat-lede">Tell us how long you have, where you land and what you love. You get a route, what to see, eat and try each day, and a rough budget, all from places on this site.</p>`
             }
           </header>
+          ${
+            sharedList
+              ? `<section class="plan-shared-list" aria-labelledby="sl-title">
+                  <h2 id="sl-title">A list shared with you</h2>
+                  ${wantHtml(sharedList, { shared: true })}
+                  <div class="trip-tools"><button class="btn primary" id="list-import">Add these to my Want to see</button><a class="btn outline" href="/plan">No thanks</a></div>
+                </section>`
+              : ""
+          }
           ${
             showForm || !plan
               ? formHtml(i)
@@ -2046,7 +2070,22 @@
                   </aside>
                   <ol class="plan-days">${plan.days.map(dayHtml).join("")}</ol>
                 </div>
-                <p class="muted small plan-foot">Drive times and prices are estimates; check opening days locally. Built only from places on this site. <a href="/trip">See all your saved places</a></p>`
+                <p class="muted small plan-foot">Drive times and prices are estimates; check opening days locally. Built only from places on this site.</p>`
+          }
+          ${
+            shared
+              ? ""
+              : `<section class="plan-want" id="want" aria-labelledby="want-title">
+                  <header>
+                    <h2 id="want-title">Want to see <span class="muted">${tripCount() || ""}</span></h2>
+                    ${tripCount() ? '<span class="trip-tools"><button class="btn outline" id="want-share">Share this list</button><button class="link-btn" id="want-clear">Clear the list</button></span>' : ""}
+                  </header>
+                  <p class="muted small" id="want-msg" aria-live="polite"></p>
+                  ${wantHtml(
+                    { saved: Saved.get(), dishes: Plate.get() },
+                    { dayOf: (dd, id) => plan && !showForm && plan.days.find((x) => x.district === dd && x.see.includes(id))?.n, month: i.month ?? TravelMonth.get() }
+                  )}
+                </section>`
           }
         </section>`;
       wire();
@@ -2060,6 +2099,36 @@
     }
 
     function wire() {
+      app.querySelector("#list-import")?.addEventListener("click", () => {
+        Saved.set([...new Set([...Saved.get(), ...sharedList.saved])]);
+        sharedList.dishes.forEach((id) => Plate.has(id) || Plate.toggle(id));
+        tripChanged();
+        location.replace("/plan#want");
+      });
+      const wmsg = app.querySelector("#want-msg");
+      app.querySelector("#want-share")?.addEventListener("click", async () => {
+        const url = `${location.origin}/plan?s=${encodeURIComponent(encodeTrip())}`;
+        try {
+          if (navigator.share) await navigator.share({ title: "Places I want to see in Kerala", url });
+          else {
+            await navigator.clipboard.writeText(url);
+            wmsg.textContent = "Link copied. Paste it anywhere to share your list.";
+          }
+        } catch {
+          wmsg.innerHTML = `Copy this link: <a href="${esc(url)}">${esc(url)}</a>`;
+        }
+      });
+      const clear = app.querySelector("#want-clear");
+      clear?.addEventListener("click", () => {
+        if (!clear.dataset.armed) {
+          clear.dataset.armed = "1";
+          clear.textContent = "Tap again to clear the list";
+          return;
+        }
+        Saved.set([]);
+        Plate.get().forEach((id) => Plate.toggle(id));
+        tripChanged();
+      });
       const form = app.querySelector("#plan-form");
       if (form) {
         const days = form.querySelector('[name="days"]');
@@ -2096,6 +2165,11 @@
         draw();
       });
       app.querySelector("#plan-print")?.addEventListener("click", () => window.print());
+      app.querySelector("#plan-journey")?.addEventListener("click", () => {
+        const j = JOURNEYS.fromPlan(plan, PLAN_DATA);
+        JourneyStore.set([j, ...JourneyStore.get()]);
+        go(`/journeys/${j.id}`);
+      });
       app.querySelector("#plan-use")?.addEventListener("click", () => {
         PlanStore.set(plan.inputs);
         location.replace("/plan");
@@ -2110,8 +2184,12 @@
     draw();
     current = {
       view: "plan",
-      // Saving or removing a place elsewhere updates the "Want to see" list next time the form opens.
-      refreshTrip: () => showForm && draw(),
+      // Saving or removing a place redraws the "Want to see" list (and the form's choices), keeping the scroll.
+      refreshTrip: () => {
+        const y = window.scrollY;
+        draw();
+        window.scrollTo(0, y);
+      },
       shareUrl: () => (plan && !showForm ? link() : location.origin + "/plan"),
     };
   }
@@ -2161,7 +2239,7 @@
           <p class="do-blurb">${esc(x.blurb || "")}</p>
           <p class="do-meta">${doingTime(x)} · ${doingPrice(x)}${x.months ? ` · ${esc(fmtMonths(x.months))}` : ""}</p>
           ${x.note ? `<p class="do-note">${esc(x.note)}</p>` : ""}
-          <div class="do-actions">${planControl(x, plan)}</div>
+          <div class="do-actions">${planControl(x, plan)}${doneBtn(`xp:${x.id}`, x.name)}</div>
         </div>
       </article>`;
     }
@@ -2278,6 +2356,418 @@
     if (sel) goTo(sel);
   }
 
+  // ---------- journeys (/journeys): trips already taken, with notes, photos and ratings (js/journeys.js) ----------
+  // Text and ratings live in localStorage; photos are too big for it, so they go to IndexedDB (Photos below).
+  const JourneyStore = {
+    key: "kerala-journey:journeys",
+    get() {
+      try {
+        return JOURNEYS.clean(JSON.parse(localStorage.getItem(this.key)) || this._mem || [], PLAN_DATA);
+      } catch {
+        return this._mem || [];
+      }
+    },
+    set(all) {
+      this._mem = all;
+      try {
+        localStorage.setItem(this.key, JSON.stringify(all));
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    find(id) {
+      return this.get().find((j) => j.id === id) || null;
+    },
+    update(id, fn) {
+      return this.set(this.get().map((j) => (j.id === id ? fn(j) : j)));
+    },
+  };
+
+  // Journey photos, resized in the browser and kept in IndexedDB on this device only.
+  const Photos = (() => {
+    let db = null;
+    const open = () =>
+      (db ||= new Promise((resolve, reject) => {
+        const r = indexedDB.open("kerala-journey", 1);
+        r.onupgradeneeded = () => r.result.createObjectStore("photos");
+        r.onsuccess = () => resolve(r.result);
+        r.onerror = () => reject(r.error);
+      }));
+    const run = async (mode, fn) => {
+      const d = await open();
+      return new Promise((resolve, reject) => {
+        const tx = d.transaction("photos", mode);
+        const req = fn(tx.objectStore("photos"));
+        tx.oncomplete = () => resolve(req.result);
+        tx.onerror = tx.onabort = () => reject(tx.error);
+      });
+    };
+    // Longest side about 1600 px, as a JPEG.
+    async function shrink(file, max = 1600) {
+      const bmp = await createImageBitmap(file, { imageOrientation: "from-image" });
+      const k = Math.min(1, max / Math.max(bmp.width, bmp.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(bmp.width * k);
+      c.height = Math.round(bmp.height * k);
+      c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+      bmp.close?.();
+      return new Promise((resolve, reject) => c.toBlob((b) => (b ? resolve(b) : reject(new Error("Could not read the photo"))), "image/jpeg", 0.85));
+    }
+    return {
+      shrink,
+      put: (id, blob) => run("readwrite", (st) => st.put(blob, id)),
+      get: (id) => run("readonly", (st) => st.get(id)),
+      del: (id) => run("readwrite", (st) => st.delete(id)).catch(() => {}),
+    };
+  })();
+
+  // What a journey item is: its name, link, photo and kind (keys are explained in js/journeys.js).
+  function itemInfo(key) {
+    const { type, id } = JOURNEYS.parseKey(key);
+    if (type === "place") {
+      const [d, sid] = id.split("/");
+      const x = spotOf(d, sid);
+      return x && { name: x.name, href: `/d/${d}/${sid}`, im: imagesFor(byId(d), x)[0], kind: "Place" };
+    }
+    if (type === "dish") {
+      const f = dishById(id);
+      return f && { name: f.name, href: `/eat/${f.id}`, im: dishImages(f)[0], kind: "Signature dish" };
+    }
+    if (type === "taste") {
+      const x = tasteById(id);
+      return x && { name: x.name, href: null, im: null, kind: "Local taste" };
+    }
+    if (type === "xp") {
+      const x = doingById(id);
+      return x && { name: x.name, href: `/do/${x.id}`, im: doingImage(x), kind: DO_KINDS[x.kind] || "Experience" };
+    }
+    return null;
+  }
+  const fmtDay = (iso) => (iso ? new Date(`${iso}T00:00:00`).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" }) : "");
+  const fmtRange = (j) => {
+    if (!j.start) return "No dates yet";
+    const end = JOURNEYS.dayDate(j, Math.max(1, j.days.length));
+    const f = (iso, o) => new Date(`${iso}T00:00:00`).toLocaleDateString("en-GB", o);
+    return j.days.length > 1 ? `${f(j.start, { day: "numeric", month: "short" })} – ${f(end, { day: "numeric", month: "short", year: "numeric" })}` : f(j.start, { day: "numeric", month: "short", year: "numeric" });
+  };
+  const journeyRoute = (j) => JOURNEYS.stops(j).map((id) => baseById(id)?.name).join(" → ");
+
+  function renderJourneys(id) {
+    const urls = [];
+    const cleanup = () => urls.splice(0).forEach((u) => URL.revokeObjectURL(u));
+    let msg = "";
+    const keepScroll = (fn) => {
+      const y = window.scrollY;
+      fn();
+      window.scrollTo(0, y);
+    };
+    const townOptions = (cur = "") =>
+      DISTRICTS.map((d) => {
+        const towns = PLAN.bases.filter((b) => b.district === d.id);
+        return towns.length ? `<optgroup label="${esc(d.name)}">${towns.map((b) => `<option value="${b.id}"${b.id === cur ? " selected" : ""}>${esc(b.name)}</option>`).join("")}</optgroup>` : "";
+      }).join("");
+
+    // ----- the list -----
+    function listHtml() {
+      const all = JourneyStore.get();
+      const saved = PlanStore.get();
+      const plan = saved && PLANNER.buildPlan(saved, PLAN_DATA);
+      const st = JOURNEYS.stats({ done: Done.get(), stamps: Passport.get(), journeys: all }, PLAN_DATA);
+      return `
+        <header class="eat-hero">
+          <p class="eyebrow">${t("journeys")}</p>
+          <h1 class="eat-title">${all.length ? "Kerala, <em>remembered</em>" : "Keep the trip, <em>not just the photos</em>"}</h1>
+          <p class="eat-lede">A journal of trips you've taken: what you did each day, notes, photos, and a rating for every place, dish and experience. ${
+            all.length ? `So far: ${st.places} places, ${st.food} tastes and ${st.experiences} experiences ticked off.` : "Start one from your plan when you set off, or from scratch afterwards."
+          }</p>
+        </header>
+        <div class="jr-start">
+          ${
+            plan
+              ? `<div class="jr-start-card">
+                  <h2>From your plan</h2>
+                  <p>${plan.inputs.days} days: ${esc(plan.stops.map((x) => baseById(x.base).name).join(" → "))}</p>
+                  <form id="jr-from-plan" class="jr-form">
+                    <label><span class="pack-label">First day</span><input type="date" name="start" /></label>
+                    <button class="btn primary" type="submit">Start this journey</button>
+                  </form>
+                </div>`
+              : `<div class="jr-start-card"><h2>From a plan</h2><p>Build a day-by-day plan first, then turn it into a journey when you go.</p><a class="btn outline" href="/plan">Plan a trip</a></div>`
+          }
+          <div class="jr-start-card">
+            <h2>From scratch</h2>
+            <form id="jr-blank" class="jr-form">
+              <label><span class="pack-label">Name</span><input type="text" name="title" maxlength="80" placeholder="Our Kerala trip" /></label>
+              <label><span class="pack-label">First day</span><input type="date" name="start" /></label>
+              <label><span class="pack-label">First stop</span><select name="base" required><option value="">Choose a town…</option>${townOptions()}</select></label>
+              <button class="btn outline" type="submit">Start a journey</button>
+            </form>
+          </div>
+        </div>
+        ${
+          all.length
+            ? `<ol class="jr-list">${all
+                .map((j) => {
+                  const ticks = j.days.flatMap((d) => d.items).filter((k) => Done.has(k)).length;
+                  const photos = j.days.reduce((n, d) => n + d.photos.length, 0);
+                  const rated = Object.values(j.reviews).filter((r) => r.stars).length;
+                  return `<li><a class="jr-card" href="/journeys/${j.id}">
+                    <span class="jr-card-map">${routeMap(j.from, j.to, JOURNEYS.stops(j), "plan-map jr-mini")}</span>
+                    <span class="jr-card-body"><strong>${esc(j.title)}</strong><small>${esc(fmtRange(j))} · ${j.days.length} ${j.days.length === 1 ? "day" : "days"}</small>
+                      <small>${esc(journeyRoute(j)) || "No stops yet"}</small>
+                      <small class="jr-counts">${ticks} ✓ · ${photos} ${photos === 1 ? "photo" : "photos"} · ${rated} rated</small></span>
+                  </a></li>`;
+                })
+                .join("")}</ol>`
+            : ""
+        }
+        <p class="muted small jr-privacy">Journeys are private and stay in this browser on this device. Photos are kept in the browser's storage: clearing this site's data deletes them, so keep your originals.</p>`;
+    }
+
+    // ----- one journey -----
+    function itemHtml(j, d, key) {
+      const x = itemInfo(key);
+      if (!x) return "";
+      const r = j.reviews[key] || { stars: 0, text: "" };
+      const thumb = x.im ? `<img src="${esc(thumbOf(x.im))}" alt="" loading="lazy" />` : '<span class="noimg"></span>';
+      const head = x.href ? `<a href="${x.href}">${thumb}<span><strong>${esc(x.name)}</strong><small>${esc(x.kind)}</small></span></a>` : `<span class="jr-item-name">${thumb}<span><strong>${esc(x.name)}</strong><small>${esc(x.kind)}</small></span></span>`;
+      const stars = [1, 2, 3, 4, 5]
+        .map((v) => `<button class="star" data-star="${esc(key)}" data-v="${v}" aria-pressed="${v <= r.stars}" aria-label="${esc(`${x.name}: ${v} of 5`)}">★</button>`)
+        .join("");
+      return `<li class="jr-item">
+        <div class="jr-item-top">${head}<span class="jr-item-acts">${doneBtn(key, x.name)}<button class="icon-btn jr-x" data-remove-item="${esc(key)}" data-day="${d.n}" aria-label="Remove ${esc(x.name)} from day ${d.n}">✕</button></span></div>
+        <div class="jr-rate"><span class="stars" role="group" aria-label="Your rating">${stars}</span>
+          <input class="jr-review" type="text" maxlength="1000" data-review="${esc(key)}" value="${esc(r.text)}" placeholder="A line about it (only you see this)" aria-label="Your review of ${esc(x.name)}" /></div>
+      </li>`;
+    }
+    function addOptions(j, d) {
+      const b = baseById(d.base);
+      const have = new Set(d.items);
+      const opt = (k) => {
+        const x = itemInfo(k);
+        return x && !have.has(k) ? `<option value="${esc(k)}">${esc(x.name)}</option>` : "";
+      };
+      const group = (label, keys) => {
+        const o = keys.map(opt).join("");
+        return o ? `<optgroup label="${label}">${o}</optgroup>` : "";
+      };
+      return [
+        group("Places", b.spots.map((sid) => `place:${b.district}/${sid}`)),
+        group("Food", [...FOOD.filter((f) => f.district === b.district).map((f) => `dish:${f.id}`), ...TASTES.filter((x) => x.district === b.district).map((x) => `taste:${x.id}`)]),
+        group("Things to do", DOINGS.filter((x) => x.base === b.id).map((x) => `xp:${x.id}`)),
+      ].join("");
+    }
+    function dayHtml(j, d) {
+      const b = baseById(d.base);
+      const date = JOURNEYS.dayDate(j, d.n);
+      return `<li class="plan-day jr-day" id="day-${d.n}">
+        <header><span class="pd-n">Day ${d.n}</span><h3>${esc(b.name)}</h3><span class="pd-where">${esc(byId(b.district)?.name || "")}${date ? ` · ${esc(fmtDay(date))}` : ""}</span></header>
+        <ul class="jr-items">${d.items.map((k) => itemHtml(j, d, k)).join("") || '<li class="muted small">Nothing on this day yet.</li>'}</ul>
+        <label class="do-pick jr-add"><span class="sr-only">Add to day ${d.n}</span><select data-add-item="${d.n}"><option value="">+ Add to this day…</option>${addOptions(j, d)}</select></label>
+        <label class="jr-note"><span class="pack-label">Notes</span><textarea data-note="${d.n}" rows="3" maxlength="4000" placeholder="What happened, who you met, what you'd tell a friend">${esc(d.note)}</textarea></label>
+        <div class="jr-photos">
+          ${d.photos.map((p) => `<figure class="jr-photo"><a data-photo-link="${p}" target="_blank" rel="noopener"><img data-photo="${p}" alt="Photo from day ${d.n}" /></a><button class="icon-btn jr-x" data-del-photo="${p}" aria-label="Delete this photo">✕</button></figure>`).join("")}
+          <label class="jr-photo-add"><input type="file" accept="image/*" multiple data-photos="${d.n}" /><span>+ Add photos</span></label>
+        </div>
+        <p class="pd-more"><button class="link-btn" data-del-day="${d.n}">Remove day ${d.n}</button></p>
+      </li>`;
+    }
+    function journeyHtml(j) {
+      const km = JOURNEYS.km(j, PLAN_DATA);
+      return `
+        <header class="eat-hero plan-hero">
+          <p class="eyebrow"><a href="/journeys">${t("journeys")}</a></p>
+          <h1 class="eat-title"><input class="jr-title" id="jr-title" value="${esc(j.title)}" maxlength="80" aria-label="Journey name" /></h1>
+          <p class="plan-facts">${esc(fmtRange(j))} · ${j.days.length} ${j.days.length === 1 ? "day" : "days"}${km ? ` · about ${km.toLocaleString("en-IN")} km` : ""}</p>
+          <div class="trip-tools">
+            <label class="jr-date"><span class="pack-label">First day</span><input type="date" id="jr-start" value="${j.start || ""}" /></label>
+            <button class="link-btn" id="jr-print">Print</button>
+            <button class="link-btn" id="jr-delete">Delete this journey</button>
+          </div>
+          <p class="muted small" id="jr-msg" aria-live="polite">${esc(msg) || "Saved in this browser as you type."}</p>
+        </header>
+        <div class="plan-layout">
+          <aside class="plan-side">
+            <div class="plan-map-wrap">${routeMap(j.from, j.to, JOURNEYS.stops(j))}</div>
+            <ol class="plan-stops">${JOURNEYS.stops(j)
+              .map((bid, k) => {
+                const b = baseById(bid);
+                return `<li><span class="ps-n">${k + 1}</span><span class="ps-name"><strong>${esc(b.name)}</strong><small>${esc(byId(b.district)?.name || "")}</small></span></li>`;
+              })
+              .join("")}</ol>
+            <label class="plan-add"><span class="sr-only">Add a day</span><select id="jr-add-day"><option value="">+ Add a day in…</option>${townOptions()}</select></label>
+          </aside>
+          <ol class="plan-days">${j.days.map((d) => dayHtml(j, d)).join("") || '<li class="muted">Add your first day from the list.</li>'}</ol>
+        </div>
+        <p class="muted small jr-privacy">Private to this browser. Photos stay on this device until accounts and sync arrive; clearing this site's data deletes them.</p>`;
+    }
+
+    function draw() {
+      cleanup();
+      const j = id && JourneyStore.find(id);
+      app.innerHTML = `<section class="eat-view plan-view jr-view">${siteHead("journeys")}${
+        id && !j ? `<header class="eat-hero"><h1 class="eat-title">Journey not found</h1><p class="eat-lede">It may have been deleted, or it was saved in another browser.</p><a class="btn outline" href="/journeys">All journeys</a></header>` : j ? journeyHtml(j) : listHtml()
+      }</section>`;
+      if (j) document.title = `${j.title} · Kerala Journey`;
+      wire(j);
+      loadPhotos();
+    }
+    async function loadPhotos() {
+      for (const img of app.querySelectorAll("img[data-photo]")) {
+        try {
+          const blob = await Photos.get(img.dataset.photo);
+          if (!blob) {
+            img.alt = "Photo not on this device";
+            continue;
+          }
+          const u = URL.createObjectURL(blob);
+          urls.push(u);
+          img.src = u;
+          img.closest("a").href = u;
+        } catch {
+          img.alt = "Photos can't be read in this browser";
+        }
+      }
+    }
+    const save = (j, fn, redraw = true) => {
+      const ok = JourneyStore.update(j.id, fn);
+      msg = ok ? "" : "Couldn't save: this browser's storage is full or turned off.";
+      if (redraw) keepScroll(draw);
+      else if (!ok) app.querySelector("#jr-msg").textContent = msg;
+    };
+    const debounce = (fn, ms = 400) => {
+      let tm;
+      return (...a) => {
+        clearTimeout(tm);
+        tm = setTimeout(() => fn(...a), ms);
+      };
+    };
+
+    function wire(j) {
+      if (!j) {
+        app.querySelector("#jr-from-plan")?.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const plan = PLANNER.buildPlan(PlanStore.get(), PLAN_DATA);
+          const nj = JOURNEYS.fromPlan(plan, PLAN_DATA, { start: new FormData(e.target).get("start") });
+          JourneyStore.set([nj, ...JourneyStore.get()]);
+          go(`/journeys/${nj.id}`);
+        });
+        app.querySelector("#jr-blank")?.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const fd = new FormData(e.target);
+          const nj = JOURNEYS.addDay(JOURNEYS.blank(PLAN_DATA, { title: fd.get("title"), start: fd.get("start") }), PLAN_DATA, fd.get("base"));
+          JourneyStore.set([nj, ...JourneyStore.get()]);
+          go(`/journeys/${nj.id}`);
+        });
+        return;
+      }
+      const cur = () => JourneyStore.find(j.id);
+      app.querySelector("#jr-title").addEventListener(
+        "input",
+        debounce((e) => {
+          save(cur(), (x) => ({ ...x, title: e.target.value.trim() || "My Kerala trip" }), false);
+          document.title = `${e.target.value.trim() || "My Kerala trip"} · Kerala Journey`;
+        })
+      );
+      app.querySelector("#jr-start").addEventListener("change", (e) => save(cur(), (x) => ({ ...x, start: e.target.value || null })));
+      app.querySelector("#jr-print").addEventListener("click", () => window.print());
+      const del = app.querySelector("#jr-delete");
+      del.addEventListener("click", () => {
+        if (!del.dataset.armed) {
+          del.dataset.armed = "1";
+          del.textContent = "Tap again to delete it, with its notes and photos";
+          return;
+        }
+        cur().days.flatMap((d) => d.photos).forEach((p) => Photos.del(p));
+        JourneyStore.set(JourneyStore.get().filter((x) => x.id !== j.id));
+        go("/journeys");
+      });
+      app.querySelector("#jr-add-day").addEventListener("change", (e) => {
+        if (!e.target.value) return;
+        save(cur(), (x) => JOURNEYS.addDay(x, PLAN_DATA, e.target.value));
+        requestAnimationFrame(() => app.querySelector(`#day-${cur().days.length}`)?.scrollIntoView({ block: "start", behavior: "smooth" }));
+      });
+      app.querySelectorAll("[data-del-day]").forEach((btn) =>
+        btn.addEventListener("click", () => {
+          if (!btn.dataset.armed) {
+            btn.dataset.armed = "1";
+            btn.textContent = "Tap again to remove this day, its notes and photos";
+            return;
+          }
+          const n = +btn.dataset.delDay;
+          cur().days.find((d) => d.n === n)?.photos.forEach((p) => Photos.del(p));
+          save(cur(), (x) => JOURNEYS.removeDay(x, n));
+        })
+      );
+      app.querySelectorAll("[data-add-item]").forEach((sel) =>
+        sel.addEventListener("change", () => sel.value && save(cur(), (x) => JOURNEYS.addItem(x, +sel.dataset.addItem, sel.value)))
+      );
+      app.querySelectorAll("[data-remove-item]").forEach((btn) =>
+        btn.addEventListener("click", () => save(cur(), (x) => JOURNEYS.removeItem(x, +btn.dataset.day, btn.dataset.removeItem)))
+      );
+      app.querySelectorAll("[data-star]").forEach((btn) =>
+        btn.addEventListener("click", () => {
+          const k = btn.dataset.star;
+          const v = +btn.dataset.v;
+          const now = cur().reviews[k]?.stars || 0;
+          save(cur(), (x) => JOURNEYS.setReview(x, k, { stars: v === now ? 0 : v }), false);
+          const stars = cur().reviews[k]?.stars || 0;
+          app.querySelectorAll(`[data-star="${CSS.escape(k)}"]`).forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.v <= stars)));
+        })
+      );
+      app.querySelectorAll("[data-review]").forEach((inp) =>
+        inp.addEventListener(
+          "input",
+          debounce(() => save(cur(), (x) => JOURNEYS.setReview(x, inp.dataset.review, { text: inp.value }), false))
+        )
+      );
+      app.querySelectorAll("[data-note]").forEach((ta) =>
+        ta.addEventListener(
+          "input",
+          debounce(() => save(cur(), (x) => JOURNEYS.setNote(x, +ta.dataset.note, ta.value), false))
+        )
+      );
+      app.querySelectorAll("[data-photos]").forEach((inp) =>
+        inp.addEventListener("change", async () => {
+          const n = +inp.dataset.photos;
+          const files = [...inp.files];
+          const status = app.querySelector("#jr-msg");
+          let added = 0;
+          for (const [k, file] of files.entries()) {
+            status.textContent = `Adding photo ${k + 1} of ${files.length}…`;
+            try {
+              const pid = `p${Date.now().toString(36)}${Math.floor(Math.random() * 46656).toString(36)}`;
+              await Photos.put(pid, await Photos.shrink(file));
+              JourneyStore.update(j.id, (x) => JOURNEYS.addPhoto(x, n, pid));
+              added++;
+            } catch {
+              msg = "Some photos couldn't be added: this browser may not allow storing them (private browsing), or it's out of space.";
+            }
+          }
+          if (added && !msg) msg = `${added} ${added === 1 ? "photo" : "photos"} added. They're kept on this device only.`;
+          keepScroll(draw);
+          msg = "";
+        })
+      );
+      app.querySelectorAll("[data-del-photo]").forEach((btn) =>
+        btn.addEventListener("click", () => {
+          if (!btn.dataset.armed) {
+            btn.dataset.armed = "1";
+            btn.textContent = "Delete?";
+            btn.classList.add("armed");
+            return;
+          }
+          Photos.del(btn.dataset.delPhoto);
+          save(cur(), (x) => JOURNEYS.removePhoto(x, btn.dataset.delPhoto));
+        })
+      );
+    }
+
+    draw();
+    current = { view: "journeys", cleanup, refreshDone: () => {} };
+  }
+
   // ---------- search (the magnifier button, or press /) ----------
   const Search = (() => {
     let dlg = null, index = null, results = [], sel = 0;
@@ -2301,7 +2791,8 @@
         ["Travel essentials", "/essentials", "packing money sim transport safety"],
         ["Plan my trip", "/plan", "plan itinerary planner route days budget trip builder"],
         ["Things to do", "/do", "experiences activities things to do tours treks boat safari"],
-        ["My trip", "/trip", "saved places share"],
+        ["Want to see", "/plan", "my trip saved places share want to see"],
+        ["My journeys", "/journeys", "journal trips taken photos notes reviews ratings memories"],
         ["Map", "/map", "districts map"],
       ])
         add("Page", title, "", text, href);
@@ -2511,7 +3002,7 @@
             ${sound ? `<button class="chip" data-sound aria-pressed="false" aria-label="Play sound: ${esc(sound.label)}" title="${esc(sound.label)}"><span aria-hidden="true">♪</span><span class="lbl"> ${t("sound")}</span></button>` : ""}
             <button class="chip" data-search aria-label="${t("search")}">${SEARCH_ICON}</button>
             ${waButtons()}
-            <button class="chip" data-passport aria-label="${t("passport")}">${STAMP_ICON}<span class="lbl">${t("passport")} · </span><span data-count>${Passport.count()}</span>/14</button>
+            <button class="chip" data-passport aria-label="${t("passport")}">${STAMP_ICON}<span class="lbl">${t("passport")} </span><span data-count>${Passport.count()}</span>/14</button>
             <button class="chip" data-hide aria-pressed="false" title="Hide the panels (H)">${t("justLook")}</button>
           </div>
         </header>
@@ -2550,7 +3041,7 @@
                 ? `<div class="board-road">
                     <span class="br-k">${esc(t("roadFrom", { name: prev.name }))}</span>
                     <strong>${esc(visit.road.how)}</strong>
-                    <span>${esc(visit.road.time)}${visit.road.tip ? ` · ${esc(visit.road.tip)}` : ""}</span>
+                    <span>${esc(visit.road.time)}.${visit.road.tip ? ` ${esc(visit.road.tip)}` : ""}</span>
                   </div>`
                 : ""
             }
@@ -2570,7 +3061,7 @@
                 : ""
             }
             <div class="board-actions">
-              <button class="btn primary" data-enter>${t("stepIn")} <span aria-hidden="true">→</span></button>
+              <button class="btn primary" data-enter>${t("stepIn")}</button>
               ${visit ? `<button class="btn board-ghost" data-board-sheet="plan">${t("planVisit")}</button>` : ""}
             </div>
             ${xp ? `<button class="board-xp" data-board-sheet="xp"><span class="tag">${t("tryIt")}</span> ${esc(xp.title)}</button>` : ""}
@@ -2699,7 +3190,7 @@
         }
         <p class="sheet-links">${
           DOINGS.some((x) => doDistrict(x) === d.id) ? `<a class="btn outline" href="/do/${d.id}">Things to do in ${esc(d.name)}</a>` : ""
-        }<a class="btn outline" href="/plan">Open the trip planner</a></p>`;
+        }<a class="btn outline" href="/plan?with=${d.id}">Plan a trip with ${esc(d.name)}</a></p>`;
     };
     const renderXp = () => {
       sheetBody.innerHTML = `<p class="xp-teaser">${esc(xp.teaser)}</p><h3 class="xp-head">${esc(xp.title)}</h3><div class="xp-host"></div>`;
@@ -2914,13 +3405,33 @@
         : `<a class="stamp" href="/d/${d.id}" data-close><strong>${esc(d.name)}</strong><small>not yet</small></a>`;
     }).join("");
     document.getElementById("passport-note").textContent =
-      n === 14 ? "You've seen all of Kerala. Time to go for real." : `${n} of 14 districts visited. Stamps are saved in this browser.`;
+      n === 14 ? "You've seen all of Kerala. Time to go for real." : `${n} of 14 districts visited on the tour. Everything here is saved in this browser.`;
+    passportStats();
+    document.getElementById("passport-food").innerHTML = DISTRICTS.map((d) => {
+      const items = [...FOOD.filter((f) => f.district === d.id).map((f) => [`dish:${f.id}`, f.name]), ...TASTES.filter((x) => x.district === d.id).map((x) => [`taste:${x.id}`, x.name])];
+      return items.length
+        ? `<li><span class="pf-d">${esc(d.name)}</span><span class="pf-items">${items.map(([k, name]) => doneBtn(k, name, "chip-done")).join("")}</span></li>`
+        : "";
+    }).join("");
     dlg.showModal();
+  }
+  // Districts · places · food n/41 · experiences · km, from the tour stamps, the ✓ ticks and the journeys.
+  function passportStats() {
+    const st = JOURNEYS.stats({ done: Done.get(), stamps: Passport.get(), journeys: JourneyStore.get() }, PLAN_DATA);
+    const cell = (n, label) => `<div><strong>${n}</strong><span>${label}</span></div>`;
+    document.getElementById("passport-stats").innerHTML = [
+      cell(`${st.districts}<small>/14</small>`, "districts"),
+      cell(st.places, st.places === 1 ? "place seen" : "places seen"),
+      cell(`${st.food}<small>/${st.foodTotal}</small>`, "tastes"),
+      cell(st.experiences, st.experiences === 1 ? "experience" : "experiences"),
+      cell(st.km ? `≈${st.km.toLocaleString("en-IN")}` : 0, "km on journeys"),
+    ].join("");
   }
   dlg.addEventListener("click", (e) => {
     if (e.target === dlg || e.target.closest("[data-close]")) dlg.close();
   });
   document.getElementById("passport-reset").addEventListener("click", () => {
+    // Only the tour stamps: ticks and journeys are real-world records, cleared from their own pages.
     Passport.reset();
     dlg.close();
     render();
@@ -2944,6 +3455,17 @@
         b.outerHTML = saveBtn(k, name, b.classList.contains("dark") ? "dark" : "");
       });
       tripChanged();
+    }
+    const db = e.target.closest("[data-done]");
+    if (db) {
+      const k = db.dataset.done;
+      Done.set(k, !Done.has(k));
+      document.querySelectorAll(`[data-done="${CSS.escape(k)}"]`).forEach((b) => {
+        const cls = [...b.classList].filter((c) => c !== "done-btn").join(" ");
+        b.outerHTML = doneBtn(k, b.dataset.name, cls);
+      });
+      current?.refreshDone?.();
+      if (dlg.open) passportStats();
     }
     if (e.target.closest("[data-search]")) Search.open();
     if (e.target.closest("[data-wa]")) openWa("", `${pageName()}\n${pageLink()}`);

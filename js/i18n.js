@@ -13,6 +13,7 @@ window.KERALA_I18N = {
     culture: "Culture",
     essentials: "Essentials",
     trip: "My trip",
+    journeys: "Journeys",
     search: "Search",
     sections: "Sections",
     langSwitch: "Switch to Malayalam",
@@ -69,6 +70,7 @@ window.KERALA_I18N = {
     mlNote: "Menus and buttons are in Malayalam. Descriptions are in English for now.",
   },
   ml: {
+    journeys: "യാത്രകൾ",
     map: "ഭൂപടം",
     guide: "വഴികാട്ടി",
     food: "ഭക്ഷണം",

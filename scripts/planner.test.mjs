@@ -16,6 +16,7 @@ const DATA = {
   doings: W.KERALA_DOINGS,
   districts: W.KERALA_DISTRICTS,
   food: W.KERALA_FOOD,
+  tastes: W.KERALA_TASTES,
   visit: W.KERALA_VISIT,
   climates: W.KERALA_CLIMATES,
 };
@@ -24,6 +25,7 @@ const P = DATA.plan;
 const spotIds = new Set(DATA.districts.flatMap((d) => d.spots.map((s) => `${d.id}/${s.id}`)));
 const foodIds = new Set(DATA.food.map((f) => f.id));
 const doingIds = new Set(DATA.doings.map((x) => x.id));
+const tasteIds = new Set(DATA.tastes.map((x) => x.id));
 const baseIds = new Set(P.bases.map((b) => b.id));
 
 // A spread of realistic trips.
@@ -41,6 +43,13 @@ test("the data is consistent", () => {
     for (const t of b.tags) assert.ok(P.interests[t], `${b.id}: unknown interest ${t}`);
     assert.ok(b.days[0] >= 1 && b.days[1] >= b.days[0], `${b.id}: bad days`);
   }
+  const kitchens = ["malabar", "hills", "palakkad", "central", "south"];
+  for (const x of DATA.tastes) {
+    assert.ok(DATA.districts.some((d) => d.id === x.district), `${x.id}: unknown district ${x.district}`);
+    assert.ok(kitchens.includes(x.kitchen), `${x.id}: unknown kitchen ${x.kitchen}`);
+    assert.ok(!foodIds.has(x.id), `${x.id}: same id as a signature dish`);
+  }
+  assert.equal(tasteIds.size, DATA.tastes.length, "taste ids are unique");
   for (const x of DATA.doings) {
     assert.ok(baseIds.has(x.base), `${x.id}: unknown base ${x.base}`);
     assert.ok(typeof x.cost === "number" && x.cost >= 0, `${x.id}: bad cost`);
@@ -61,8 +70,11 @@ test("every plan adds up and only uses known ids", () => {
       assert.ok(baseIds.has(d.base));
       for (const s of d.see) assert.ok(spotIds.has(`${d.district}/${s}`), `unknown spot ${s}`);
       for (const f of d.eat) assert.ok(foodIds.has(f), `unknown dish ${f}`);
+      for (const f of d.tastes) assert.ok(tasteIds.has(f), `unknown taste ${f}`);
       for (const t of d.try) assert.ok(doingIds.has(t), `unknown experience ${t}`);
     });
+    const tastes = p.days.flatMap((d) => d.tastes);
+    assert.equal(new Set(tastes).size, tastes.length, `no taste twice: ${label}`);
     const tries = p.days.flatMap((d) => d.try);
     assert.equal(new Set(tries).size, tries.length, `no experience twice: ${label}`);
     assert.ok(p.cost.byStyle.budget.total > 0 && p.cost.byStyle.budget.total < p.cost.byStyle.luxury.total, label);

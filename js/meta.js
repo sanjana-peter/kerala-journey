@@ -78,6 +78,12 @@ window.KERALA_META = function (pathname, W) {
         "Tell it your days, budget and what you love: get a day-by-day Kerala itinerary with a route map, what to see, eat and do each day, and a rough budget. Share it on WhatsApp.",
       image: cover("idukki/munnar"),
     };
+  if (p[0] === "journeys")
+    return {
+      title: `My Kerala journeys · ${site}`,
+      description: "A private journal of Kerala trips: what you did each day, notes, photos, and ratings for places, dishes and experiences.",
+      image: cover("alappuzha/houseboats"),
+    };
   if (p[0] === "trip") return { title: `My Kerala trip · ${site}`, description: "The places and dishes saved for a trip to Kerala, district by district.", image: home.image };
   if (p[0] === "map") return { title: `Map of Kerala's fourteen districts · ${site}`, description: home.description, image: home.image };
   if (p[0] === "guide")

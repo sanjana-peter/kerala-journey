@@ -53,7 +53,7 @@ It ships on the current static Vercel site.
 |---|---|---|
 | `plan.js` | 17 **bases** (the towns a trip stays in: Kochi, Munnar, Thekkady, Alappuzha, Varkala…), each with district, coordinates, `hills`, interest tags, the spots seen from it, `[least, ideal]` days and a "classic" weight. Also gateways (COK, TRV, CCJ, CNN), parties, paces, event seasons and daily costs per style | In use by `/plan`; costs need a local check |
 | `doings.js` | ≈55 experiences: base, kind, hours, cost (`per` person or group), `when`, `months`, notes such as closures | In use by `/plan` ("Try"); prices need a local check |
-| `food.js` → `KERALA_TASTES` | ≈30 extra well-known tastes per district (Kozhikode biryani, unnakkaya, sulaimani, boli…) for the food passport | To do; needs a local check |
+| `food.js` → `KERALA_TASTES` | ≈30 extra well-known tastes per district (Kozhikode biryani, unnakkaya, sulaimani, boli…) for the food passport | In use: food passport, plan days, journeys; needs a local check |
 
 ### Engine: `js/planner.js` (pure functions, no DOM, runs in Node for tests)
 
@@ -123,6 +123,11 @@ days add up, the cost is right for a fixed input, and no unknown ids come out.
 - **Nav:** Plan first, Experiences after Food, and Journeys replacing My trip. Check that the header still fits on a phone.
 - **Plumbing:** `meta.js` titles for `/plan`, `/do` and `/journeys`, routes in `scripts/build-pages.mjs`, and English strings in `i18n.js`
   (Malayalam falls back to English until someone translates it).
+
+Status (2026-10-04): **Phase 1 is built.** Want to see on `/plan` (with `/trip` redirects), `?with=<district>` from the
+district Plan sheet, the `Done` store and ✓ ticks, passport stats and food checklist, the Journeys nav item and `/journeys`
+(`js/journeys.js`, tested by `scripts/journeys.test.mjs`). Malayalam for the new strings and a local check of prices,
+closures and the tastes are still open (see "Needs a person").
 
 - **`/journeys`**: a list of trips taken, each with dates and a route map. Opening one shows its days, and each day
   lets the traveller write notes, add photos, and give a place, dish or experience 1–5 stars and a short review.
