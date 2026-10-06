@@ -1,6 +1,7 @@
 import { emergencyContacts, essentials, gateways, regions } from "@/lib/keralaData.ts";
 import { placeName, type Itinerary } from "@/lib/planner.ts";
-import { formatOption, packingList, routeLine, tripSummary } from "@/lib/dossier.ts";
+import { dossierSources, formatOption, packingList, routeLine, tripSummary } from "@/lib/dossier.ts";
+import { CHECKED_ON } from "@/lib/sources.ts";
 
 /** The dossier as a plain, print-friendly document. Same sections as the Markdown download. */
 export function DossierDocument({ itinerary: it }: { itinerary: Itinerary }) {
@@ -105,6 +106,20 @@ export function DossierDocument({ itinerary: it }: { itinerary: Itinerary }) {
             </div>
           ))}
         </div>
+      </section>
+
+      <section>
+        <H2>Sources</H2>
+        <p className="mb-1 text-ink-500">Facts checked on {CHECKED_ON}. Travel-guide sources are marked; re-check those first.</p>
+        <ul className="list-disc space-y-0.5 pl-5 text-[0.8rem]">
+          {dossierSources(it).map((s) => (
+            <li key={s.url}>
+              <a href={s.url} className="underline">{s.label}</a>
+              {s.kind === "guide" && <span className="text-ink-500"> (travel guide)</span>}
+              <span className="block break-all text-ink-400 print:block">{s.url}</span>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <footer className="border-t border-sand-200 pt-3 text-xs text-ink-500">

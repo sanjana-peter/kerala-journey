@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { realityCheck } from "@/lib/keralaData.ts";
+import { SourceLinks } from "./SourceLinks";
 import { cx } from "./ui";
 
 export function RealityCheck() {
@@ -36,6 +37,7 @@ export function RealityCheck() {
               </h4>
               <div id={`reality-${i}`} hidden={!isOpen} className="px-5 pb-5 text-sm leading-relaxed text-ink-700">
                 {item.a}
+                <SourceLinks sources={item.sources} className="mt-2" />
               </div>
             </li>
           );

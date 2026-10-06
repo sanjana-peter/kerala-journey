@@ -13,6 +13,7 @@ import {
   type Activity, type GatewayId, type Leg, type NodeId, type Pace, type RegionId, type TransitOption,
   type Traveler, type TripLength, type VibeId, type When,
 } from "./keralaData.ts";
+import type { Source } from "./sources.ts";
 
 export interface TripInput {
   vibes: VibeId[];
@@ -36,6 +37,7 @@ export interface ResolvedLeg {
   tips: string[];
   /** True when the leg isn't in the data and was estimated from distance. */
   estimated: boolean;
+  sources: Source[];
 }
 
 export interface PlannedActivity extends Activity {
@@ -159,14 +161,14 @@ export function findLeg(from: NodeId, to: NodeId): ResolvedLeg {
   const hit: Leg | undefined = legs.find(
     (l) => (l.between[0] === from && l.between[1] === to) || (l.between[0] === to && l.between[1] === from),
   );
-  if (hit) return { from, to, km: hit.km, options: hit.options, tips: hit.tips, estimated: false };
+  if (hit) return { from, to, km: hit.km, options: hit.options, tips: hit.tips, estimated: false, sources: hit.sources ?? [] };
 
   // Estimate: road distance ≈ 1.35 × straight line; ~30 km/h if either end is in the hills, ~40 km/h otherwise.
   const km = roundTo(haversineKm(coordsOf(from), coordsOf(to)) * 1.35, 5);
   const hills = [from, to].some((id) => id in regions && regions[id as RegionId].hills);
   const h = km / (hills ? 30 : 40);
   return {
-    from, to, km, estimated: true,
+    from, to, km, estimated: true, sources: [],
     options: [{
       mode: "cab", label: "Private cab", per: "car",
       hours: [roundTo(h * 0.9, 0.5), roundTo(h * 1.15, 0.5)],

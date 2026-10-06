@@ -48,6 +48,7 @@ export function PhraseFlip() {
             <h2 id="phrases-title" className="text-3xl font-semibold text-forest-900 sm:text-4xl">Flip a word, earn a smile</h2>
             <p className="mt-3 text-ink-700">
               Malayalam is famously hard. Nobody expects you to speak it, so even one word goes a long way.
+              Pronunciations are approximate English spellings, with the stressed syllable in capitals.
             </p>
           </div>
           <div className="flex items-center gap-3 text-sm">

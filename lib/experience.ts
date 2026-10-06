@@ -7,6 +7,7 @@
  *          written permission, as on the earlier version of the site.
  */
 import type { VibeId } from "./keralaData.ts";
+import { src, type Source } from "./sources.ts";
 
 // ─── Photos ───────────────────────────────────────────────────────────────────
 
@@ -92,12 +93,15 @@ export const microStories: Record<VibeId, string> = {
 
 // ─── Seasons ──────────────────────────────────────────────────────────────────
 
-export interface Festival { name: string; where: string; what: string }
+export interface Festival { name: string; where: string; what: string; sources?: Source[] }
+
+/** Rainfall and highs: IMD normals for Cochin International Airport, 1991–2020 (rounded). */
+export const climateSource = src("imdKochi");
 
 export interface Season {
-  /** Approximate long-term average rainfall in Kochi, mm. */
+  /** Average monthly rainfall at Kochi (Cochin airport), mm. */
   rainMm: number;
-  /** Typical daytime high on the coast, °C. */
+  /** Mean daily maximum at Kochi, °C. */
   highC: number;
   photo: PhotoId;
   tint: string;
@@ -106,61 +110,61 @@ export interface Season {
 }
 
 export const seasons: Season[] = [
-  { rainMm: 15, highC: 31, photo: "kumarakom-sunset", tint: "#c98a3a", mood: "Golden and dry",
+  { rainMm: 2, highC: 34, photo: "kumarakom-sunset", tint: "#c98a3a", mood: "Golden and dry",
     festivals: [
-      { name: "Makaravilakku", where: "Sabarimala", what: "The climax of the pilgrim season in mid-January. Huge crowds of devotees in black." },
-      { name: "Theyyam season", where: "Kannur & Kasaragod", what: "Night-long ritual performances in village shrines. Painted dancers become gods." },
+      { name: "Makaravilakku", where: "Sabarimala", what: "The climax of the pilgrim season, on or around 14 January. Huge crowds of devotees in black.", sources: src("sabarimala") },
+      { name: "Theyyam season", where: "Kannur & Kasaragod", what: "Night-long ritual performances in village shrines, mid-October to May and busiest November to March. Painted dancers become gods.", sources: src("theyyamSeason") },
     ] },
-  { rainMm: 25, highC: 32, photo: "kathakali", tint: "#b8692e", mood: "Festival nights",
+  { rainMm: 15, highC: 35, photo: "kathakali", tint: "#b8692e", mood: "Festival nights",
     festivals: [
       { name: "Temple utsavams", where: "Statewide", what: "Temple festivals with caparisoned elephants, drums and fireworks, almost every week somewhere." },
-      { name: "Attukal Pongala", where: "Thiruvananthapuram", what: "Lakhs of women cook pongala in clay pots on the city streets on one day in Feb or Mar." },
+      { name: "Attukal Pongala", where: "Thiruvananthapuram", what: "Millions of women cook pongala in clay pots on the city streets, on one day in February or March (3 March in 2026).", sources: src("attukal", "attukal2026") },
     ] },
-  { rainMm: 40, highC: 33, photo: "varkala-beach", tint: "#c2703e", mood: "Heat building",
+  { rainMm: 40, highC: 35, photo: "varkala-beach", tint: "#c2703e", mood: "Heat building",
     festivals: [
-      { name: "Theyyam season (late)", where: "North Kerala", what: "The last big months of theyyam before the rains." },
+      { name: "Theyyam season (late)", where: "North Kerala", what: "Theyyam continues until about May, moving south from Kasaragod into Kannur.", sources: src("theyyamSeason") },
       { name: "Temple utsavams", where: "Statewide", what: "Festival season continues with elephant processions and percussion." },
     ] },
-  { rainMm: 120, highC: 33, photo: "kochi-nets", tint: "#b65a33", mood: "Sticky, with thunder",
+  { rainMm: 116, highC: 34, photo: "kochi-nets", tint: "#b65a33", mood: "Sticky, with thunder",
     festivals: [
       { name: "Vishu", where: "Statewide", what: "Malayalam New Year in mid-April. The first sight of the morning is the vishukkani, and fireworks go off all evening." },
-      { name: "Thrissur Pooram", where: "Thrissur", what: "Rival temples face off with 30 elephants a side, parasol switching and a dawn fireworks show. April or May." },
+      { name: "Thrissur Pooram", where: "Thrissur", what: "Two temples line up 15 caparisoned elephants each and race to switch parasols (kudamattam), with fireworks before dawn. Held in Medam, April or May (26 April in 2026).", sources: src("thrissurPooram", "poorumElephants", "pooram2026") },
     ] },
-  { rainMm: 290, highC: 32, photo: "kuttanad-paddy", tint: "#8a6a3c", mood: "Waiting for rain",
+  { rainMm: 225, highC: 33, photo: "kuttanad-paddy", tint: "#8a6a3c", mood: "Waiting for rain",
     festivals: [
-      { name: "Thrissur Pooram (some years)", where: "Thrissur", what: "Falls in May when the Malayalam month of Medam runs late." },
+      { name: "Thrissur Pooram (some years)", where: "Thrissur", what: "Falls in May in years when the Pooram star comes late in the Malayalam month of Medam.", sources: src("thrissurPooram") },
     ] },
-  { rainMm: 680, highC: 29, photo: "kuttanad-storm", tint: "#3f5c6e", mood: "The monsoon breaks",
+  { rainMm: 596, highC: 31, photo: "kuttanad-storm", tint: "#3f5c6e", mood: "The monsoon breaks",
     festivals: [
       { name: "Monsoon Ayurveda season", where: "Statewide", what: "Cool, damp air is said to open the pores. Proper treatment courses begin." },
     ] },
-  { rainMm: 600, highC: 28, photo: "munnar-mist", tint: "#34566a", mood: "Green and roaring",
+  { rainMm: 571, highC: 30, photo: "munnar-mist", tint: "#34566a", mood: "Green and roaring",
     festivals: [
       { name: "Karkidakam", where: "Statewide", what: "The Ramayana is read aloud in homes, and people eat karkidaka kanji, a medicinal rice porridge." },
     ] },
-  { rainMm: 380, highC: 29, photo: "snake-boats", tint: "#2f6274", mood: "Boat races and Onam",
+  { rainMm: 458, highC: 30, photo: "snake-boats", tint: "#2f6274", mood: "Boat races and Onam",
     festivals: [
-      { name: "Nehru Trophy Boat Race", where: "Punnamada Lake, Alleppey", what: "100-oar snake boats race on the second Saturday of August. Book a stand ticket early." },
-      { name: "Onam", where: "Statewide", what: "Kerala's harvest festival: flower carpets, the sadya feast and ten days of celebration. August or September." },
+      { name: "Nehru Trophy Boat Race", where: "Punnamada Lake, Alleppey", what: "Snake boats with around 100 rowers race on a Saturday in August (22 August in 2026). Book a stand ticket early.", sources: src("nehruTrophy2026") },
+      { name: "Onam", where: "Statewide", what: "Kerala's harvest festival: flower carpets, the sadya feast and ten days of celebration. August or September (Thiruvonam was 26 August in 2026).", sources: src("onam2026") },
     ] },
-  { rainMm: 300, highC: 30, photo: "thekkady-lake", tint: "#3f6a55", mood: "Rain thinning out",
+  { rainMm: 359, highC: 31, photo: "thekkady-lake", tint: "#3f6a55", mood: "Rain thinning out",
     festivals: [
-      { name: "Onam (some years)", where: "Statewide", what: "Pulikali tiger dancers take over Thrissur's streets on the fourth day." },
-      { name: "Aranmula Uthrattathi Boat Race", where: "Aranmula, Pampa river", what: "A ritual snake-boat procession more than a race, with the rowers singing vanchipattu." },
+      { name: "Onam (some years)", where: "Statewide", what: "Pulikali tiger dancers take over Thrissur's Swaraj Round on the fourth day of Onam.", sources: src("ktPulikali") },
+      { name: "Aranmula Uthrattathi Boat Race", where: "Aranmula, Pampa river", what: "Temple snake boats (palliyodams) on the Uthrattathi day of Chingam, more ritual than race, with the rowers singing vanchipattu.", sources: src("ktAranmula") },
     ] },
-  { rainMm: 320, highC: 30, photo: "wayanad-chembra", tint: "#466b4f", mood: "Afternoon storms",
+  { rainMm: 343, highC: 32, photo: "wayanad-chembra", tint: "#466b4f", mood: "Afternoon storms",
     festivals: [
       { name: "Navaratri & Vidyarambham", where: "Statewide", what: "Nine nights of worship. On Vijayadashami, small children write their first letters in rice." },
     ] },
-  { rainMm: 160, highC: 31, photo: "munnar-tea", tint: "#4d7a4a", mood: "Fresh and clearing",
+  { rainMm: 176, highC: 33, photo: "munnar-tea", tint: "#4d7a4a", mood: "Fresh and clearing",
     festivals: [
-      { name: "Sabarimala season begins", where: "Pathanamthitta", what: "Mandala pilgrimage starts in mid-November. Expect busy roads around Pampa." },
-      { name: "Kalpathy Ratholsavam", where: "Palakkad", what: "Three days of temple-chariot processions through an old Tamil Brahmin village." },
+      { name: "Sabarimala season begins", where: "Pathanamthitta", what: "The Mandala pilgrimage starts on the first of Vrischikam, in mid-November. Expect busy roads around Pampa.", sources: src("sabarimala") },
+      { name: "Kalpathy Ratholsavam", where: "Palakkad", what: "Temple-chariot processions through Kalpathy's old Tamil Brahmin heritage village.", sources: src("ktKalpathy") },
     ] },
-  { rainMm: 40, highC: 31, photo: "alleppey-houseboat", tint: "#a87430", mood: "Peak season",
+  { rainMm: 53, highC: 33, photo: "alleppey-houseboat", tint: "#a87430", mood: "Peak season",
     festivals: [
       { name: "Christmas", where: "Kochi & statewide", what: "Paper star lanterns outside every Christian home, midnight mass and plum cake." },
-      { name: "Cochin Carnival", where: "Fort Kochi", what: "A week of parades ending with the Pappanji effigy burnt at midnight on New Year's Eve." },
+      { name: "Cochin Carnival", where: "Fort Kochi", what: "Weeks of parades and events, ending with the Pappanji effigy burnt on the beach at midnight on New Year's Eve.", sources: src("cochinCarnival", "pappanji") },
     ] },
 ];
 
@@ -204,7 +208,7 @@ export const phrases: Phrase[] = [
 
 // ─── Spice matrix ─────────────────────────────────────────────────────────────
 
-export type SpiceRegion = "Idukki" | "Wayanad" | "Kannur" | "Alleppey" | "Kottayam" | "Thrissur";
+export type SpiceRegion = "Idukki" | "Wayanad" | "Kannur" | "Alleppey" | "Kottayam" | "Thrissur" | "Palakkad";
 
 export interface Spice {
   id: string;
@@ -212,71 +216,81 @@ export interface Spice {
   ml: string;
   say: string;
   color: [string, string];
+  /** Main growing districts. Empty = grows across Kerala. */
   regions: SpiceRegion[];
   heat: 0 | 1 | 2 | 3;
   taste: string;
   where: string;
   story: string;
   tip: string;
+  sources: Source[];
 }
 
-export const spiceRegions: SpiceRegion[] = ["Idukki", "Wayanad", "Kannur", "Kottayam", "Alleppey", "Thrissur"];
+export const spiceRegions: SpiceRegion[] = ["Idukki", "Wayanad", "Kannur", "Kottayam", "Alleppey", "Thrissur", "Palakkad"];
 
 export const spices: Spice[] = [
   {
     id: "pepper", name: "Black pepper", ml: "കുരുമുളക്", say: "ku-ru-MU-lak", color: ["#2b2622", "#5a4d43"],
-    regions: ["Wayanad", "Idukki", "Kannur"], heat: 3, taste: "Sharp, woody, slow-burning heat.",
+    regions: ["Wayanad", "Idukki", "Kannur", "Kottayam"], heat: 3, taste: "Sharp, woody, slow-burning heat.",
     where: "Kerala pepper chicken, rasam, nadan beef fry.",
-    story: "\"Black gold\". Pepper from the Malabar coast drew Arab, Chinese and Roman traders, and Vasco da Gama landed near Kozhikode in 1498 looking for it.",
+    story: "\"Black gold\". Pepper and cardamom drew Arab, Jewish and Chinese traders to the Malabar coast for centuries, and Vasco da Gama landed at Kappad, near Kozhikode, in May 1498 looking for them.",
     tip: "Buy whole Tellicherry or Malabar pepper and grind it fresh. The pre-ground stuff in tourist shops is dust.",
+    sources: src("pepperDistricts", "ktSpiceDistricts", "vascoDaGama"),
   },
   {
     id: "cardamom", name: "Green cardamom", ml: "ഏലം", say: "AY-lam", color: ["#4f7a3a", "#8fb071"],
-    regions: ["Idukki"], heat: 0, taste: "Floral, citrusy and cooling.",
+    regions: ["Idukki", "Wayanad"], heat: 0, taste: "Floral, citrusy and cooling.",
     where: "Chai, payasam, biryani, unniyappam.",
-    story: "The \"queen of spices\" grows under the forest shade of the Cardamom Hills around Kumily and Vandanmedu, where the auctions set prices for the whole country.",
+    story: "The \"queen of spices\" grows under forest shade in Idukki's Cardamom Hills, around Kumily and Vandanmedu. The Spices Board's e-auctions at Puttady (and Bodinayakanur, across the border) set prices for the country.",
     tip: "Look for fat, bright green pods that smell strongly when cracked. Pale, small pods are old.",
+    sources: src("ktSpiceDistricts", "cardamomAuctions"),
   },
   {
     id: "ginger", name: "Ginger", ml: "ഇഞ്ചി", say: "IN-ji", color: ["#b9935c", "#e0c48f"],
-    regions: ["Wayanad", "Idukki"], heat: 2, taste: "Hot, bright, a little sweet.",
+    regions: ["Wayanad", "Alleppey"], heat: 2, taste: "Hot, bright, a little sweet.",
     where: "Inji puli at a sadya, chukku kaapi (dry-ginger coffee) for a cold.",
-    story: "Dried \"Cochin ginger\" (chukku) was traded for centuries. Every Malayali grandmother prescribes chukku kaapi for a monsoon cold.",
+    story: "Dried ginger (chukku) is a kitchen staple and an old export. Every Malayali grandmother prescribes chukku kaapi for a monsoon cold.",
     tip: "Ask for chukku kaapi at a tea shop on a rainy day.",
+    sources: src("ktSpiceDistricts"),
   },
   {
     id: "turmeric", name: "Turmeric", ml: "മഞ്ഞൾ", say: "MAN-jal", color: ["#c98a12", "#f0bf3c"],
-    regions: ["Alleppey", "Wayanad"], heat: 0, taste: "Earthy, warm, slightly bitter.",
+    regions: ["Palakkad", "Wayanad"], heat: 0, taste: "Earthy, warm, slightly bitter.",
     where: "Almost every curry, and fish marinades.",
-    story: "Alleppey finger turmeric is prized for its deep colour. Turmeric also turns up in rituals and in the paste brides wear before a wedding.",
+    story: "\"Alleppey Finger\" is a trade grade named after the old Alappuzha spice port, prized for its high curcumin content (around 4–7%). Turmeric also turns up in rituals and in the paste brides wear before a wedding.",
     tip: "It stains everything: banana leaves, fingers and white shirts.",
+    sources: src("ktSpiceDistricts", "alleppeyTurmeric"),
   },
   {
     id: "cinnamon", name: "Cinnamon", ml: "കറുവപ്പട്ട", say: "ka-ru-va-PAT-ta", color: ["#7a4421", "#b06d3c"],
     regions: ["Kannur"], heat: 1, taste: "Sweet, warm, woody.",
     where: "Malabar biryani, meat stews, Christmas plum cake.",
-    story: "The East India Company planted the Anjarakandy cinnamon estate near Kannur in the 1760s. It's still one of the largest in Asia.",
+    story: "The East India Company founded the Anjarakandy cinnamon estate near Kannur in 1767. It's reputed to be the largest in Asia, and its processing plant still runs.",
     tip: "True cinnamon has thin, papery, many-layered quills. Thick single bark is usually cassia.",
+    sources: src("ktAnjarakandy", "anjarakandyWiki"),
   },
   {
     id: "clove", name: "Clove", ml: "ഗ്രാമ്പൂ", say: "GRAAM-poo", color: ["#4a2a1c", "#7d4a32"],
-    regions: ["Idukki", "Kottayam"], heat: 2, taste: "Intense, numbing, medicinal.",
+    regions: ["Idukki"], heat: 2, taste: "Intense, numbing, medicinal.",
     where: "Biryani, garam masala, appam-and-stew.",
-    story: "Cloves are the unopened flower buds of a tree that grows in the hills above Kottayam. A clove held on a sore tooth is the classic home remedy.",
+    story: "Cloves are the unopened flower buds of a tree grown in Idukki's high ranges alongside pepper and cardamom. A clove held on a sore tooth is the classic home remedy.",
     tip: "A good clove leaves oil on your fingernail when you press it.",
+    sources: src("pepperDistricts"),
   },
   {
     id: "nutmeg", name: "Nutmeg & mace", ml: "ജാതിക്ക", say: "JAA-thik-ka", color: ["#8a3b24", "#c4583a"],
     regions: ["Thrissur", "Kottayam"], heat: 1, taste: "Sweet, nutty, resinous.",
     where: "Meat dishes, sweets, and nutmeg-fruit pickle and juice.",
-    story: "Kerala grows most of India's nutmeg. The red lace around the seed is mace, a second spice from the same fruit.",
-    tip: "Try the candied nutmeg fruit sold at spice shops in Thrissur and Kalady.",
+    story: "Kerala grows almost all of India's nutmeg, mainly in Thrissur, Ernakulam and Kottayam. The red lace around the seed is mace, a second spice from the same fruit.",
+    tip: "Look for nutmeg-fruit pickle and candied nutmeg at spice shops.",
+    sources: src("iissrNutmeg"),
   },
   {
     id: "kudampuli", name: "Kudampuli", ml: "കുടംപുളി", say: "ku-dam-PU-li", color: ["#1f1a17", "#4a3b34"],
-    regions: ["Kottayam", "Alleppey"], heat: 0, taste: "Smoky, sour and deep.",
+    regions: [], heat: 0, taste: "Smoky, sour and deep.",
     where: "Meen curry, the red fish curry of central Kerala.",
-    story: "Malabar tamarind: a fruit smoked and dried until it's black. It gives Kottayam's fish curry its sourness, and the curry tastes better the next day.",
+    story: "Malabar tamarind (Garcinia gummi-gutta): the fruit rind is sun-dried, then smoked until black. It gives Kerala's red fish curry its sourness, and the curry tastes better the next day.",
     tip: "Order meen curry with kappa in a toddy shop and taste the kudampuli.",
+    sources: src("kudampuli"),
   },
 ];

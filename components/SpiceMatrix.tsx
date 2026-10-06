@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Flame, MapPin, ShoppingBag, UtensilsCrossed } from "lucide-react";
 import { spiceRegions, spices, type SpiceRegion } from "@/lib/experience.ts";
 import { Reveal } from "./Reveal";
+import { SourceLinks } from "./SourceLinks";
 import { cx } from "./ui";
 
 /** A clickable grid of Kerala's spices. Filter by where they grow; open one for its story. */
@@ -111,6 +112,7 @@ export function SpiceMatrix() {
                   <div className="flex gap-3">
                     <dt><MapPin size={16} className="mt-0.5 text-sand-200" aria-label="Grown in" /></dt>
                     <dd className="flex flex-wrap gap-1.5">
+                      {active.regions.length === 0 && <span className="glass-dark rounded-full px-2.5 py-0.5 text-xs">Across Kerala</span>}
                       {active.regions.map((r) => <span key={r} className="glass-dark rounded-full px-2.5 py-0.5 text-xs">{r}</span>)}
                     </dd>
                   </div>
@@ -123,6 +125,7 @@ export function SpiceMatrix() {
                     <dd>{active.tip}</dd>
                   </div>
                 </dl>
+                <SourceLinks sources={active.sources} tone="dark" className="mt-5" />
               </div>
             </motion.article>
           </AnimatePresence>

@@ -14,6 +14,8 @@
  * closures) at least once a season.
  */
 
+import { src, type Source } from "./sources.ts";
+
 export type VibeId = "mist" | "backwaters" | "coast" | "wild";
 export type RegionId = "wayanad" | "kochi" | "munnar" | "thekkady" | "kumarakom" | "alleppey" | "varkala" | "kovalam";
 export type GatewayId = "COK" | "TRV" | "CCJ";
@@ -40,6 +42,8 @@ export interface Activity {
   closedMonths?: number[];
   /** Takes the evening and the night (houseboats). */
   overnight?: boolean;
+  /** Where the opening days, rules and prices were checked. */
+  sources?: Source[];
 }
 
 export interface Region {
@@ -89,6 +93,8 @@ export interface Leg {
   km: number;
   options: TransitOption[];
   tips: string[];
+  /** Distance/time/fare cross-checks. Legs without sources are estimates from comparable routes. */
+  sources?: Source[];
 }
 
 // ─── Vibes ────────────────────────────────────────────────────────────────────
@@ -160,11 +166,10 @@ export const regions: Record<RegionId, Region> = {
     stayTip: "Stay in a plantation homestay near Vythiri or Meppadi: central for most sights.",
     freeTime: "Slow morning on the estate, then a coffee-and-pepper walk with your host.",
     activities: [
-      { id: "edakkal", name: "Edakkal Caves", hours: 3, when: "Morning", note: "Stone Age carvings at the top of a steep climb. Usually closed on Mondays, and daily tickets are limited, so go early.", cautionFor: { family: "Steep rock steps and an iron ladder. Hard for small kids and bad knees." } },
-      { id: "wayanad-safari", name: "Muthanga or Tholpetty jeep safari", hours: 2.5, when: "Sunrise", note: "Forest department jeeps leave at opening time and the queue starts before dawn. Safaris can stop in the dry fire season.", cost: "₹600–1,000 per jeep plus entry" },
-      { id: "chembra", name: "Chembra Peak trek", hours: 6, when: "Sunrise", note: "Climbs past a heart-shaped lake. Needs a forest department permit and guide, and the trail has been closed at times, so confirm before you go.", avoidFor: ["family"] },
+      { id: "edakkal", name: "Edakkal Caves", hours: 3, when: "Morning", note: "Stone Age carvings at the top of a steep climb. Closed on Mondays and some public holidays; go early to beat the queue.", sources: src("ktEdakkal"), cautionFor: { family: "Steep rock steps and an iron ladder. Hard for small kids and bad knees." } },
+      { id: "wayanad-safari", name: "Muthanga or Tholpetty jeep safari", hours: 2.5, when: "Sunrise", note: "Forest department jeeps run from opening time; in high season arrive an hour early to register. Both sanctuaries close for several weeks in the fire season (roughly March to April).", closedMonths: [2, 3], sources: src("wayanadSanctuary") },
+      { id: "chembra", name: "Chembra Peak trek", hours: 5, when: "Sunrise", note: "Up to the heart-shaped lake with a forest department guide. Permits are first-come, first-served in the morning with a daily cap; in 2026 the trek ends at the lake and the summit is off-limits. Confirm before you go.", avoidFor: ["family"], sources: src("ktChembra", "chembraStatus") },
       { id: "banasura", name: "Banasura Sagar Dam", hours: 2, when: "Afternoon", note: "A huge earth dam with speedboats and easy walks. Good with kids." },
-      { id: "soochipara", name: "Soochipara Falls", hours: 2.5, when: "Afternoon", note: "Short, steep walk down through tea and forest. Swimming is limited to a marked area.", closedMonths: [5, 6, 7] },
       { id: "estate-walk", name: "Coffee and spice estate walk", hours: 2, when: "Morning", note: "Most homestays will walk you through their coffee, pepper and cardamom." },
     ],
   },
@@ -182,9 +187,9 @@ export const regions: Record<RegionId, Region> = {
     freeTime: "Café-hop around Princess Street and take the ferry to Ernakulam for ₹10.",
     activities: [
       { id: "fort-kochi-walk", name: "Fort Kochi heritage walk", hours: 3, when: "Morning", note: "Chinese fishing nets, St Francis Church, Santa Cruz Basilica. It's flat; start before 9 to beat the heat." },
-      { id: "mattancherry", name: "Mattancherry Palace and Jew Town", hours: 2.5, when: "Morning", note: "Palace murals and the Paradesi Synagogue. Both close on Fridays (the synagogue also on Saturdays)." },
+      { id: "mattancherry", name: "Mattancherry Palace and Jew Town", hours: 2.5, when: "Morning", note: "Palace murals (10 am to 5 pm, closed Fridays) and the Paradesi Synagogue (closed Saturdays, and open only until 2 pm on Fridays).", sources: src("ktDutchPalace", "ktSynagogue") },
       { id: "kathakali", name: "Kathakali performance", hours: 2, when: "Evening", note: "Arrive an hour early to watch the make-up being applied. Regular nightly shows in Fort Kochi.", cost: "₹400–600" },
-      { id: "water-metro", name: "Water Metro to the islands", hours: 1.5, when: "Afternoon", note: "Electric ferries from the High Court jetty. A cheap harbour cruise.", cost: "₹20–40" },
+      { id: "water-metro", name: "Water Metro across the harbour", hours: 1.5, when: "Afternoon", note: "Electric ferries from the High Court terminal to Fort Kochi, Vypin or Bolgatty, about 7 am to 8 pm. A cheap harbour cruise.", cost: "₹20–40", sources: src("waterMetro") },
     ],
   },
   munnar: {
@@ -200,13 +205,13 @@ export const regions: Record<RegionId, Region> = {
     stayTip: "Stay just outside town (Chithirapuram, Pallivasal, Pothamedu) for the views. Munnar town itself is noisy.",
     freeTime: "Walk the estate roads near your stay: the tea pickers start around 8 am.",
     activities: [
-      { id: "eravikulam", name: "Eravikulam National Park (Rajamala)", hours: 3, when: "Morning", note: "Nilgiri tahr on the grassy slopes. Park buses take you up from the gate.", booking: "Book online; weekend slots sell out.", closedMonths: [1, 2] },
+      { id: "eravikulam", name: "Eravikulam National Park (Rajamala)", hours: 3, when: "Morning", note: "Nilgiri tahr on the grassy slopes, 7:30 am to 4 pm. Closed every February and March for the calving season; reopens 1 April.", booking: "Book online at eravikulamnationalpark.in. Visitor numbers are capped daily, and weekends sell out.", closedMonths: [1, 2], sources: src("eravikulamReopen", "eravikulamBooking") },
       { id: "tea-walk", name: "Guided tea-estate walk", hours: 2, when: "Morning", note: "Your homestay can arrange a local guide. You walk through working estates, not along a road.", cost: "₹500–1,000" },
       { id: "tea-museum", name: "KDHP Tea Museum", hours: 1.5, when: "Afternoon", note: "Short film, old machinery and a working line from leaf to tea." },
       { id: "mattupetty", name: "Mattupetty Dam and Echo Point", hours: 2, when: "Afternoon", note: "Easy and scenic, crowded on weekends. Good with kids." },
       { id: "top-station", name: "Top Station viewpoint", hours: 4, when: "Sunrise", note: "About 35 km of winding road each way to look out over Tamil Nadu. Go early, before the mist comes in.", cautionFor: { family: "Long winding drive. Carry motion-sickness tablets for the kids." } },
       { id: "kolukkumalai", name: "Kolukkumalai sunrise jeep safari", hours: 5, when: "Sunrise", note: "Off-road 4×4 up to one of the highest tea estates. Leaves around 4 am.", cost: "₹2,500–3,500 per jeep", cautionFor: { family: "Very rough, bumpy ride. Not good with toddlers." } },
-      { id: "meesapulimala", name: "Meesapulimala trek", hours: 8, when: "Sunrise", note: "Full-day guided trek, moderate to hard.", booking: "Only through KFDC (the state forest corporation). No walk-ins.", avoidFor: ["family"] },
+      { id: "meesapulimala", name: "Meesapulimala trek", hours: 8, when: "Sunrise", note: "Full-day guided trek, moderate to hard.", booking: "Permits only through KFDC (Kerala Forest Development Corporation), Munnar. No walk-ins.", avoidFor: ["family"], sources: src("meesapulimala") },
     ],
   },
   thekkady: {
@@ -222,11 +227,11 @@ export const regions: Record<RegionId, Region> = {
     stayTip: "Stay in Kumily within walking distance of the Periyar gate, so the 7 am boat is easy.",
     freeTime: "Browse the spice shops on Kumily's main road and take a slow walk along the forest edge.",
     activities: [
-      { id: "periyar-boat", name: "Periyar lake boat safari", hours: 2, when: "Sunrise", note: "The first boat, around 7:30 am, gives the best chance of seeing elephants and gaur.", booking: "Book on the Kerala Forest Department eco-tourism site." },
-      { id: "nature-walk", name: "Guided nature walk in Periyar", hours: 3, when: "Sunrise", note: "Small groups with a tribal guide. Leech socks are handed out in wet months.", cautionFor: { family: "Some forest programmes have minimum ages. Check when you book." } },
+      { id: "periyar-boat", name: "Periyar lake boat safari", hours: 1.5, when: "Sunrise", note: "90-minute cruise. The first boat, at 7:30 am, gives the best chance of seeing elephants and gaur.", booking: "Book online in advance and reach the counter 45 minutes early.", sources: src("periyarBoating") },
+      { id: "nature-walk", name: "Guided nature walk in Periyar", hours: 2.5, when: "Sunrise", note: "4–5 km in small groups with a tribal guide; slots from 7 am. Leech socks are handed out in wet months.", cost: "₹350 per person", cautionFor: { family: "Some forest programmes exclude young children. Check age rules when you book." }, sources: src("ktPeriyar") },
       { id: "spice-plantation", name: "Spice plantation tour", hours: 2, when: "Morning", note: "Cardamom, pepper, vanilla and coffee. Most tours end in a shop, and you don't have to buy." },
       { id: "kalari", name: "Kalaripayattu show", hours: 1, when: "Evening", note: "Kerala's martial art. Shows run nightly in Kumily from about 6 pm.", cost: "₹300–400" },
-      { id: "bamboo-rafting", name: "Bamboo rafting and trek (full day)", hours: 8, when: "Sunrise", note: "Forest department eco-tourism programme with very few places.", avoidFor: ["family"] },
+      { id: "bamboo-rafting", name: "Bamboo rafting and trek (full day)", hours: 8, when: "Sunrise", note: "Forest department eco-tourism programme; reporting 7:45 am, only three rafts a day.", cost: "₹2,400 per person (full day)", avoidFor: ["family"], sources: src("ktPeriyar") },
     ],
   },
   kumarakom: {
@@ -262,7 +267,7 @@ export const regions: Record<RegionId, Region> = {
     stayTip: "One night on a houseboat, and any extra nights in a canal-side homestay (cheaper and more local).",
     freeTime: "Rent a bicycle and ride the canal paths, or just watch the boats go by.",
     activities: [
-      { id: "houseboat", name: "Overnight houseboat", hours: 5, when: "Afternoon", overnight: true, note: "Board around noon. Boats must moor for the night by about 5:30 pm, and checkout is 9 am. Book a licensed boat directly or through your stay, never from touts at the jetty.", cost: "₹8,000–15,000 per boat (1 bedroom, meals included)", cautionFor: { solo: "A private boat for one person is expensive. Take a day cruise or a shikara instead.", family: "Ask for a boat with railings on the upper deck." } },
+      { id: "houseboat", name: "Overnight houseboat", hours: 5, when: "Afternoon", overnight: true, note: "Board at noon. No cruising after dusk: boats moor for the night around 5:30 to 6 pm, and checkout is 9 am. Book a licensed boat directly or through your stay, never from touts at the jetty.", sources: src("houseboatTimes"), cost: "₹8,000–15,000 per boat (1 bedroom, meals included)", cautionFor: { solo: "A private boat for one person is expensive. Take a day cruise or a shikara instead.", family: "Ask for a boat with railings on the upper deck." } },
       { id: "canoe", name: "Canoe or shikara through narrow canals", hours: 3, when: "Morning", note: "Small boats reach canals the houseboats can't.", cost: "Shikara ₹400–800/hour · canoe tour ₹700–1,000 per person", cautionFor: { family: "Insist on life jackets for the kids." } },
       { id: "village-walk", name: "Kuttanad village walk and toddy-shop lunch", hours: 3, when: "Afternoon", note: "Paddy fields below sea level, then fish curry and tapioca in a toddy shop.", cautionFor: { family: "Toddy shops serve palm wine. Ask for a family restaurant instead." } },
       { id: "alleppey-beach", name: "Alleppey Beach at sunset", hours: 1.5, when: "Evening", note: "An old pier and a wide beach. Not for swimming." },
@@ -305,8 +310,8 @@ export const regions: Record<RegionId, Region> = {
     activities: [
       { id: "lighthouse", name: "Vizhinjam Lighthouse and Lighthouse Beach", hours: 2, when: "Evening", note: "Climb the lighthouse (small fee) for the view over the bay." },
       { id: "poovar", name: "Poovar estuary boat ride", hours: 3, when: "Morning", note: "Mangroves and a golden sandbar where the river meets the sea.", cost: "₹1,500–3,000 per boat" },
-      { id: "padmanabhaswamy", name: "Padmanabhaswamy Temple, Thiruvananthapuram", hours: 2, when: "Morning", note: "Only Hindus may enter. Strict dress code (dhoti or sari, which you can rent there), and no phones inside. Non-Hindus can still see the outside and the East Fort area." },
-      { id: "napier", name: "Napier Museum", hours: 2.5, when: "Afternoon", note: "A striking Indo-Saracenic building next to the city zoo. Usually closed on Mondays." },
+      { id: "padmanabhaswamy", name: "Padmanabhaswamy Temple, Thiruvananthapuram", hours: 2, when: "Morning", note: "Entry is for Hindus. Strict dress code: men in a mundu and no shirt, women in a sari or set-mundu (dhotis can be rented and worn over trousers). No phones inside. Anyone can see the gopuram and the East Fort area.", sources: src("ktPadmanabhaswamy", "padmanabhaswamyEntry") },
+      { id: "napier", name: "Napier Museum", hours: 2.5, when: "Afternoon", note: "A striking Indo-Saracenic building next to the city zoo. Closed on Mondays and Wednesday mornings.", sources: src("napier") },
       { id: "ayurveda-kovalam", name: "Ayurveda treatment", hours: 1.5, when: "Afternoon", note: "Kovalam has plenty of Ayurveda centres. Choose one classified as Green Leaf or Olive Leaf." },
     ],
   },
@@ -326,9 +331,10 @@ export const legs: Leg[] = [
     between: ["COK", "kochi"], km: 45,
     options: [
       cab([1, 1.5], [1000, 1500], "Use the prepaid taxi counter outside arrivals, or the Uber/Ola pickup zone."),
-      { mode: "bus", label: "KSRTC airport bus (AC)", hours: [1.5, 2], cost: [100, 200], per: "person", how: "Leaves from outside the terminal and runs via Vyttila Hub to Fort Kochi." },
+      { mode: "bus", label: "KSRTC airport bus (AC)", hours: [1.5, 2], cost: [70, 150], per: "person", how: "Every 30–40 minutes from the bus stop near the terminal, via Aluva and Vyttila to Fort Kochi." },
     ],
     tips: ["Fort Kochi is on a peninsula. Rush-hour traffic on the bridges can add 30–45 minutes."],
+    sources: src("airportBus"),
   },
   {
     between: ["COK", "munnar"], km: 110,
@@ -337,6 +343,7 @@ export const legs: Leg[] = [
       { mode: "bus", label: "KSRTC bus from Aluva", hours: [4.5, 5.5], cost: [150, 250], per: "person", how: "Take a cab to Aluva KSRTC stand (about 20 min). Munnar buses leave roughly every hour in the morning." },
     ],
     tips: ["After Neriamangalam it's about two hours of hairpin bends. Eat light and sit in front.", "Cheeyappara and Valara waterfalls are right by the road on the way up."],
+    sources: src("kochiMunnar", "uberKochiMunnar"),
   },
   {
     between: ["kochi", "munnar"], km: 130,
@@ -345,14 +352,16 @@ export const legs: Leg[] = [
       { mode: "bus", label: "KSRTC bus", hours: [5, 6], cost: [150, 250], per: "person", how: "From Ernakulam KSRTC stand or Vyttila Hub. Morning departures are the most reliable." },
     ],
     tips: ["Leave by 8 am to get to Munnar before the afternoon mist and rain.", "The ghat section is winding. Take motion-sickness tablets 30 minutes before you go."],
+    sources: src("kochiMunnar", "uberKochiMunnar"),
   },
   {
     between: ["munnar", "thekkady"], km: 95,
     options: [
-      cab([3.5, 4.5], [3000, 4000]),
+      cab([3, 4], [3000, 4000]),
       { mode: "bus", label: "KSRTC bus", hours: [4.5, 5.5], cost: [120, 200], per: "person", how: "Only a few direct buses, mostly early morning, from Munnar KSRTC stand. Check times at the stand the day before." },
     ],
-    tips: ["A beautiful drive through cardamom hills, but slow. Don't plan anything big for the afternoon."],
+    tips: ["A beautiful drive through cardamom hills, but slow. Two routes: via Pooppara, or the shorter one via Rajakkad and Nedumkandam."],
+    sources: src("munnarThekkady"),
   },
   {
     between: ["munnar", "alleppey"], km: 170,
@@ -389,11 +398,12 @@ export const legs: Leg[] = [
   {
     between: ["kochi", "alleppey"], km: 55,
     options: [
-      { mode: "train", label: "Train", hours: [1, 1.5], cost: [30, 150], per: "person", how: "Ernakulam Jn (South) → Alappuzha. Buy unreserved tickets on the UTS app. Trains run every 1–2 hours." },
+      { mode: "train", label: "Train", hours: [0.75, 1.25], cost: [30, 150], per: "person", how: "Ernakulam Jn (South) → Alappuzha, roughly hourly. Buy unreserved tickets on the RailOne app (it replaced UTS in March 2026) or at the counter." },
       { mode: "bus", label: "KSRTC bus", hours: [1.5, 2], cost: [70, 100], per: "person", how: "Frequent buses from Vyttila Hub, every 15–20 minutes." },
       cab([1.5, 2], [1800, 2500]),
     ],
     tips: ["Coastal highway (NH 66): flat and easy, but heavy traffic around Aroor."],
+    sources: src("ersAlleppeyTrain", "railOne"),
   },
   {
     between: ["kochi", "kumarakom"], km: 55,
@@ -414,15 +424,16 @@ export const legs: Leg[] = [
   {
     between: ["kochi", "varkala"], km: 165,
     options: [
-      { mode: "train", label: "Train", hours: [3, 3.5], cost: [100, 500], per: "person", how: "Ernakulam Jn → Varkala Sivagiri. Book on IRCTC. The station is 3 km from the cliff, and an auto costs ₹100–150." },
+      { mode: "train", label: "Train", hours: [3, 4.25], cost: [100, 500], per: "person", how: "Ernakulam Jn → Varkala Sivagiri: about 3 h by express, up to 4¼ h by passenger train. Book on IRCTC or RailOne. The station is 3 km from the cliff, and an auto costs ₹100–150." },
       cab([4, 5], [4500, 5500]),
     ],
     tips: ["The train beats the road: the coastal highway is slow and under construction in places."],
+    sources: src("ersVarkalaTrain", "railOne"),
   },
   {
     between: ["alleppey", "varkala"], km: 110,
     options: [
-      { mode: "train", label: "Train", hours: [2, 2.5], cost: [70, 400], per: "person", how: "Alappuzha → Varkala Sivagiri. Book on IRCTC or the UTS app." },
+      { mode: "train", label: "Train", hours: [2, 2.5], cost: [70, 400], per: "person", how: "Alappuzha → Varkala Sivagiri. Book on IRCTC or the RailOne app." },
       cab([2.5, 3.5], [3000, 3800]),
     ],
     tips: ["Houseboats check out at 9 am. A late-morning train gets you to Varkala for sunset."],
@@ -497,9 +508,10 @@ export const legs: Leg[] = [
     between: ["CCJ", "wayanad"], km: 100,
     options: [
       cab([3, 3.5], [3000, 3800]),
-      { mode: "bus", label: "Cab to Kozhikode + KSRTC bus", hours: [3.5, 4.5], cost: [800, 1100], per: "person", how: "Cab from the airport to Kozhikode KSRTC stand (45 min), then a frequent bus to Kalpetta (2.5–3 h, ₹100–150)." },
+      { mode: "bus", label: "Cab to Kozhikode + KSRTC bus", hours: [3.5, 4.5], cost: [800, 1100], per: "person", how: "Cab from the airport to Kozhikode KSRTC stand (45 min), then a frequent bus to Kalpetta (85 km, 2.5–3 h, ₹100–150)." },
     ],
     tips: ["The road climbs the Thamarassery ghat (nine hairpin bends). Weekend traffic jams are common."],
+    sources: src("ktThamarassery", "calicutWayanad"),
   },
   {
     between: ["wayanad", "kochi"], km: 260,
@@ -513,25 +525,27 @@ export const legs: Leg[] = [
 
 // ─── Survival essentials ──────────────────────────────────────────────────────
 
-export const essentials: { id: string; title: string; items: { h: string; p: string }[] }[] = [
+export const essentials: { id: string; title: string; items: { h: string; p: string }[]; sources?: Source[] }[] = [
   {
     id: "money",
     title: "Money and UPI",
     items: [
       { h: "Currency", p: "Indian rupee (₹). Cards work in hotels and bigger restaurants. Carry cash for tea stalls, autos, ferries and temple offerings." },
-      { h: "UPI", p: "Almost every shop takes UPI (QR-code payments). Visitors from abroad can't always link a foreign card, but UPI One World and some prepaid wallets at major airports work. Set it up before relying on it." },
+      { h: "UPI", p: "Almost every shop takes UPI (QR-code payments). Visitors from abroad can use NPCI's UPI One World prepaid wallet: KYC with passport and visa in an app such as CheqUPI, then load it with a foreign card (₹25,000 per load, ₹50,000 a month). Availability is still limited, so set it up before relying on it." },
       { h: "ATMs", p: "Easy to find in towns and rarer in the hills and forests. Take out cash before Wayanad's forests or Thekkady's back roads." },
       { h: "Tipping", p: "Not expected everywhere, but welcome for houseboat crews, drivers and guides (₹200–500 a day)." },
     ],
+    sources: src("upiOneWorld"),
   },
   {
     id: "power",
     title: "Power and phone",
     items: [
       { h: "Plugs", p: "Types C, D and M; 230 V, 50 Hz. Bring a universal adapter. Type D/M sockets are common in older homestays." },
-      { h: "SIM", p: "Jio or Airtel have the best coverage. Visitors from abroad need their passport, visa and a photo, and activation can take a few hours. An eSIM bought before you fly saves the hassle." },
+      { h: "SIM", p: "Jio or Airtel have the best coverage. Visitors from abroad need their original passport, visa and a photo, and activation can take up to 24 hours. An eSIM bought before you fly saves the hassle." },
       { h: "Coverage", p: "Good in towns and along the coast; patchy in forests, on ghat roads and on parts of the backwaters. Download offline maps." },
     ],
+    sources: src("touristSim"),
   },
   {
     id: "scams",
@@ -551,19 +565,23 @@ export const essentials: { id: string; title: string; items: { h: string; p: str
     items: [
       { h: "Dress", p: "Away from the beach, cover shoulders and knees, especially at temples. Some temples admit Hindus only." },
       { h: "Shoes off", p: "Take your shoes off at temples, homes and many shops." },
-      { h: "Alcohol", p: "Sold only in licensed bars, some hotels and state-run outlets, and there are dry days. Beach shacks may serve discreetly; don't count on it." },
+      { h: "Alcohol", p: "Sold only in licensed bars, some hotels and state-run outlets. The first of every month is a dry day (plus election and festival dry days). Beach shacks may serve discreetly; don't count on it." },
       { h: "Right hand", p: "Eat, give and receive with your right hand." },
     ],
+    sources: src("dryDay", "ktPadmanabhaswamy"),
   },
 ];
 
-export const emergencyContacts: { label: string; number: string; note?: string }[] = [
-  { label: "All emergencies", number: "112", note: "Police, fire, ambulance" },
-  { label: "Ambulance", number: "108" },
-  { label: "Fire", number: "101" },
-  { label: "Women's helpline", number: "1091" },
-  { label: "India tourist helpline", number: "1363", note: "24×7, several languages (also 1800-11-1363)" },
-  { label: "Kerala Tourism (toll-free)", number: "1800-425-4747" },
+const helplines = src("lsgHelplines")[0];
+
+export const emergencyContacts: { label: string; number: string; note?: string; source: Source }[] = [
+  { label: "All emergencies", number: "112", note: "Police, fire, ambulance", source: helplines },
+  { label: "Police", number: "100", source: helplines },
+  { label: "Ambulance", number: "108", source: helplines },
+  { label: "Fire & rescue", number: "101", source: helplines },
+  { label: "Women's helpline", number: "1091", note: "or 181", source: helplines },
+  { label: "India tourist helpline", number: "1363", note: "24×7 in 12 languages (also 1800-11-1363)", source: src("indiaTouristHelpline")[0] },
+  { label: "Kerala Tourism info (toll-free)", number: "1800-425-4747", note: "From Indian numbers only", source: src("ktFooter")[0] },
 ];
 
 // ─── Months ───────────────────────────────────────────────────────────────────
@@ -573,7 +591,7 @@ export type Climate = "pleasant" | "hot" | "monsoon" | "showers";
 export const months: { name: string; short: string; climate: Climate; note: string }[] = [
   { name: "January", short: "Jan", climate: "pleasant", note: "Dry, clear and peak season. Book stays early." },
   { name: "February", short: "Feb", climate: "pleasant", note: "Dry and warming up. Eravikulam usually closes for the tahr calving season." },
-  { name: "March", short: "Mar", climate: "hot", note: "Hot and humid on the coast (33 °C+). The hills are still pleasant." },
+  { name: "March", short: "Mar", climate: "hot", note: "Hot and humid on the coast (around 35 °C). The hills are still pleasant." },
   { name: "April", short: "Apr", climate: "hot", note: "Hottest and stickiest month, with some evening thunderstorms. Low season prices begin." },
   { name: "May", short: "May", climate: "hot", note: "Muggy. The monsoon usually breaks around the end of the month." },
   { name: "June", short: "Jun", climate: "monsoon", note: "Heavy monsoon. Seas are closed to swimmers, and landslides can close hill roads." },
@@ -618,18 +636,21 @@ export const packing: { always: string[]; climate: Record<Climate, string[]>; vi
 
 // ─── "Is Kerala for you?" ─────────────────────────────────────────────────────
 
-export const realityCheck: { q: string; a: string }[] = [
+export const realityCheck: { q: string; a: string; sources?: Source[] }[] = [
   {
     q: "It's humid. Really humid.",
-    a: "The coast sits at 70–90% humidity most of the year, and March to May feels like a sauna (33 °C+). Hill stations are the escape: Munnar is 10–15 °C cooler. If you hate sticky weather, go from November to February, or spend more nights in the hills.",
+    sources: src("imdKochi"),
+    a: "The coast is humid most of the year, and March to May feels like a sauna (daytime highs around 33–35 °C in Kochi). Hill stations are the escape: Munnar is 10–15 °C cooler. If you hate sticky weather, go from November to February, or spend more nights in the hills.",
   },
   {
     q: "The monsoon is a real season, not a light drizzle.",
-    a: "June to September brings heavy downpours, rough seas closed to swimmers, and occasional landslides on hill roads. You get low prices, empty sights and huge waterfalls in return. Rain usually comes in bursts, not all day.",
+    a: "The monsoon normally arrives around 1 June and runs to September: heavy downpours (Kochi averages about 600 mm in June alone), rough seas closed to swimmers, and occasional landslides on hill roads. You get low prices, empty sights and huge waterfalls in return. Rain usually comes in bursts, not all day.",
+    sources: src("monsoonOnset", "imdKochi"),
   },
   {
     q: "Short distances take a long time.",
     a: "Average road speed is 30–40 km/h. Kochi to Munnar is 130 km and takes 4–5 hours. Plan one move every 2–3 days, not one a day, or you'll spend the trip in a car.",
+    sources: src("kochiMunnar"),
   },
   {
     q: "Mountain roads cause motion sickness.",
@@ -637,7 +658,8 @@ export const realityCheck: { q: string; a: string }[] = [
   },
   {
     q: "It's slow, not a party.",
-    a: "Kerala is about village life, early mornings and quiet evenings. Alcohol is sold only in licensed bars and state outlets, and there are dry days. Varkala has a café scene, but nothing like Goa's nightlife. Most towns are asleep by 10 pm.",
+    a: "Kerala is about village life, early mornings and quiet evenings. Alcohol is sold only in licensed bars and state outlets, and the first of every month is a dry day. Varkala has a café scene, but nothing like Goa's nightlife. Most towns are asleep by 10 pm.",
+    sources: src("dryDay"),
   },
   {
     q: "The beaches aren't for lazy swimming.",
@@ -645,7 +667,8 @@ export const realityCheck: { q: string; a: string }[] = [
   },
   {
     q: "Temples have rules, and some are closed to you.",
-    a: "Some major temples, including Padmanabhaswamy and Guruvayur, admit Hindus only. Others need a dress code (no shirts for men, saris or long skirts for women). Ask before taking photos.",
+    a: "Some major temples, including Padmanabhaswamy and Guruvayur, admit Hindus only. Many have a dress code (at Padmanabhaswamy: a mundu and no shirt for men, a sari or set-mundu for women). Ask before taking photos.",
+    sources: src("guruvayurEntry", "ktPadmanabhaswamy"),
   },
   {
     q: "Wildlife is a gamble.",

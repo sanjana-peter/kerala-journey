@@ -71,7 +71,10 @@ lib/
   planner.test.ts
 ```
 
-Fares and times in `lib/keralaData.ts` are 2025–26 ballpark figures. Re-check fares, opening days and closures each season.
+Facts were checked against official and published sources on 2026-10-06. Links appear next to each fact on the page and
+in the dossier, the registry is `lib/sources.ts`, and [SOURCES.md](SOURCES.md) lists what was confirmed, what was corrected
+and what is still unverified (most cab fares, activity prices and the Malayalam transliterations). Re-check fares, opening
+days and closures each season, and update `CHECKED_ON` in `lib/sources.ts`.
 
 The previous version of the site (interactive district map, panoramas, culture and food pages) is in git history on `main`
 before this rewrite.

@@ -4,6 +4,7 @@
  */
 import { emergencyContacts, essentials, gateways, months, packing, regions, vibes, type TransitOption } from "./keralaData.ts";
 import { placeName, totalTravelHours, travelerLabels, type Itinerary } from "./planner.ts";
+import { CHECKED_ON, type Source } from "./sources.ts";
 
 // ─── Formatting (shared with the UI) ─────────────────────────────────────────
 
@@ -43,6 +44,17 @@ export function packingList(it: Itinerary): { title: string; items: string[] }[]
   const extra = packing.traveler[input.traveler];
   if (extra) groups.push({ title: travelerLabels[input.traveler], items: extra });
   return groups;
+}
+
+/** Every source behind the facts in this dossier, de-duplicated. */
+export function dossierSources(it: Itinerary): Source[] {
+  const all: Source[] = [
+    ...it.days.flatMap((d) => d.items.flatMap((a) => a.sources ?? [])),
+    ...it.legs.flatMap((l) => l.sources),
+    ...emergencyContacts.map((c) => c.source),
+    ...essentials.flatMap((e) => e.sources ?? []),
+  ];
+  return all.filter((s, i) => all.findIndex((x) => x.url === s.url) === i);
 }
 
 // ─── Markdown ─────────────────────────────────────────────────────────────────
@@ -140,6 +152,13 @@ export function toMarkdown(it: Itinerary): string {
     line();
     for (const i of g.items) line(`- [ ] ${i}`);
   }
+
+  line();
+  line("## Sources");
+  line();
+  line(`Facts checked on ${CHECKED_ON}. Travel-guide sources are marked; re-check those first.`);
+  line();
+  for (const s of dossierSources(it)) line(`- [${s.label}](${s.url})${s.kind === "guide" ? " (travel guide)" : ""}`);
 
   line();
   line("---");

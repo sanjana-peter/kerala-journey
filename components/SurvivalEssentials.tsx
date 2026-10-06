@@ -1,5 +1,6 @@
 import { Phone, Plug, ShieldAlert, Users, Wallet, type LucideIcon } from "lucide-react";
 import { emergencyContacts, essentials } from "@/lib/keralaData.ts";
+import { SourceLinks } from "./SourceLinks";
 
 const icons: Record<string, LucideIcon> = { money: Wallet, power: Plug, scams: ShieldAlert, customs: Users };
 
@@ -24,6 +25,7 @@ export function SurvivalEssentials() {
             </li>
           ))}
         </ul>
+        <SourceLinks sources={emergencyContacts.map((c) => c.source)} tone="dark" className="mt-3" />
       </article>
 
       {essentials.map((sec) => {
@@ -42,6 +44,7 @@ export function SurvivalEssentials() {
                 </div>
               ))}
             </dl>
+            <SourceLinks sources={sec.sources} className="mt-3" />
           </article>
         );
       })}

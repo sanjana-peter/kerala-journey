@@ -6,6 +6,7 @@ import { regions } from "@/lib/keralaData.ts";
 import { placeName, totalTravelHours } from "@/lib/planner.ts";
 import { formatHours, formatINR, tripSummary } from "@/lib/dossier.ts";
 import { useTrip } from "./TripContext";
+import { SourceLinks } from "./SourceLinks";
 import { cx, modeIcons } from "./ui";
 
 export function ItineraryView() {
@@ -86,6 +87,7 @@ export function ItineraryView() {
                           <TriangleAlert size={14} className="mt-px shrink-0" aria-hidden /> {a.caution}
                         </p>
                       )}
+                      <SourceLinks sources={a.sources} className="mt-1" />
                     </div>
                   </div>
                 ))}

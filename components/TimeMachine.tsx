@@ -4,10 +4,11 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { CalendarCheck, CloudRain, Pause, Play, Sparkles, Thermometer } from "lucide-react";
-import { photos, seasons } from "@/lib/experience.ts";
+import { climateSource, photos, seasons } from "@/lib/experience.ts";
 import { months } from "@/lib/keralaData.ts";
 import { useTrip } from "./TripContext";
 import { Reveal } from "./Reveal";
+import { SourceLinks } from "./SourceLinks";
 import { cx } from "./ui";
 
 const MAX_RAIN = Math.max(...seasons.map((s) => s.rainMm));
@@ -90,7 +91,7 @@ export function TimeMachine() {
                     </div>
                     <div className="glass-dark flex items-center gap-3 rounded-2xl px-4 py-3">
                       <Thermometer size={20} aria-hidden className="text-sand-200" />
-                      <div><dt className="text-xs text-sand-200">Coast high</dt><dd className="text-lg font-semibold tabular-nums">~{season.highC} °C</dd></div>
+                      <div><dt className="text-xs text-sand-200">Kochi high</dt><dd className="text-lg font-semibold tabular-nums">~{season.highC} °C</dd></div>
                     </div>
                   </dl>
 
@@ -123,6 +124,7 @@ export function TimeMachine() {
                       <p className="font-serif text-lg font-semibold">{f.name}</p>
                       <p className="text-xs font-medium uppercase tracking-wide text-sand-200">{f.where}</p>
                       <p className="mt-1.5 text-sm leading-relaxed text-sand-50/90">{f.what}</p>
+                      <SourceLinks sources={f.sources} tone="dark" className="mt-2" />
                     </motion.li>
                   ))}
                 </motion.ul>
@@ -137,7 +139,7 @@ export function TimeMachine() {
         <div className="glass mt-5 organic p-5 sm:p-6">
           <div className="mb-4 flex items-baseline justify-between gap-3">
             <h4 className="text-sm font-semibold text-ink-900">Average monthly rainfall in Kochi (mm)</h4>
-            <span className="text-xs text-ink-500">Approximate long-term averages</span>
+            <span className="text-xs text-ink-500">IMD normals, 1991–2020</span>
           </div>
           <div className="relative flex h-40 items-end gap-1 border-b border-sand-300 sm:gap-2" role="radiogroup" aria-label="Month">
             {seasons.map((s, i) => {
@@ -187,7 +189,10 @@ export function TimeMachine() {
             <thead><tr><th>Month</th><th>Rain (mm)</th><th>High (°C)</th></tr></thead>
             <tbody>{seasons.map((s, i) => <tr key={i}><td>{months[i].name}</td><td>{s.rainMm}</td><td>{s.highC}</td></tr>)}</tbody>
           </table></div>
-          <p className="mt-3 text-right text-[0.7rem] text-ink-400">{photo.title} · Photo: {photo.credit}</p>
+          <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
+            <SourceLinks sources={climateSource} />
+            <p className="text-[0.7rem] text-ink-400">{photo.title} · Photo: {photo.credit}</p>
+          </div>
         </div>
       </Reveal>
     </section>

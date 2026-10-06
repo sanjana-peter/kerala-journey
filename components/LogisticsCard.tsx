@@ -1,6 +1,7 @@
 import { ArrowRight, Info } from "lucide-react";
 import { placeName, type ResolvedLeg } from "@/lib/planner.ts";
 import { formatHours, formatINR } from "@/lib/dossier.ts";
+import { SourceLinks } from "./SourceLinks";
 import { modeIcons } from "./ui";
 
 /** One transit leg: every realistic way to make it, best first, with fares and boarding tips. */
@@ -39,12 +40,19 @@ export function LogisticsCard({ leg, index }: { leg: ResolvedLeg; index: number 
         })}
       </ul>
 
-      {(leg.tips.length > 0 || leg.estimated) && (
-        <ul className="space-y-1.5 bg-white/40 px-5 py-3 text-sm text-ink-700">
-          {leg.tips.map((t) => (
-            <li key={t} className="flex gap-2"><Info size={15} className="mt-0.5 shrink-0 text-forest-600" aria-hidden />{t}</li>
-          ))}
-        </ul>
+      {(leg.tips.length > 0 || leg.sources.length > 0) && (
+        <div className="space-y-2 bg-white/40 px-5 py-3">
+          <ul className="space-y-1.5 text-sm text-ink-700">
+            {leg.tips.map((t) => (
+              <li key={t} className="flex gap-2"><Info size={15} className="mt-0.5 shrink-0 text-forest-600" aria-hidden />{t}</li>
+            ))}
+          </ul>
+          {leg.sources.length > 0 ? (
+            <SourceLinks sources={leg.sources} />
+          ) : (
+            <p className="text-[0.7rem] text-ink-400">Times and fares estimated from comparable routes; confirm locally.</p>
+          )}
+        </div>
       )}
     </article>
   );

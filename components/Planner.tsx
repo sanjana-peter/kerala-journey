@@ -2,6 +2,7 @@
 
 import { Download, FileText } from "lucide-react";
 import { regions } from "@/lib/keralaData.ts";
+import { CHECKED_ON } from "@/lib/sources.ts";
 import { DossierDocument } from "./DossierDocument";
 import { DossierModal } from "./DossierModal";
 import { EasterEgg } from "./EasterEgg";
@@ -89,7 +90,8 @@ export function Planner() {
         </main>
 
         <footer className="border-t border-sand-200 py-8 text-center text-xs text-ink-500">
-          Kerala Journey. Fares and times are ballpark figures; confirm locally. No sponsored listings.
+          Kerala Journey. Facts checked on {CHECKED_ON}, with sources linked throughout; fares are ballpark figures, so confirm locally.
+          No sponsored listings.
         </footer>
         <DossierModal />
         <EasterEgg />

@@ -111,3 +111,34 @@ test("the dossier contains the plan, transit and emergency numbers", () => {
   assert.match(md, /112/);
   assert.match(md, /Packing/);
 });
+
+test("every source is a well-formed https URL", async () => {
+  const { sources } = await import("./sources.ts");
+  for (const [key, s] of Object.entries(sources)) {
+    assert.match(s.url, /^https:\/\/[^\s]+$/, key);
+    assert.ok(s.label.length > 5, key);
+  }
+});
+
+test("safety-critical facts carry sources", async () => {
+  const { emergencyContacts, legs } = await import("./keralaData.ts");
+  const { spices, seasons } = await import("./experience.ts");
+  for (const c of emergencyContacts) assert.ok(c.source?.url, c.label);
+  for (const s of spices) assert.ok(s.sources.length > 0, s.name);
+  for (const s of seasons) for (const f of s.festivals) {
+    if (!["Temple utsavams", "Vishu", "Monsoon Ayurveda season", "Karkidakam", "Navaratri & Vidyarambham", "Christmas"].includes(f.name)) {
+      assert.ok(f.sources?.length, f.name);
+    }
+  }
+  // Every leg the planner actually uses for the classic routes is sourced.
+  for (const pair of [["COK", "munnar"], ["kochi", "munnar"], ["kochi", "alleppey"], ["kochi", "varkala"]]) {
+    const leg = legs.find((l) => l.between.includes(pair[0] as never) && l.between.includes(pair[1] as never));
+    assert.ok(leg?.sources?.length, pair.join("–"));
+  }
+});
+
+test("the dossier lists its sources", () => {
+  const md = toMarkdown(buildItinerary({ vibes: ["mist", "backwaters"], days: 7, pace: "relaxed", traveler: "couple", month: null }));
+  assert.match(md, /## Sources/);
+  assert.match(md, /\]\(https:\/\//);
+});
