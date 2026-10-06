@@ -1,36 +1,62 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 import { useTrip } from "./TripContext";
-import { Button } from "./ui";
+import { cx } from "./ui";
 
-const FUNNEL = [
+const LINKS = [
   { href: "#explore", label: "Explore" },
+  { href: "#seasons", label: "Seasons" },
   { href: "#decide", label: "Decide" },
   { href: "#plan", label: "Plan" },
   { href: "#export", label: "Export" },
 ];
 
+/** Transparent over the hero photo, frosted glass once you scroll. */
 export function SiteHeader() {
   const { generated, setDossierOpen } = useTrip();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.6);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-30 border-b border-sand-200 bg-sand-100/90 backdrop-blur">
+    <header
+      className={cx(
+        "sticky top-0 z-30 border-b transition-[background-color,border-color,color,backdrop-filter] duration-500",
+        scrolled ? "border-white/50 bg-sand-50/70 text-ink-900 backdrop-blur-xl" : "border-transparent bg-transparent text-sand-50",
+      )}
+    >
       <div className="mx-auto flex h-14 max-w-6xl items-center gap-4 px-4 sm:px-6">
-        <a href="#top" className="font-serif text-lg font-semibold text-forest-900">Kerala Journey</a>
-        <nav aria-label="Planner steps" className="ml-auto hidden md:block">
+        <a href="#top" className="font-serif text-lg font-semibold">Kerala Journey</a>
+        <nav aria-label="Sections" className="ml-auto hidden md:block">
           <ol className="flex items-center gap-1 text-sm">
-            {FUNNEL.map((f, i) => (
-              <li key={f.href} className="flex items-center gap-1">
-                {i > 0 && <span className="text-sand-300" aria-hidden>→</span>}
-                <a href={f.href} className="rounded-md px-2 py-1 font-medium text-ink-700 hover:bg-sand-200 hover:text-ink-900">{f.label}</a>
+            {LINKS.map((f) => (
+              <li key={f.href}>
+                <a href={f.href} className={cx("rounded-full px-3 py-1 font-medium transition-colors", scrolled ? "text-ink-700 hover:bg-sand-200 hover:text-ink-900" : "text-sand-50/85 hover:bg-white/15 hover:text-sand-50")}>
+                  {f.label}
+                </a>
               </li>
             ))}
           </ol>
         </nav>
-        <Button variant="primary" className="ml-auto px-3 py-1.5 md:ml-2" disabled={!generated} onClick={() => setDossierOpen(true)}
-          title={generated ? undefined : "Build your trip first"}>
+        <button
+          type="button"
+          className={cx(
+            "ml-auto inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 md:ml-2",
+            scrolled ? "bg-forest-800 text-sand-50 hover:bg-forest-700" : "bg-sand-50/20 text-sand-50 ring-1 ring-sand-50/40 hover:bg-sand-50/30",
+          )}
+          disabled={!generated}
+          onClick={() => setDossierOpen(true)}
+          title={generated ? undefined : "Build your trip first"}
+        >
           <Download size={15} /> <span className="hidden sm:inline">Dossier</span>
-        </Button>
+        </button>
       </div>
     </header>
   );

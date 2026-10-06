@@ -35,6 +35,16 @@
   --color-ink-900: #1d2830;
 }
 
+/* Mood colours are animatable: registering them lets the browser interpolate instead of snapping. */
+@property --mood-accent { syntax: "<color>"; inherits: true; initial-value: #2f6b4a; }
+@property --mood-wash { syntax: "<color>"; inherits: true; initial-value: #e6efe6; }
+@property --mood-glow-a { syntax: "<color>"; inherits: true; initial-value: #b9d3c2; }
+@property --mood-glow-b { syntax: "<color>"; inherits: true; initial-value: #dfe9e4; }
+
+.mood-root {
+  transition: --mood-accent 1.2s ease, --mood-wash 1.2s ease, --mood-glow-a 1.6s ease, --mood-glow-b 1.6s ease;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -43,6 +53,7 @@
   body {
     @apply bg-sand-100 text-ink-900 font-sans antialiased;
   }
+  .font-ml { font-family: var(--font-malayalam), "Noto Sans Malayalam", system-ui, sans-serif; }
   h1, h2, h3 {
     @apply font-serif tracking-tight;
   }
@@ -54,9 +65,52 @@
   }
 }
 
+@layer components {
+  /* Frosted glass: translucent cream over whatever is behind. */
+  .glass {
+    @apply border border-white/60 bg-white/55 shadow-[0_8px_32px_-12px_rgb(31_61_43/0.25)] backdrop-blur-xl;
+  }
+  .glass-dark {
+    @apply border border-white/15 bg-forest-900/35 text-sand-50 backdrop-blur-xl;
+  }
+  /* Soft, slightly irregular corners. */
+  .organic {
+    border-radius: 2rem 1.5rem 2.25rem 1.75rem;
+  }
+  .mood-accent { color: var(--mood-accent); }
+  .bg-mood-accent { background-color: var(--mood-accent); }
+  .border-mood-accent { border-color: var(--mood-accent); }
+}
+
+/* Ambient glow behind the page, drifting slowly in the mood's colours. */
+.ambient {
+  position: fixed;
+  inset: -20vmax;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40vmax 32vmax at 18% 22%, var(--mood-glow-a), transparent 70%),
+    radial-gradient(36vmax 30vmax at 82% 68%, var(--mood-glow-b), transparent 70%),
+    var(--color-sand-100);
+  animation: drift 38s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(3vmax, -2vmax, 0) scale(1.06); }
+  100% { transform: translate3d(-2vmax, 2vmax, 0) scale(1.02); }
+}
+
+/* Card flip */
+.flip { perspective: 1000px; }
+.flip-inner { transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.2, 1); }
+.flip-inner.is-flipped { transform: rotateY(180deg); }
+.flip-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.flip-back { transform: rotateY(180deg); }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { transition: none !important; animation: none !important; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation: none !important; }
+  .flip-inner.is-flipped .flip-front { visibility: hidden; }
 }
 
 /* The dossier prints on its own: everything else is screen-only. */

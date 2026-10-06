@@ -49,7 +49,7 @@ export function ItineraryView() {
           const travel = d.travel;
           const TravelIcon = travel ? modeIcons[travel.options[0].mode] : null;
           return (
-            <li key={d.day} className="rounded-xl border border-sand-200 bg-white/70">
+            <li key={d.day} className="overflow-hidden rounded-2xl border border-white/70 bg-white/60">
               <div className="flex items-baseline gap-3 border-b border-sand-200 px-4 py-3 sm:px-5">
                 <span className="shrink-0 text-xs font-bold uppercase tracking-wider text-clay-600">Day {d.day}</span>
                 <h4 className="font-serif text-lg font-semibold text-ink-900">{d.title}</h4>
@@ -141,7 +141,7 @@ function RouteLeg({ hours }: { hours: [number, number] }) {
     <li aria-hidden className="flex items-center gap-2 py-1 pl-4 text-xs text-ink-400 sm:px-2 sm:py-0 sm:pl-2">
       <span className="h-4 w-px bg-sand-300 sm:h-px sm:w-4" />
       {formatHours(hours)}
-      <span className="h-4 w-px bg-sand-300 sm:h-px sm:w-4" />
+      <span className="hidden h-px w-4 bg-sand-300 sm:block" />
     </li>
   );
 }

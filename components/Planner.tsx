@@ -1,36 +1,48 @@
 "use client";
 
-import { ArrowDown, Download, FileText } from "lucide-react";
-import { legs, regions, vibes } from "@/lib/keralaData.ts";
+import { Download, FileText } from "lucide-react";
+import { regions } from "@/lib/keralaData.ts";
 import { DossierDocument } from "./DossierDocument";
 import { DossierModal } from "./DossierModal";
+import { EasterEgg } from "./EasterEgg";
+import { Hero } from "./Hero";
 import { LogisticsCard } from "./LogisticsCard";
+import { PhraseFlip } from "./PhraseFlip";
 import { RealityCheck } from "./RealityCheck";
+import { Reveal } from "./Reveal";
 import { SiteHeader } from "./SiteHeader";
+import { SpiceMatrix } from "./SpiceMatrix";
 import { SurvivalEssentials } from "./SurvivalEssentials";
+import { TimeMachine } from "./TimeMachine";
 import { useTrip } from "./TripContext";
 import { TripWizard } from "./TripWizard";
 import { Button, SectionHeading } from "./ui";
-import { VibeSelector } from "./VibeSelector";
+import { VibeCanvas } from "./VibeCanvas";
 
-/** The whole funnel on one page: Explore → Decide → Plan → Export. */
+/**
+ * The whole funnel on one page: Explore (vibes, seasons, spices) → Decide → Plan (logistics, phrases) → Export.
+ * The ambient background and accent colours follow the mood set in the hero and vibe cards.
+ */
 export function Planner() {
   const { itinerary, generated, setDossierOpen } = useTrip();
 
   return (
     <>
       <div className="screen-only">
+        <div aria-hidden className="ambient" />
         <SiteHeader />
-        <main id="top" className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Hero />
-
-          <div className="space-y-24 pb-24">
+        <Hero />
+        <main className="mx-auto max-w-6xl px-4 pt-20 sm:px-6 sm:pt-28">
+          <div className="space-y-28 pb-24">
             <div>
-              <VibeSelector />
+              <VibeCanvas />
               <RealityCheck />
             </div>
 
-            <TripWizard />
+            <TimeMachine />
+            <SpiceMatrix />
+
+            <Reveal><TripWizard /></Reveal>
 
             <section id="plan" className="scroll-mt-20">
               <SectionHeading step={3} eyebrow="Plan" title="Getting between places">
@@ -49,12 +61,14 @@ export function Planner() {
               <SurvivalEssentials />
             </section>
 
+            <PhraseFlip />
+
             <section id="export" className="scroll-mt-20">
               <SectionHeading step={4} eyebrow="Export" title="Take it with you">
                 One document with your day-by-day plan, every transit leg, emergency numbers and a packing list for your month.
                 Download it as Markdown, or print it to PDF.
               </SectionHeading>
-              <div className="flex flex-col items-start gap-5 rounded-2xl border border-sand-200 bg-sand-50 p-6 sm:flex-row sm:items-center">
+              <div className="glass flex flex-col items-start gap-5 organic p-6 sm:flex-row sm:items-center">
                 <span className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-clay-50 text-clay-600"><FileText size={26} /></span>
                 <div className="flex-1">
                   <p className="font-semibold text-ink-900">
@@ -78,6 +92,7 @@ export function Planner() {
           Kerala Journey. Fares and times are ballpark figures; confirm locally. No sponsored listings.
         </footer>
         <DossierModal />
+        <EasterEgg />
       </div>
 
       {/* What the browser prints, whether from the dossier's Print button or Ctrl+P. */}
@@ -85,40 +100,5 @@ export function Planner() {
         {generated ? <DossierDocument itinerary={itinerary} /> : <p>Build a trip at Kerala Journey to print your dossier.</p>}
       </div>
     </>
-  );
-}
-
-function Hero() {
-  return (
-    <section className="py-14 sm:py-20">
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-clay-600">Kerala trip planner</p>
-      <h1 className="mt-3 max-w-3xl text-4xl font-semibold leading-[1.08] text-forest-900 sm:text-6xl">
-        Plan Kerala properly. Skip the brochure.
-      </h1>
-      <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-700">
-        Pick a vibe and tell us your days and who&apos;s coming. You get a route that never doubles back, honest transit
-        times and fares, and a dossier you can print.
-      </p>
-      <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-        <Button onClick={() => document.getElementById("explore")?.scrollIntoView()} className="px-5 py-3 text-base">
-          Start with a vibe <ArrowDown size={18} />
-        </Button>
-        <dl className="flex gap-6 text-sm">
-          <Stat n={vibes.length} label="trip vibes" />
-          <Stat n={Object.keys(regions).length} label="bases" />
-          <Stat n={legs.length} label="transit legs" />
-        </dl>
-      </div>
-    </section>
-  );
-}
-
-function Stat({ n, label }: { n: number; label: string }) {
-  return (
-    <div className="flex items-baseline gap-1.5">
-      <dt className="sr-only">{label}</dt>
-      <dd className="font-serif text-2xl font-semibold text-forest-800">{n}</dd>
-      <span className="text-ink-500" aria-hidden>{label}</span>
-    </div>
   );
 }

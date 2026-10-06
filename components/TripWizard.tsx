@@ -47,7 +47,7 @@ export function TripWizard() {
         Three questions. The route follows the map (hills, then water, then coast), so you never cross the state twice.
       </SectionHeading>
 
-      <div className="overflow-hidden rounded-2xl border border-sand-200 bg-sand-50">
+      <div className="glass overflow-hidden organic">
         {/* Step indicator */}
         <ol className="flex border-b border-sand-200 text-sm">
           {STEPS.map((s) => {
@@ -62,7 +62,7 @@ export function TripWizard() {
                   aria-current={active ? "step" : undefined}
                   className={cx(
                     "flex w-full items-center justify-center gap-2 px-2 py-3.5 font-medium sm:justify-start sm:px-5",
-                    active ? "bg-forest-800 text-sand-50" : done ? "text-forest-700 hover:bg-sand-100" : "text-ink-400",
+                    active ? "bg-mood-accent text-white" : done ? "text-forest-700 hover:bg-sand-100" : "text-ink-400",
                   )}
                 >
                   <span className={cx("grid h-6 w-6 shrink-0 place-items-center rounded-full text-xs font-bold", active ? "bg-sand-50 text-forest-800" : done ? "bg-forest-100 text-forest-800" : "bg-sand-200")}>
@@ -174,7 +174,7 @@ function Choice({ on, onClick, title, hint, icon }: { on: boolean; onClick: () =
       onClick={onClick}
       className={cx(
         "flex h-full flex-col rounded-xl border-2 px-4 py-3 text-left transition-colors",
-        on ? "border-forest-700 bg-forest-50" : "border-sand-200 bg-white/60 hover:border-sand-300",
+        on ? "border-mood-accent bg-white/80 shadow-sm" : "border-white/70 bg-white/40 hover:border-sand-300",
       )}
     >
       <span className="flex items-center gap-2 font-semibold text-ink-900">

@@ -32,8 +32,8 @@ export function Button({ variant = "primary", className, ...props }: ButtonHTMLA
 export function SectionHeading({ step, eyebrow, title, children }: { step: number; eyebrow: string; title: string; children?: ReactNode }) {
   return (
     <header className="mb-8 max-w-2xl">
-      <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-clay-600">
-        <span className="grid h-5 w-5 place-items-center rounded-full bg-clay-600 text-[0.65rem] text-white">{step}</span>
+      <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] mood-accent">
+        <span className="grid h-5 w-5 place-items-center rounded-full bg-mood-accent text-[0.65rem] text-white">{step}</span>
         {eyebrow}
       </p>
       <h2 className="text-3xl font-semibold text-forest-900 sm:text-4xl">{title}</h2>

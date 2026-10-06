@@ -17,7 +17,7 @@ export function RealityCheck() {
         </p>
       </div>
 
-      <ul className="divide-y divide-sand-200 overflow-hidden rounded-2xl border border-sand-200 bg-sand-50">
+      <ul className="glass divide-y divide-sand-200/70 overflow-hidden organic">
         {realityCheck.map((item, i) => {
           const isOpen = open === i;
           return (
@@ -28,7 +28,7 @@ export function RealityCheck() {
                   aria-expanded={isOpen}
                   aria-controls={`reality-${i}`}
                   onClick={() => setOpen(isOpen ? null : i)}
-                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-[0.95rem] font-semibold text-ink-900 hover:bg-sand-100"
+                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-[0.95rem] font-semibold text-ink-900 hover:bg-white/50"
                 >
                   {item.q}
                   <ChevronDown size={18} className={cx("shrink-0 text-ink-400 transition-transform", isOpen && "rotate-180")} aria-hidden />

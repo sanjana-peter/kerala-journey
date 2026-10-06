@@ -6,8 +6,8 @@ import { modeIcons } from "./ui";
 /** One transit leg: every realistic way to make it, best first, with fares and boarding tips. */
 export function LogisticsCard({ leg, index }: { leg: ResolvedLeg; index: number }) {
   return (
-    <article id={`leg-${leg.from}-${leg.to}`} className="scroll-mt-24 rounded-2xl border border-sand-200 bg-sand-50">
-      <header className="flex items-center justify-between gap-3 border-b border-sand-200 px-5 py-4">
+    <article id={`leg-${leg.from}-${leg.to}`} className="glass scroll-mt-24 overflow-hidden organic">
+      <header className="flex items-center justify-between gap-3 border-b border-sand-200/70 px-5 py-4">
         <h4 className="flex flex-wrap items-center gap-2 font-serif text-lg font-semibold text-ink-900">
           <span className="font-sans text-xs font-bold text-clay-600">LEG {index + 1}</span>
           {placeName(leg.from)} <ArrowRight size={16} className="text-ink-400" aria-hidden /> {placeName(leg.to)}
@@ -40,7 +40,7 @@ export function LogisticsCard({ leg, index }: { leg: ResolvedLeg; index: number 
       </ul>
 
       {(leg.tips.length > 0 || leg.estimated) && (
-        <ul className="space-y-1.5 rounded-b-2xl bg-sand-100 px-5 py-3 text-sm text-ink-700">
+        <ul className="space-y-1.5 bg-white/40 px-5 py-3 text-sm text-ink-700">
           {leg.tips.map((t) => (
             <li key={t} className="flex gap-2"><Info size={15} className="mt-0.5 shrink-0 text-forest-600" aria-hidden />{t}</li>
           ))}

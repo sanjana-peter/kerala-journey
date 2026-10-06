@@ -6,7 +6,7 @@ const icons: Record<string, LucideIcon> = { money: Wallet, power: Plug, scams: S
 export function SurvivalEssentials() {
   return (
     <div className="grid gap-4 lg:grid-cols-3">
-      <article className="rounded-2xl bg-forest-800 p-5 text-sand-50 lg:row-span-2">
+      <article className="organic bg-forest-800 p-5 text-sand-50 lg:row-span-2">
         <h4 className="flex items-center gap-2 font-serif text-lg font-semibold">
           <Phone size={18} aria-hidden /> Emergency numbers
         </h4>
@@ -30,7 +30,7 @@ export function SurvivalEssentials() {
         const Icon = icons[sec.id] ?? ShieldAlert;
         const warn = sec.id === "scams";
         return (
-          <article key={sec.id} className={warn ? "rounded-2xl border border-clay-100 bg-clay-50 p-5 lg:col-span-2" : "rounded-2xl border border-sand-200 bg-sand-50 p-5"}>
+          <article key={sec.id} className={warn ? "organic border border-clay-100 bg-clay-50/80 p-5 backdrop-blur-xl lg:col-span-2" : "glass organic p-5"}>
             <h4 className={`flex items-center gap-2 font-serif text-lg font-semibold ${warn ? "text-clay-700" : "text-forest-900"}`}>
               <Icon size={18} aria-hidden /> {sec.title}
             </h4>
