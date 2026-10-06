@@ -1,18 +1,28 @@
 {
   "name": "kerala-journey",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "An interactive walk through Kerala's fourteen districts.",
+  "type": "module",
+  "description": "A zero-BS Kerala trip planner: pick a vibe, build a route, download your dossier.",
   "scripts": {
-    "start": "node scripts/serve.mjs",
-    "test": "node --test scripts/planner.test.mjs scripts/journeys.test.mjs",
-    "media": "node scripts/fetch-media.mjs",
-    "map": "node scripts/build-map.mjs",
-    "optimize": "python scripts/optimize-images.py",
-    "build": "node scripts/build-pages.mjs",
-    "preview": "node scripts/serve.mjs dist"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --experimental-strip-types --disable-warning=ExperimentalWarning lib/planner.test.ts"
+  },
+  "dependencies": {
+    "lucide-react": "^1.52.0",
+    "next": "^16.3.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
-    "sharp": "^0.35.4"
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.0"
   }
 }

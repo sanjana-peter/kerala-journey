@@ -1,0 +1,24 @@
+import type { Metadata, Viewport } from "next";
+import { Fraunces, Inter } from "next/font/google";
+import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", display: "swap", axes: ["opsz"] });
+
+export const metadata: Metadata = {
+  title: "Kerala Journey: plan a Kerala trip without the guesswork",
+  description:
+    "Pick a vibe, set your days and who's coming, and get a no-backtracking Kerala route with real transit times, fares in ₹, and a dossier you can print.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1f3d2b",
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
+      <body>{children}</body>
+    </html>
+  );
+}

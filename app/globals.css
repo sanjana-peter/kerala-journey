@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  /* Deep forest greens */
+  --color-forest-50: #eff4ef;
+  --color-forest-100: #dde8de;
+  --color-forest-200: #bcd2bf;
+  --color-forest-500: #4b7a5f;
+  --color-forest-600: #3a6a4f;
+  --color-forest-700: #2c5440;
+  --color-forest-800: #1f3d2b;
+  --color-forest-900: #152a1e;
+
+  /* Warm sand and cream */
+  --color-sand-50: #fcfaf5;
+  --color-sand-100: #f6f1e6;
+  --color-sand-200: #ece3d1;
+  --color-sand-300: #ddd0b6;
+  --color-sand-500: #a8977a;
+
+  /* Terracotta accents */
+  --color-clay-50: #fbf0ea;
+  --color-clay-100: #f5ddd0;
+  --color-clay-500: #c4643c;
+  --color-clay-600: #b0532d;
+  --color-clay-700: #8f4223;
+
+  /* Dark slate text */
+  --color-ink-400: #7c8790;
+  --color-ink-500: #5e6a73;
+  --color-ink-700: #3a4750;
+  --color-ink-900: #1d2830;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 4.5rem;
+  }
+  body {
+    @apply bg-sand-100 text-ink-900 font-sans antialiased;
+  }
+  h1, h2, h3 {
+    @apply font-serif tracking-tight;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-forest-600;
+  }
+  dialog::backdrop {
+    background: rgb(21 42 30 / 0.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+/* The dossier prints on its own: everything else is screen-only. */
+.print-only { display: none; }
+
+@media print {
+  @page { margin: 16mm 14mm; }
+  body { background: white; }
+  .screen-only { display: none !important; }
+  .print-only { display: block; }
+  .dossier { font-size: 10.5pt; color: #000; }
+  .dossier h2 { break-after: avoid; }
+  .dossier section, .dossier li, .dossier tr { break-inside: avoid; }
+}

@@ -1,4 +1,7 @@
 node_modules/
-_sheet-*.html
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
 .DS_Store
-dist/
+.vercel
