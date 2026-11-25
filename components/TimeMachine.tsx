@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { CalendarCheck, CloudRain, Pause, Play, Sparkles, Thermometer } from "lucide-react";
+import { ArrowRight, CalendarCheck, CloudRain, Pause, Play, Sparkles, Thermometer } from "lucide-react";
 import { climateSource, photos, seasons } from "@/lib/experience.ts";
+import { monthSlug } from "@/lib/explore.ts";
 import { months } from "@/lib/keralaData.ts";
 import { useTrip } from "./TripContext";
 import { Reveal } from "./Reveal";
@@ -105,6 +107,12 @@ export function TimeMachine() {
                   >
                     <CalendarCheck size={16} /> {planned ? `Planning for ${month.name}` : `Plan my trip for ${month.name}`}
                   </button>
+                  <Link
+                    href={`/months/${monthSlug(m)}`}
+                    className="glass-dark ml-2 mt-6 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors hover:bg-forest-900/55"
+                  >
+                    All of {month.name} <ArrowRight size={16} aria-hidden />
+                  </Link>
                 </motion.div>
               </AnimatePresence>
             </div>

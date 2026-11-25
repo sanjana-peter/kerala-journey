@@ -4,13 +4,13 @@ import { formatHours, formatINR } from "@/lib/dossier.ts";
 import { SourceLinks } from "./SourceLinks";
 import { modeIcons } from "./ui";
 
-/** One transit leg: every realistic way to make it, best first, with fares and boarding tips. */
-export function LogisticsCard({ leg, index }: { leg: ResolvedLeg; index: number }) {
+/** One transit leg: every realistic way to make it, best first, with fares and boarding tips. `index` numbers it within a trip. */
+export function LogisticsCard({ leg, index }: { leg: ResolvedLeg; index?: number }) {
   return (
     <article id={`leg-${leg.from}-${leg.to}`} className="glass scroll-mt-24 overflow-hidden organic">
       <header className="flex items-center justify-between gap-3 border-b border-sand-200/70 px-5 py-4">
         <h4 className="flex flex-wrap items-center gap-2 font-serif text-lg font-semibold text-ink-900">
-          <span className="font-sans text-xs font-bold text-clay-600">LEG {index + 1}</span>
+          {index !== undefined && <span className="font-sans text-xs font-bold text-clay-600">LEG {index + 1}</span>}
           {placeName(leg.from)} <ArrowRight size={16} className="text-ink-400" aria-hidden /> {placeName(leg.to)}
         </h4>
         <span className="shrink-0 text-xs text-ink-500">~{leg.km} km</span>

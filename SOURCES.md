@@ -74,3 +74,35 @@ only have travel-guide or news sources, marked *guide* or *news* below. Re-check
 - **Malayalam phrases, transliterations and slang.** These need a native speaker's review. The survival phrases came
   from the earlier version of the site.
 - **Packing lists, scam warnings, micro-stories and sensory notes:** general advice or creative writing.
+
+## Districts and Everyday Kerala (added 2026-10-07)
+
+`lib/districts.ts` was written from the pages below, checked on 2026-10-07. Each district page and Everyday card links
+to them.
+
+| Claim | Source |
+| --- | --- |
+| District headquarters (Ernakulam at Kakkanad, Idukki at Painavu, Wayanad at Kalpetta) | [Wikipedia](https://en.wikipedia.org/wiki/List_of_districts_of_Kerala) |
+| Kasaragod: seven languages; formed from Kannur in 1984 | [Wikipedia](https://en.wikipedia.org/wiki/Kasaragod_district) |
+| Bekal Fort is the largest fort in Kerala | [Wikipedia](https://en.wikipedia.org/wiki/Bekal_Fort) |
+| Kanhirode (1952) and Loknath (1955) weavers' co-operatives, Loknath's free tour | [Kerala Tourism](https://www.keralatourism.org/malabar/kanhirode-weaving-society/140), [Lonely Planet](https://www.lonelyplanet.com/india/kerala/kannur-cannanore/attractions/loknath-weavers-co-operative/a/poi-sig/1151132/356343) (guide) |
+| Mambally Bapu's first Christmas cake, Thalassery, 1883 | [The News Minute](https://www.thenewsminute.com/kerala/how-mambally-bapu-baked-first-christmas-cake-1883-kerala-159135) (news) |
+| Kozhikodan halwa is made with coconut oil; SM Street is about 500 years old | [Kerala Tourism](https://keralatourism.org/shopping-options/kozhikkodan-halwa-a-sweet-legacy-of-kerala/31) |
+| Sevens football: Malappuram is the hub, season November–May | [Kerala Tourism](https://www.keralatourism.org/malabar/sevens-football/214), [Olympics.com](https://olympics.com/en/news/what-is-sevens-football-kerala-history) (news) |
+| Arya Vaidya Sala, Kottakkal, founded 1902 by P. S. Varier | [Wikipedia](https://en.wikipedia.org/wiki/Arya_Vaidya_Sala) |
+| Palakkad, "Granary of Kerala"; Palakkad Gap about 30 km wide | [Wikipedia](https://en.wikipedia.org/wiki/Palakkad_district), [Wikipedia](https://en.wikipedia.org/wiki/Palakkad_Gap) |
+| Kalamandalam's "A Day with the Masters" tour, since 2003 | [Kerala Kalamandalam](https://kalamandalam.ac.in/guided-tour/) |
+| Kottayam, first fully literate town in India (1989) | [Wikipedia](https://en.wikipedia.org/wiki/1989_in_Kerala) |
+| Kuttanad below-sea-level farming, FAO GIAHS | [FAO](https://www.fao.org/giahs/giahs-around-the-world/india-kuttanad-farming-system/en) |
+| Aranmula kannadi GI tag, 2005 | [Wikipedia](https://en.wikipedia.org/wiki/Aranmula_kannadi) |
+| Kollam, cashew-processing capital since the 1930s | [Wikipedia](https://en.wikipedia.org/wiki/Cashew_business_in_Kollam) |
+| Kollam–Alappuzha boat: about 8 h, leaves around 10:30, canal reopened late 2025 | [A Social Nomad](https://asocialnomad.com/?p=6964) (guide), [Onmanorama](https://onmanorama.com/travel/kerala/2019/09/17/panoramic-boat-journey-kollam-alappuzha.html) (news) |
+| State ferry fares: Kottayam–Alappuzha ₹29, Kumarakom–Muhamma ₹16 | [Onmanorama, Dec 2025](https://www.onmanorama.com/travel/kerala/2025/12/08/how-to-explore-kumarakom-routes-fares.html) (news) |
+| Janakeeya hotels: ₹20 at launch, now ₹35–40, many closing | [Onmanorama, Aug 2026](https://www.onmanorama.com/news/kerala/2026/08/15/subsidy-cuts-rising-costs-push-janakeeya-hotels-out-of-business-in-pathanamthitta.html) (news) |
+| Idukki dam opens to visitors only in short seasonal windows | [Onmanorama](https://onmanorama.com/travel/kerala/2024/09/04/idukki-dam-open-for-visitors-onam-vacation-kerala-tourism.html) (news) |
+| Over 7,000 grant-aided public libraries | [Onmanorama, 2024](https://www.onmanorama.com/news/kerala/2024/02/03/all-public-libraries-kerala-to-be-computerised-r-bindu.amp.html) (news) |
+
+**Not independently verified:** the general Everyday Kerala etiquette (tea shops, rice meals, private buses,
+temple festivals, library visits), Thalassery biryani's kaima rice, the cashew grade note and the district one-liners.
+These are common local knowledge, but have them read by someone from Kerala. The Kalamandalam tour's price and
+days couldn't be confirmed on its own site, so the page says only to book ahead.

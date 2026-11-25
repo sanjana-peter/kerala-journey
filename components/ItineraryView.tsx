@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Fragment } from "react";
 import { BedDouble, ChevronDown, Clock, Plane, TriangleAlert } from "lucide-react";
 import { regions } from "@/lib/keralaData.ts";
@@ -96,7 +97,7 @@ export function ItineraryView() {
 
                 <p className="flex items-center gap-1.5 text-xs text-ink-500">
                   {d.base ? (
-                    <><BedDouble size={14} aria-hidden /> Sleep in {regions[d.base].name}</>
+                    <><BedDouble size={14} aria-hidden /> Sleep in <Link href={`/places/${d.base}`} className="underline decoration-dotted underline-offset-2 hover:text-ink-900">{regions[d.base].name}</Link></>
                   ) : (
                     <><Plane size={14} aria-hidden /> Departure day</>
                   )}

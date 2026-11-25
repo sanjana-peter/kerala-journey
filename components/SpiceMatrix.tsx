@@ -1,8 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Flame, MapPin, ShoppingBag, UtensilsCrossed } from "lucide-react";
+import { ArrowRight, Flame, MapPin, ShoppingBag, UtensilsCrossed } from "lucide-react";
 import { spiceRegions, spices, type SpiceRegion } from "@/lib/experience.ts";
 import { Reveal } from "./Reveal";
 import { SourceLinks } from "./SourceLinks";
@@ -126,6 +127,9 @@ export function SpiceMatrix() {
                   </div>
                 </dl>
                 <SourceLinks sources={active.sources} tone="dark" className="mt-5" />
+                <Link href={`/spices/${active.id}`} className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-sand-50 px-4 py-2 text-sm font-semibold text-forest-900 transition-transform hover:-translate-y-0.5">
+                  Where to see it growing <ArrowRight size={15} aria-hidden />
+                </Link>
               </div>
             </motion.article>
           </AnimatePresence>

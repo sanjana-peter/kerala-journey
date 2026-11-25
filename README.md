@@ -26,6 +26,28 @@ The page is meant to be played with before planning:
 - **Malayalam card-flip:** 22 survival, transit, food and slang phrases with pronunciation and context; progress is saved.
 - **Easter eggs:** type a secret word anywhere on the page.
 
+Anything on the home page can be opened for a closer look. Each of these pages is static and has its own URL:
+
+- **`/places/[id]`**: all eight bases. Every activity, filterable by who's travelling and month (using the planner's rules),
+  where to stay, every checked transit connection, spices grown nearby, and previous/next along the route.
+- **`/vibes/[id]`**: the story, senses, who it suits, its places and what to pack.
+- **`/spices/[id]`**: the story, where to taste and buy it, and which bases are near the farms.
+- **`/months/[month]`**: weather, festivals, what's closed, what to pack, and "Plan my trip for…".
+- **`/districts/[id]`**: all 14 districts of Kerala, not only the ones with a tourist base. What the district is like,
+  its everyday things to do, the planner bases in it, spices grown there, its festivals (linked to their months),
+  the nearest airport, and a map showing where it is.
+- **`/districts`**: every district grouped as Malabar, central Kerala and Travancore, with a north–south dot map.
+- **`/everyday`**: *Everyday Kerala*, the common Kerala rather than the sights. Tea at a chaaya kada, a rice
+  "meals" lunch, toddy shops, state ferries, private buses, temple festivals and village libraries, plus local
+  things district by district (Theyyam in Kannur, Sevens football in Malappuram, halwa on Kozhikode's SM Street…).
+  Each comes with a "how to do it" note on etiquette and timing, and can be filtered by kind.
+- **`/places`**: the index of all of the above.
+
+Districts are explore-only: the trip planner still routes through its eight bases. Every place page shows which
+district it's in, and spice pages link to the districts they grow in.
+
+Trip state lives in the root layout (`SiteShell`), so adding a vibe or a month on any page carries over to the planner.
+
 Motion uses [Motion](https://motion.dev) (Framer Motion) and respects `prefers-reduced-motion`. The last trip, and which
 phrases you've discovered, are remembered in the browser (localStorage).
 
@@ -37,7 +59,7 @@ used pending their written permission as on the earlier version of the site. Swa
 ```sh
 npm install
 npm run dev        # http://localhost:3000
-npm test           # planner + dossier tests (Node 22+)
+npm test           # planner, dossier and district-data tests (Node 22+)
 npm run build      # production build
 ```
 
@@ -47,6 +69,9 @@ Deploys to Vercel as a standard Next.js app.
 
 ```
 app/                 layout, page, globals.css (Tailwind v4 theme: forest, sand, clay, ink)
+  places/ vibes/ spices/ months/ districts/ everyday/   deep-dive pages, generated from lib/ at build time
+lib/districts.ts     the 14 districts and the Everyday Kerala experiences, with sources
+lib/explore.ts       links between the data sets (place photos, districts, spices, connections, closures)
 components/
   TripContext.tsx    all trip state; derives the itinerary from the wizard answers
   MoodContext.tsx    theme engine: the active mood and its CSS colour variables

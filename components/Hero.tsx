@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowDown, Ear, Flower2, Wind } from "lucide-react";
+import { ArrowDown, ArrowRight, Ear, Flower2, Wind } from "lucide-react";
 import { moodOrder, moods, photos } from "@/lib/experience.ts";
+import { vibes } from "@/lib/keralaData.ts";
 import { useMood } from "./MoodContext";
 import { useTrip } from "./TripContext";
 import { cx } from "./ui";
@@ -105,7 +107,9 @@ export function Hero() {
         {/* Region selector */}
         <div>
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-sand-200">
-            Hover a place, tap to add it to your trip
+            {/* Touch screens have no hover */}
+            <span className="hidden [@media(hover:hover)]:inline">Hover a place, tap to add it to your trip</span>
+            <span className="[@media(hover:hover)]:hidden">Tap a place to add it to your trip</span>
           </p>
           <ul className="grid grid-cols-4 gap-2 sm:gap-3" onMouseLeave={() => preview(null)}>
             {moodOrder.map((id) => {
@@ -142,7 +146,14 @@ export function Hero() {
               );
             })}
           </ul>
-          <div className="mt-4 flex items-center justify-between gap-4 text-[0.7rem] text-sand-200/80">
+          {/* Tapping a tile adds it to the trip; this opens the place shown, for a closer look */}
+          <Link
+            href={`/places/${vibes.find((v) => v.id === mood.id)!.regions[0]}`}
+            className="mt-4 inline-flex items-center gap-1.5 rounded-full text-sm font-semibold text-sand-50 underline decoration-sand-50/40 underline-offset-4 hover:decoration-sand-50"
+          >
+            Open {mood.place} <ArrowRight size={14} aria-hidden />
+          </Link>
+          <div className="mt-3 flex items-center justify-between gap-4 text-[0.7rem] text-sand-200/80">
             <span className="flex gap-1.5" aria-hidden>
               {moodOrder.map((id) => (
                 <span key={id} className={cx("h-1 rounded-full transition-all duration-700", id === mood.id ? "w-6 bg-sand-50" : "w-2 bg-sand-50/40", idle && id === mood.id && "animate-pulse")} />

@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "motion/react";
-import { Check, Plus } from "lucide-react";
+import { ArrowRight, Check, Plus } from "lucide-react";
 import { microStories, moods, photos } from "@/lib/experience.ts";
-import { vibes } from "@/lib/keralaData.ts";
+import { regions, vibes } from "@/lib/keralaData.ts";
 import { ComparisonSlider } from "./ComparisonSlider";
 import { useMood } from "./MoodContext";
 import { useTrip } from "./TripContext";
@@ -33,61 +34,79 @@ export function VibeCanvas() {
           const photo = photos[mood.photo];
           return (
             <Reveal key={v.id} delay={i * 0.08}>
-              <motion.button
-                type="button"
+              <motion.div
                 layout
-                aria-pressed={on}
-                onClick={() => { toggleVibe(v.id); pin(v.id); }}
                 onMouseEnter={() => preview(v.id)}
-                onFocus={() => preview(v.id)}
-                onBlur={() => preview(null)}
                 whileHover={{ y: -4 }}
-                whileTap={{ scale: 0.99 }}
                 className={cx(
-                  "group relative flex h-full w-full flex-col overflow-hidden organic text-left transition-shadow duration-500",
+                  "group relative flex h-full w-full flex-col overflow-hidden organic transition-shadow duration-500",
                   on ? "shadow-[0_0_0_3px_var(--mood-accent),0_24px_48px_-24px_rgb(31_61_43/0.5)]" : "shadow-[0_12px_32px_-20px_rgb(31_61_43/0.45)]",
                 )}
               >
-                {/* Photo with name */}
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <Image src={photo.src} alt={photo.alt} fill sizes="(min-width: 640px) 50vw, 100vw" className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.07]" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-forest-900/85 via-forest-900/10 to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-5 text-sand-50">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sand-200">{v.places}</p>
-                      <h3 className="mt-1 text-2xl font-semibold sm:text-3xl">{v.name}</h3>
+                <motion.button
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => { toggleVibe(v.id); pin(v.id); }}
+                  onFocus={() => preview(v.id)}
+                  onBlur={() => preview(null)}
+                  whileTap={{ scale: 0.99 }}
+                  className="flex flex-1 flex-col text-left"
+                >
+                  {/* Photo with name */}
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    <Image src={photo.src} alt={photo.alt} fill sizes="(min-width: 640px) 50vw, 100vw" className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.07]" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-forest-900/85 via-forest-900/10 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-5 text-sand-50">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sand-200">{v.places}</p>
+                        <h3 className="mt-1 text-2xl font-semibold sm:text-3xl">{v.name}</h3>
+                      </div>
+                      <span
+                        className={cx(
+                          "grid h-10 w-10 shrink-0 place-items-center rounded-full transition-all duration-300",
+                          on ? "bg-sand-50 text-forest-900" : "glass-dark group-hover:bg-sand-50/25",
+                        )}
+                        aria-hidden
+                      >
+                        {on ? <Check size={18} strokeWidth={3} /> : <Plus size={18} />}
+                      </span>
                     </div>
-                    <span
-                      className={cx(
-                        "grid h-10 w-10 shrink-0 place-items-center rounded-full transition-all duration-300",
-                        on ? "bg-sand-50 text-forest-900" : "glass-dark group-hover:bg-sand-50/25",
-                      )}
-                      aria-hidden
-                    >
-                      {on ? <Check size={18} strokeWidth={3} /> : <Plus size={18} />}
-                    </span>
                   </div>
-                </div>
 
-                {/* Micro-story and the honest details */}
-                <div className="glass flex flex-1 flex-col gap-4 rounded-none border-0 p-5">
-                  <p className="font-serif text-[1.05rem] italic leading-relaxed text-ink-700">“{microStories[v.id]}”</p>
-                  <dl className="mt-auto grid grid-cols-3 gap-3 border-t border-sand-200/80 pt-4 text-[0.78rem] leading-snug">
-                    <div>
-                      <dt className="font-semibold text-ink-900">Best</dt>
-                      <dd className="text-ink-500">{v.bestMonths}</dd>
-                    </div>
-                    <div>
-                      <dt className="font-semibold text-ink-900">Suits</dt>
-                      <dd className="text-ink-500">{v.suits}</dd>
-                    </div>
-                    <div>
-                      <dt className="font-semibold text-clay-700">Skip if</dt>
-                      <dd className="text-ink-500">{v.skipIf}</dd>
-                    </div>
-                  </dl>
+                  {/* Micro-story and the honest details */}
+                  <div className="glass flex flex-1 flex-col gap-4 rounded-none border-0 p-5">
+                    <p className="font-serif text-[1.05rem] italic leading-relaxed text-ink-700">“{microStories[v.id]}”</p>
+                    <dl className="mt-auto grid grid-cols-3 gap-3 border-t border-sand-200/80 pt-4 text-[0.78rem] leading-snug">
+                      <div>
+                        <dt className="font-semibold text-ink-900">Best</dt>
+                        <dd className="text-ink-500">{v.bestMonths}</dd>
+                      </div>
+                      <div>
+                        <dt className="font-semibold text-ink-900">Suits</dt>
+                        <dd className="text-ink-500">{v.suits}</dd>
+                      </div>
+                      <div>
+                        <dt className="font-semibold text-clay-700">Skip if</dt>
+                        <dd className="text-ink-500">{v.skipIf}</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </motion.button>
+
+                {/* Dig deeper: the vibe's own page and each of its places */}
+                <div className="glass flex flex-wrap items-center gap-2 rounded-none border-0 border-t border-sand-200/80 px-5 py-3 text-sm">
+                  <Link href={`/vibes/${v.id}`} className="inline-flex items-center gap-1 font-semibold mood-accent hover:underline">
+                    Explore {v.name} <ArrowRight size={14} aria-hidden />
+                  </Link>
+                  <span className="ml-auto flex flex-wrap gap-1.5">
+                    {v.regions.map((r) => (
+                      <Link key={r} href={`/places/${r}`} className="rounded-full bg-sand-50 px-2.5 py-0.5 text-ink-700 ring-1 ring-sand-200 hover:text-ink-900 hover:ring-forest-600">
+                        {regions[r].name}
+                      </Link>
+                    ))}
+                  </span>
                 </div>
-              </motion.button>
+              </motion.div>
             </Reveal>
           );
         })}
